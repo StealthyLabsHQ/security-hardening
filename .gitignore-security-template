@@ -1,0 +1,102 @@
+# Security-focused .gitignore template
+# Copy relevant sections into your project's .gitignore
+
+# -------------------------------------------------------
+# CRITICAL: secrets and credentials
+# -------------------------------------------------------
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Certificates & private keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+*.asc
+
+# Service accounts & API credentials
+service-account*.json
+*-adminsdk-*.json
+firebase-adminsdk*.json
+credentials.json
+google-credentials.json
+gcp-credentials.json
+*_credentials.json
+
+# Config files with real values
+config/local.*
+config/production.*
+config/secrets.*
+secrets.*
+*.secrets
+*.secret
+
+# -------------------------------------------------------
+# Database dumps (may contain real data)
+# -------------------------------------------------------
+*.sql
+*.dump
+*.sqlite
+*.db
+*.bak
+*.backup
+*.old
+
+# -------------------------------------------------------
+# Archives (may bundle secrets or data)
+# -------------------------------------------------------
+*.zip
+*.tar.gz
+*.tar.bz2
+*.7z
+*.rar
+
+# -------------------------------------------------------
+# Infrastructure
+# -------------------------------------------------------
+# Terraform
+*.tfvars
+!*.tfvars.example
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Kubernetes
+kubeconfig
+*.kubeconfig
+kube_config
+
+# Ansible
+*.vault
+vault_pass.txt
+
+# -------------------------------------------------------
+# Cloud provider CLI configs
+# -------------------------------------------------------
+.aws/credentials
+.aws/config
+.gcloud/
+.azure/
+
+# -------------------------------------------------------
+# IDE and OS artifacts
+# -------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/settings.json
+*.swp
+*.swo

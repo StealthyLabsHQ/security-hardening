@@ -1,0 +1,311 @@
+# Security Hardening Reference
+
+A comprehensive, actionable security reference for developers, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, and AI/LLM agents.
+
+Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS**.
+
+---
+
+## Install in Claude Code
+
+This repository is a Claude Code skill. Once installed, Claude automatically applies the security references when you ask it to review, audit, or harden code.
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/StealthyLabsHQ/security-hardening.git
+```
+
+### 2. Register the skill in Claude Code
+
+Add the skill to your Claude Code settings file (`~/.claude/settings.json`):
+
+```json
+{
+  "skills": [
+    {
+      "name": "security-hardening",
+      "path": "/path/to/security-hardening"
+    }
+  ]
+}
+```
+
+Replace `/path/to/security-hardening` with the actual path where you cloned the repo.
+
+### 3. Use it
+
+In any Claude Code session, the skill is triggered automatically when you ask security-related questions:
+
+```
+"Is this code secure?"
+"Review my authentication logic"
+"Audit this API endpoint for OWASP issues"
+"Harden my nginx config"
+"Check for secret leaks in this file"
+```
+
+Claude will reference the appropriate files from `references/` and apply the checklists, patterns, and mitigations documented here.
+
+### 4. Add the CI pipeline to your project
+
+Copy the GitHub Actions workflow into your own project to get automated security scanning on every push:
+
+```bash
+mkdir -p your-project/.github/workflows
+cp .github/workflows/security.yml your-project/.github/workflows/
+cp .github/pull_request_template.md your-project/.github/
+```
+
+### 5. Add the .gitignore template
+
+```bash
+cat .gitignore-security-template >> your-project/.gitignore
+```
+
+---
+
+## Table of Contents
+
+- [Web Application Security](#web-application-security)
+- [Infrastructure & Configuration](#infrastructure--configuration)
+- [Identity & Access Management](#identity--access-management)
+- [Platform Security](#platform-security)
+- [Human Layer](#human-layer)
+- [AI / LLM, Agent & MCP Security](#ai--llm--agent-security)
+- [Improvement Plan & Audit Tools](#improvement-plan--audit-tools)
+- [Automation](#automation)
+- [External References](#external-references)
+
+---
+
+## Web Application Security
+
+### `references/owasp-top10.md`
+Quick-reference for the **OWASP Top 10 (2021)**. For each category: what it is, attack examples, and practical fixes.
+
+Covers: Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Auth Failures, Integrity Failures, Logging Failures, SSRF.
+
+### `references/api-security.md`
+**OWASP API Security Top 10 (2023)** with code examples for every risk.
+
+Covers: BOLA/IDOR, BFLA, mass assignment, rate limiting, JSON schema validation, SSRF, secure error handling, webhook signature verification, GraphQL depth/complexity limits, pagination security.
+
+### `references/secure-headers.md`
+Production-ready **HTTP security headers** with copy-paste values.
+
+Covers: HSTS, CSP (nonce/hash-based), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COEP/COOP/CORP, cookie attributes (`Secure`, `HttpOnly`, `SameSite`), CORS, headers to remove, drop-in blocks for **Nginx** and **Cloudflare Workers**.
+
+### `references/language-patterns.md`
+Per-language **dangerous code patterns** with vulnerable vs. safe alternatives for security audits.
+
+| Language | Patterns covered |
+|----------|-----------------|
+| Node.js / JavaScript | Command injection, `eval`, prototype pollution, path traversal, NoSQL injection |
+| Python | Command injection, `eval`/`exec`, `pickle.loads`, path traversal, SSTI (Jinja2) |
+| PHP | Command injection, `eval`, file inclusion, SQL injection, `extract()` |
+| Go | Template injection, command injection, path traversal, SQL injection |
+| Ruby | Command injection, `eval`/ERB, `Marshal.load`, mass assignment |
+| Java | SQL injection, XXE, unsafe deserialization |
+
+### `references/secret-leak-prevention.md`
+Complete guide to preventing, detecting, and responding to secret leaks in Git. Covers every stage: pre-commit blocking, CI scanning, GitHub push protection, incident response (revoke first, then clean history), detection by secret type, frontend special cases, safe-by-design patterns, and a `.gitignore` security template.
+
+Includes: per-provider revocation steps (OpenAI, AWS, GitHub, Stripe, GCP, Slack...), a detection table with regex patterns, frontend-safe vs. never-in-frontend key matrix, 8 common vibecoder leak traps, and secrets manager examples (Vault, AWS Secrets Manager, SOPS, Doppler).
+
+### `references/quick-start-ai-coding.md`
+**Start here if you use AI to write code.** 10 things to check before every push, a false-sense-of-security table, what to do when something goes wrong, and a 5-minute security setup for a new project.
+
+Covers: secret detection, dangerous patterns (eval/shell=True/pickle), IDOR prevention, password hashing, frontend key safety, error message leaks, input validation, TLS verify, dependency audit, and a quick-reference card.
+
+### `references/pre-push-checklist.md`
+Operational checklist to run in 2 minutes before every `git push`. Organized by category with copy-paste `grep` commands for quick scanning.
+
+Covers: secrets, dangerous patterns, auth/authorization, input/output, sensitive data, dependencies, configuration, and frontend-specific checks.
+
+### `references/production-error-handling.md`
+How to handle errors, logs, and config in production without leaking internals.
+
+Covers: generic error responses with reference IDs, correct HTTP status codes (401 vs 403 vs 404), removing server banners, what to log vs. never log, log field redaction (Pino, Zap, structlog), startup config validation (fail-fast if secrets missing), debug mode risks, and CORS error response safety.
+
+### `references/vibecoder-traps.md`
+**12 common mistakes** made by developers copy-pasting LLM-generated or Stack Overflow code, with fixes.
+
+Covers: `eval`, `pickle.loads`, `shell=True`, SHA-256 for passwords, CORS wildcard with credentials, file upload without validation, logging PII/tokens, disabling TLS verify, Docker as root, mass assignment, missing rate limiting, trusting frontend for roles.
+
+---
+
+## Infrastructure & Configuration
+
+### `references/secure-headers.md`
+See [Web Application Security](#web-application-security) above - also includes Nginx hardening block and Cloudflare Workers config.
+
+### `references/iot-ot-security.md`
+**IoT and OT/Industrial** network security.
+
+Covers: Purdue Model segmentation (IT/OT DMZ), default credential elimination, legacy protocol risks (Modbus, DNP3, BACnet, PROFINET), firmware/patch management, passive OT monitoring, OT-specific incident response (safety-first containment).
+
+---
+
+## Identity & Access Management
+
+### `references/authorization-rbac.md`
+**RBAC, ABAC, and ReBAC** models with code examples. Deny-by-default pattern and IDOR/BOLA prevention.
+
+Covers: RBAC implementation, ABAC with OPA, ReBAC with OpenFGA, deny-by-default, IDOR/BOLA safe patterns, common anti-patterns (frontend-only check, role from client payload), 404 vs 403 strategy.
+
+### `references/active-directory-hardening.md`
+**Active Directory and Entra ID (Azure AD)** hardening.
+
+Covers: Tiering Model (Tier 0/1/2), LAPS, disabling SMBv1 / LLMNR / NTLMv1, Kerberoasting and AS-REP Roasting mitigations, gMSA, Protected Users group, Conditional Access, PIM (just-in-time elevation), risky sign-in monitoring. Tools: BloodHound, PingCastle, Purple Knight.
+
+---
+
+## Platform Security
+
+### `references/mobile-security.md`
+**OWASP Mobile Top 10 (2024)** for iOS and Android, with Swift and Kotlin code examples.
+
+Covers: Keychain/Keystore secure storage, certificate pinning, cleartext traffic prevention, binary protections (ProGuard, obfuscation), root/jailbreak detection, permission least privilege, PII in logs, `debuggable=false`. Tools: MobSF, Frida, objection, Drozer.
+
+### `references/desktop-app-security.md`
+**C/C++, C#/.NET, and Electron** application security.
+
+Covers: Buffer overflows, format string injection, compiler hardening flags (ASLR, DEP, stack canaries), C# deserialization (BinaryFormatter), XXE, DLL hijacking mitigations, Electron secure configuration (`nodeIntegration: false`, `contextIsolation: true`, `sandbox: true`, IPC validation). Tools: Process Monitor, Electronegativity, AddressSanitizer.
+
+### `references/endpoint-vba-security.md`
+**Office macros (VBA)** and endpoint hardening.
+
+Covers: Dangerous VBA patterns (Shell, WScript, ADODB), AMSI integration, macro signing, AppLocker/WDAC application whitelisting, Credential Guard, EDR deployment, BitLocker/FileVault, local admin rights removal. Tools: CIS-CAT Lite, OSQuery, Sysinternals Autoruns.
+
+---
+
+## Human Layer
+
+### `references/social-engineering-physical.md`
+**Phishing, BEC, vishing, and physical security** controls.
+
+Covers: Email authentication (SPF, DKIM, DMARC `p=reject`), phishing-resistant MFA (FIDO2/WebAuthn), AiTM bypass risks, simulated phishing (GoPhish), CEO fraud / IBAN change verification procedures, clean desk policy, badge access control, tailgating prevention, MDM remote wipe, security awareness program KPIs.
+
+---
+
+## AI / LLM & Agent Security
+
+### `references/llm-agent-security.md`
+**OWASP LLM Top 10 (2025)** and agentic security controls.
+
+Covers: Prompt injection (direct and indirect), sensitive data disclosure via context, excessive agency, RAG poisoning, secrets in system prompts, agentic action audit logging, tool permission tiers (Level 0-3), output validation before execution, MCP server security (authentication, tool allowlists, sandboxing).
+
+### `references/mcp-security.md`
+**Dedicated MCP (Model Context Protocol) security reference** covering the four main attack vectors when giving an AI agent "hands and eyes" via external tools.
+
+Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/volume configs, narrow endpoint design), Indirect Prompt Injection via MCP (step-by-step attack chain, LLM-as-a-Judge sanitization, chained-action prevention), Server Spoofing and malicious manifests (allowlist enforcement, static manifest validation, supply chain audit), Path Traversal and SSRF in MCP tool parameters (Python validators for `read_file` and `fetch_url`, Pydantic schema enforcement, SSRF blocklist with private ranges and AWS IMDS).
+
+---
+
+## Improvement Plan & Audit Tools
+
+### `references/security-improvements.md`
+Structured **7-axis defense-in-depth improvement plan** with quick wins and long-term actions per axis. Sources: OWASP, NIST 800-53/800-63B, CIS Benchmarks.
+
+Axes: code security, authentication, infrastructure, supply chain, CI/CD DevSecOps, monitoring/incident response, offensive testing.
+
+### `references/frontend-frameworks-security.md`
+**Security risks specific to modern SPA and SSR frameworks** (React, Next.js, Vue, Nuxt) beyond classic OWASP XSS coverage.
+
+Covers: SSR data leaks - `__NEXT_DATA__` exposes full DB objects in HTML (audit command, fix pattern for `getServerSideProps` / `useAsyncData` / RSC), DOM-based XSS in React (`dangerouslySetInnerHTML` + DOMPurify, `javascript:` href injection) and Vue (`v-html`), Prototype Pollution (attack chain via `__proto__`, vulnerable lodash/jQuery/qs versions, `Object.freeze` and `structuredClone` mitigations), client-side secret exposure (`NEXT_PUBLIC_` trap, bundle audit), CSRF in SPAs (double-submit cookie pattern), nonce-based CSP with Next.js middleware.
+
+### `references/supply-chain-security.md`
+**Software supply chain security** from code to production. Covers the attack surfaces exposed by SolarWinds, Log4Shell, and the XZ Utils backdoor.
+
+Covers: SLSA framework (levels 0-3, requirements table, GitHub Actions provenance workflow with slsa-github-generator), SBOM generation (Syft and Trivy, SPDX and CycloneDX, CI attachment, CVE scan against SBOM), Dependency Confusion attack and mitigations (npm scoped packages, pip `--index-url` vs `--extra-index-url`, hash pinning), Cosign/Sigstore keyless image signing and verification, gitsign for commit signing, GitHub Actions hardening (commit SHA pinning, OIDC instead of static keys, minimal permissions per job), dependency scanning (npm audit, pip-audit, govulncheck, OpenSSF Scorecard).
+
+### `references/applied-cryptography.md`
+**Algorithm selection and copy-paste code examples** for developers who need to make cryptographic decisions. Covers the most common mistakes (CWE-916, CWE-327, CWE-338).
+
+Covers: password hashing (Argon2id vs bcrypt vs MD5 - why fast hashes are wrong), authenticated encryption (AES-256-GCM and ChaCha20-Poly1305 with encrypt/decrypt examples in Python/Node.js/Go), asymmetric algorithm selection table (Ed25519, ECDSA P-256, RSA), TLS 1.3 configuration, CSPRNG usage (`secrets`, `crypto.randomBytes`, `crypto/rand`), HMAC vs plain hash, quick reference table (use case / recommended / never use), CWE mapping for 8 common crypto mistakes.
+
+### `references/cwe-owasp-mapping.md`
+**Cross-reference table** linking CWE, OWASP Top 10, OWASP ASVS controls, vulnerable code patterns, and SAST tool/rule for automated detection.
+
+Covers: injection, authentication, access control, cryptography, secrets, supply chain. Includes quick tool command reference (Semgrep, Bandit, Gosec, Gitleaks, Trivy, OWASP ZAP).
+
+### `references/security-audit-levels.md`
+Progressive audit framework from solo developer to expert review. Tells you exactly where to start, what to check at each level, how long it takes, which tools to use, and when to move to the next level.
+
+| Level | For who | Time | Key focus |
+|-------|---------|------|-----------|
+| 1 | Solo dev / MVP | 30-90 min | Secrets, deps, basic headers, dangerous patterns |
+| 2 | Live app with users | Half-day to 1 day | IDOR, input validation, CORS, rate limiting |
+| 3 | Production SaaS / team | 1-3 days | AuthZ model, supply chain, infra hardening, detection |
+| 4 | Regulated / critical | Days to weeks | Threat model, pentest, fuzzing, red team |
+
+Also includes a coverage matrix linking every reference file in this repo to its audit level(s).
+
+### `references/security-testing-examples.md`
+Executable security tests ready to add to your test suite. Failing tests mean the security control is missing.
+
+Covers (pytest, Jest, Go): IDOR/authorization, rate limiting, file upload (extension, MIME, size, path traversal, SVG XSS), SSRF (localhost, AWS metadata, private ranges), error handling (no stack trace, reference ID), security headers, webhook signature verification. Includes OWASP ZAP Docker baseline scan.
+
+### `references/cloud-iam-hardening.md`
+**AWS, GCP, and Azure** hardening with audit commands and copy-paste configurations.
+
+Covers: IAM least privilege, no wildcard policies, MFA enforcement, S3/GCS/Blob public access prevention, Secrets Manager usage, IMDSv2 (SSRF protection on EC2), CloudTrail audit logging, CI/CD OIDC (no long-lived keys), IaC scanning (Checkov, tfsec).
+
+### `references/container-k8s-hardening.md`
+**Docker and Kubernetes** hardening from Dockerfile to cluster admission policies.
+
+Covers: non-root Dockerfiles, multi-stage builds, read-only filesystems, Trivy image scanning, K8s Pod Security Standards, network policies (default-deny), Secrets via External Secrets Operator or Vault, RBAC minimal roles, Kyverno admission policies, Cosign image signing.
+
+### `references/incident-playbooks.md`
+Step-by-step response procedures for the 6 most common security incidents.
+
+Playbooks: compromised user account, webhook/integration token compromise, JWT signing secret leaked, cloud storage bucket exposed, verbose errors/debug mode in production, CORS misconfiguration. Each follows Detect - Contain - Investigate - Remediate - Review. Includes postmortem template.
+
+### `references/coverage-matrix.md`
+Overview of all reference files: depth, priority, **audit level**, review frequency, and automation availability. Includes coverage gaps backlog.
+
+### `references/security-myths.md`
+11 common misconceptions with explanation and fix: WAF as sole defense, SHA-256 for passwords, "JWT = security", CORS protecting APIs, secrets in .env, HTTPS being sufficient, no rate limiting, security through obscurity, OAuth misuse, Docker isolation, code review alone.
+
+### `references/framework-examples.md`
+Copy-paste security configurations per framework: headers, JWT auth middleware, input validation, rate limiting, safe error handling, IDOR-safe DB queries.
+
+Covers: **Express**, **NestJS**, **FastAPI**, **Django**, **Laravel**, **Spring Boot**, **Go (Gin)**.
+
+---
+
+## Automation
+
+### `.github/workflows/security.yml`
+**GitHub Actions security pipeline** running on every push and PR - copy this into any project.
+
+Jobs: Gitleaks (secret scanning), Semgrep (SAST), Trivy filesystem scan (dependency CVEs, blocks on CRITICAL/HIGH), Syft SBOM generation (artifact upload), Dependency Review (blocks PRs introducing vulnerable deps).
+
+### `.github/pull_request_template.md`
+**Security checklist** enforced on every PR before review.
+
+Sections: input/output validation, authentication & authorization, secrets & sensitive data, dependencies, network & API, code quality.
+
+### `CHANGELOG.md`
+Tracks all additions, updates, and deprecations with dates. Includes a backlog of planned improvements.
+
+---
+
+## External References
+
+| Standard / Tool | Link |
+|----------------|------|
+| OWASP Top 10 | https://owasp.org/www-project-top-ten/ |
+| OWASP API Security Top 10 | https://owasp.org/www-project-api-security/ |
+| OWASP Mobile Top 10 | https://owasp.org/www-project-mobile-top-10/ |
+| OWASP LLM Top 10 | https://owasp.org/www-project-top-10-for-large-language-model-applications/ |
+| OWASP ASVS | https://owasp.org/www-project-application-security-verification-standard/ |
+| OWASP Secure Headers | https://owasp.org/www-project-secure-headers/ |
+| NIST SP 800-82 Rev 3 (OT) | https://csrc.nist.gov/publications/detail/sp/800-82/rev-3/final |
+| NIST SP 800-63B (Auth) | https://pages.nist.gov/800-63-3/sp800-63b.html |
+| CIS Benchmarks | https://www.cisecurity.org/cis-benchmarks/ |
+| MITRE ATT&CK for ICS | https://attack.mitre.org/matrices/ics/ |
+| MITRE ATLAS (AI/ML) | https://atlas.mitre.org/ |
+| Mozilla Observatory | https://observatory.mozilla.org |
+| CISA ICS Advisories | https://www.cisa.gov/ics-advisories |
