@@ -40,6 +40,8 @@ Last matrix review: **2026-04-03**
 | `frontend-frameworks-security.md` | SSR leaks, DOM XSS, prototype pollution, CSP for SPAs | High | Recommended | 2-3 | Annual | Partial (ESLint security, Semgrep; SSR leaks and prototype pollution manual) |
 | `supply-chain-security.md` | SLSA, SBOM, dependency confusion, Cosign, CI/CD pipeline | High | Recommended | 3 | Annual | Partial (Syft/Trivy SBOM, Cosign, govulncheck; SLSA provenance manual) |
 | `applied-cryptography.md` | Algorithm selection, AEAD, CSPRNG, password hashing | High | Recommended | 2-3 | Annual | Partial (Semgrep/Bandit detect deprecated algos; key length manual) |
+| `privacy-data-minimization.md` | PII in logs, retention, erasure, analytics | High | Recommended | 2-3 | Annual | Partial (log PII scanning; retention jobs manual) |
+| `vuln-management.md` | Triage SLA, false positives, risk acceptance, metrics | High | Recommended | 3 | Annual | Partial (SLA tracking automatable; triage and acceptance manual) |
 | `coverage-matrix.md` | This document | Medium | Recommended | 3 | Annual | None (meta document) |
 
 ---

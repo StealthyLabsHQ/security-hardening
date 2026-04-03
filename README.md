@@ -73,6 +73,7 @@ cat .gitignore-security-template >> your-project/.gitignore
 - [Platform Security](#platform-security)
 - [Human Layer](#human-layer)
 - [AI / LLM, Agent & MCP Security](#ai--llm--agent-security)
+- [Privacy and Operations](#privacy-and-operations)
 - [Improvement Plan & Audit Tools](#improvement-plan--audit-tools)
 - [Automation](#automation)
 - [External References](#external-references)
@@ -200,6 +201,20 @@ Covers: Prompt injection (direct and indirect), sensitive data disclosure via co
 **Dedicated MCP (Model Context Protocol) security reference** covering the four main attack vectors when giving an AI agent "hands and eyes" via external tools.
 
 Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/volume configs, narrow endpoint design), Indirect Prompt Injection via MCP (step-by-step attack chain, LLM-as-a-Judge sanitization, chained-action prevention), Server Spoofing and malicious manifests (allowlist enforcement, static manifest validation, supply chain audit), Path Traversal and SSRF in MCP tool parameters (Python validators for `read_file` and `fetch_url`, Pydantic schema enforcement, SSRF blocklist with private ranges and AWS IMDS).
+
+---
+
+## Privacy and Operations
+
+### `references/privacy-data-minimization.md`
+**Privacy by design** - how to stop leaking PII through logs, errors, exports, and analytics.
+
+Covers: PII categories and what counts as sensitive in logs, structured log redaction (Pino `redact`, Zap custom fields, Python logging), automated log scanning for PII patterns, retention policy template per data category (logs 90d, transactions 7y, sessions TTL), scheduled anonymization/deletion jobs (Django + SQL), GDPR right to erasure implementation (multi-system erasure service), PII in exception reporting (Sentry `send_default_pii=False`, scrubbing hook), sensitive data in support dumps and backups (encryption), analytics data minimization (`userId` only, no email/phone), session recording masking (FullStory, LogRocket, Hotjar).
+
+### `references/vuln-management.md`
+**Vulnerability management process** from scanner output to closed finding - triage, SLA, false positives, risk acceptance.
+
+Covers: Vulnerability lifecycle diagram, finding sources and signal quality (SAST/SCA/DAST/secrets), severity classification with context adjustment rules (internet-facing = bump up, auth required = bump down), SLA table (Critical 24h, High 7d, Medium 30d, Low 90d), triage decision tree (reachable? exploitable? blast radius? mitigating controls?), triage outcome classification (fix/accept/false positive/not applicable/compensating control), false positive documentation with in-code suppression justification (nosemgrep/noqa with mandatory comment), risk acceptance template (expiry, dual approval, compensating controls), compensating controls per vulnerability type, metrics dashboard (MTTR, SLA compliance rate, recurring types), dependency reachability analysis (govulncheck, trivy --ignore-unfixed).
 
 ---
 

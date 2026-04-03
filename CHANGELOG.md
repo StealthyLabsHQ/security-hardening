@@ -95,9 +95,18 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-03] - Seventh batch
+
+### Added
+- `references/privacy-data-minimization.md` - PII in logs (redaction patterns for Pino/Zap/Python logging), data retention policy template with scheduled deletion jobs, GDPR right to erasure implementation, PII in error tracking (Sentry scrubbing), support dumps scoping, analytics data minimization, session recording masking
+- `references/vuln-management.md` - Full vulnerability lifecycle, severity classification with context adjustments, remediation SLA table (Critical 24h to Low 90d), triage decision tree, false positive documentation with in-code suppression justification, risk acceptance template (90-day expiry, two approvals, compensating controls), metrics and reporting, dependency reachability analysis (govulncheck)
+
+### Updated
+- `references/coverage-matrix.md` - Added 2 new entries
+
+---
+
 ## Backlog
 
 - [ ] Container/K8s maturity levels cross-reference
-- [ ] Privacy / data minimization guide (PII in logs, retention, masking)
-- [ ] Vulnerability management process (triage SLA, accepted risk documentation)
 - [ ] Cloud misconfiguration examples for common vibecodeur mistakes (open S3, public RDS)
