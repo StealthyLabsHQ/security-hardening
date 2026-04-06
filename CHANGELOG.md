@@ -5,6 +5,21 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-06] - Eighth batch
+
+### Added
+- `references/ai-cli-hardening.md` - Operational hardening baseline for AI coding CLIs (Claude Code, Codex CLI, Gemini CLI): default-deny profile, tiered permissions, policy-as-code template, prompt/context firewall, CI guardrails, maturity roadmap
+- `references/ai-agent-incident-response.md` - Incident response playbook for AI agents and MCP workflows: containment, evidence collection, timeline reconstruction, blast radius analysis, recovery, communication template, post-incident hardening
+
+### Updated
+- `SKILL.md` - Added explicit agentic controls step and references to new AI CLI hardening + AI agent incident response guides
+- `README.md` - Added both new AI-focused references in the AI/LLM & Agent Security section
+- `references/coverage-matrix.md` - Added coverage rows for new AI CLI hardening and AI agent incident response documents
+- `references/ai-cli-hardening.md` - Added vendor-neutral control mapping table and 14-day rollout plan
+- `references/ai-agent-incident-response.md` - Added RACI-lite ownership model and recovery exit criteria checklist
+
+---
+
 ## [2026-04-03] - Seventh batch
 
 ### Added
