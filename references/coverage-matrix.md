@@ -2,7 +2,7 @@
 
 Overview of all reference files: depth, review frequency, priority, and automation availability.
 
-Last matrix review: **2026-04-03**
+Last matrix review: **2026-04-06**
 
 ---
 
@@ -26,6 +26,8 @@ Last matrix review: **2026-04-03**
 | `cwe-owasp-mapping.md` | CWE / OWASP / ASVS / SAST mapping | Medium | Recommended | 2-3 | Annual | Full (cross-reference for tool configuration) |
 | `llm-agent-security.md` | LLM/Agent/MCP security | Medium | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (output validation; prompt injection mostly manual) |
 | `mcp-security.md` | MCP attack vectors (SSRF, path traversal, injection, spoofing) | High | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (manifest static analysis; parameter validation in code; injection manual) |
+| `ai-cli-hardening.md` | AI coding CLI baseline controls, policy-as-code, permission tiers | High | Essential | 2-3 | Bi-annual (fast-moving field) | Partial (policy lint and CI gates automatable; approvals/manual review needed) |
+| `ai-agent-incident-response.md` | Incident response playbook for AI agents and MCP workflows | High | Recommended | 3-4 | Bi-annual (fast-moving field) | Partial (detection/containment automatable; investigation/communications manual) |
 | `mobile-security.md` | iOS/Android security | High | Recommended | 2-3 | Annual (OWASP Mobile release cycle) | Partial (MobSF, static analysis; cert pinning needs manual) |
 | `desktop-app-security.md` | C/C++/C#/Electron | High | Recommended | 2-3 | Annual | Partial (compiler flags, Electronegativity; DLL hijacking needs manual) |
 | `endpoint-vba-security.md` | Endpoints, VBA macros | Medium | Recommended | 3 | Annual | Partial (CIS-CAT, OSQuery; macro policy needs GPO/manual) |
@@ -92,7 +94,6 @@ Last matrix review: **2026-04-03**
 | Gap | Priority | Notes |
 |-----|----------|-------|
 | Security testing examples (pytest, Jest, ZAP) | Recommended | Show how to write security-specific tests |
-| Maturity-level roadmap (solo dev / startup / enterprise) | Recommended | Prioritization by team maturity |
 | Container and Kubernetes hardening | Recommended | Separate from endpoint; growing attack surface |
 | CI/CD pipeline hardening (GitHub Actions, GitLab CI) | Recommended | Secrets in CI, runner permissions, artifact integrity |
 | Privacy by design / GDPR technical controls | Context-Dependent | Data minimization, right to erasure implementation |
