@@ -202,6 +202,16 @@ Covers: Prompt injection (direct and indirect), sensitive data disclosure via co
 
 Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/volume configs, narrow endpoint design), Indirect Prompt Injection via MCP (step-by-step attack chain, LLM-as-a-Judge sanitization, chained-action prevention), Server Spoofing and malicious manifests (allowlist enforcement, static manifest validation, supply chain audit), Path Traversal and SSRF in MCP tool parameters (Python validators for `read_file` and `fetch_url`, Pydantic schema enforcement, SSRF blocklist with private ranges and AWS IMDS).
 
+### `references/ai-cli-hardening.md`
+**Operational hardening baseline for AI coding CLIs** (Claude Code, Codex CLI, Gemini CLI, and similar tools).
+
+Covers: default-deny permissions, tiered elevation model (read-only to high-impact actions), policy-as-code template, prompt/context firewall controls, secret-safe workflows, Git/release integrity controls, CI guardrails, and maturity roadmap by team size.
+
+### `references/ai-agent-incident-response.md`
+**Incident response playbook dedicated to AI agents** and MCP-enabled workflows.
+
+Covers: severity model, first 15-minute containment steps, evidence collection, timeline reconstruction, blast radius analysis, eradication/recovery, communication template, and post-incident hardening actions specific to agentic systems.
+
 ---
 
 ## Privacy and Operations
