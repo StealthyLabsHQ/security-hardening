@@ -208,6 +208,7 @@ Per-language **dangerous code patterns** with vulnerable vs. safe alternatives f
 | Ruby | Command injection, `eval`/ERB, `Marshal.load`, mass assignment |
 | Java | SQL injection, XXE, unsafe deserialization |
 | PowerShell | `Invoke-Expression`, command injection, path traversal, `ConvertTo-SecureString -AsPlainText`, TLS bypass, download-and-run, ExecutionPolicy myth, PSScriptAnalyzer rules |
+| Bash / POSIX shell | Word splitting, unquoted `$var`, missing `set -Eeuo pipefail`, `find`/`xargs` injection, `curl \| sh`, temp file races, secrets in argv, `IFS`/`PATH` tampering, shellcheck rules |
 
 ### `references/secret-leak-prevention.md`
 Complete guide to preventing, detecting, and responding to secret leaks in Git. Covers every stage: pre-commit blocking, CI scanning, GitHub push protection, incident response (revoke first, then clean history), detection by secret type, frontend special cases, safe-by-design patterns, and a `.gitignore` security template.
@@ -401,6 +402,9 @@ Covers: **Express**, **NestJS**, **FastAPI**, **Django**, **Laravel**, **Spring 
 ---
 
 ## Automation
+
+### `.github/workflows/script-lint.yml`
+**Lint pipeline for small ops/installer scripts** that often skip review: shellcheck for `.sh`/`.bash` (warning-as-error, all checks enabled) and PSScriptAnalyzer for `.ps1`/`.psm1`/`.psd1` (security-focused rule set: `PSAvoidUsingInvokeExpression`, `PSAvoidUsingConvertToSecureStringWithPlainText`, `PSAvoidUsingPlainTextForPassword`, etc.). Triggered only on script paths so it stays fast.
 
 ### `.github/workflows/security.yml`
 **GitHub Actions security pipeline** running on every push and PR - copy this into any project.
