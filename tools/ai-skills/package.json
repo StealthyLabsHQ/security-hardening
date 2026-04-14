@@ -1,9 +1,9 @@
 {
-  "name": "ai-skills",
+  "name": "skilldrop",
   "version": "0.1.0",
   "description": "Universal AI CLI skill installer — Claude, Codex, Gemini, Cursor, Copilot, Windsurf",
   "bin": {
-    "ai-skills": "./bin/ai-skills.js"
+    "skilldrop": "./bin/ai-skills.js"
   },
   "main": "./lib/cli.js",
   "engines": {
