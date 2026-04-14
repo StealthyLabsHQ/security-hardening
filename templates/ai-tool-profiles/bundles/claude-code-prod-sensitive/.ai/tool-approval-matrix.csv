@@ -1,0 +1,11 @@
+action_class,default_disposition,approval_owner,notes
+read_repo,allow,developer,repo-only
+edit_workspace,ask,repo-owner,manual diff review mandatory
+install_dependencies,deny,security-or-devops,allow only via explicit approval
+external_network,deny,security-or-devops,temporary allowlist only
+git_push,deny,repo-owner,PR flow only
+release,deny,repo-owner+security,dual control
+deploy,deny,repo-owner+security,dual control
+database_migration,deny,repo-owner+security,dual control and rollback plan
+permission_change,deny,security,never autonomous
+read_secrets,deny,security,break-glass outside agent

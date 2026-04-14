@@ -19,11 +19,22 @@ Work through this checklist before requesting review. Check every item or explai
 - [ ] Deny-by-default applied: access explicitly granted, not assumed
 - [ ] New admin or privileged routes are protected and not just hidden
 
+### Privacy / GDPR
+- [ ] New personal data collected by this change is justified and minimized
+- [ ] Retention, deletion, anonymization, or export impact was reviewed
+- [ ] Logs, analytics, support tooling, and error reporting were checked for new PII exposure
+- [ ] New processor / vendor / cross-border transfer impact was reviewed when applicable
+
 ### Secrets & Sensitive Data
 - [ ] No hardcoded secrets, API keys, tokens, or passwords in code or config files
 - [ ] Environment variables / secrets manager used for all credentials
 - [ ] Sensitive data (PII, tokens, passwords) is NOT logged
 - [ ] Logs do not contain bearer tokens, cookies, session IDs, or emails
+
+### AI / Automation
+- [ ] AI-assisted or automated changes were reviewed for prompt-injection, tool-execution, and exfiltration risk
+- [ ] Workflow, bot, or agent permissions remain least-privilege (no unnecessary write/admin scope)
+- [ ] No-code connectors, webhooks, preview links, and publish scopes were reviewed when applicable
 
 ### Dependencies
 - [ ] New dependencies are justified and from a trustworthy source

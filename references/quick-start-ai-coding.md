@@ -2,7 +2,7 @@
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Essential | Automation: Partial (Gitleaks + Semgrep cover most patterns; logic review manual)
 
-You are using Claude, Copilot, ChatGPT, or another AI assistant to write code fast. This guide tells you what to check before you ship, in order of importance.
+You are using Claude Code, Codex, Gemini CLI, Cursor, Copilot, ChatGPT, or another AI assistant / builder to ship fast. This guide tells you what to check before you ship, in order of importance.
 
 ---
 
@@ -145,6 +145,38 @@ requests.get(url, verify="/path/to/ca-bundle.crt")
 npm audit --audit-level=high
 pip-audit
 ```
+
+---
+
+## Extra Checks for Cursor, Browser Builders, and No-Code Tools
+
+If you are using an AI IDE assistant, a browser coding tool, or a no-code / low-code platform, add these checks:
+
+### 11. No public preview or shared app without authentication
+
+- Preview links should not expose internal tools, admin panels, or customer data.
+- Demo mode is not a security control.
+
+### 12. No production connector owned by a personal account
+
+- Use a service account, not a founder or employee mailbox.
+- Record token owner, scope, and rotation date.
+
+### 13. No raw production data in prompts, memory, or knowledge uploads
+
+- Use synthetic or masked data.
+- Never upload HR, finance, support exports, or legal files blindly.
+
+### 14. Webhooks and automations are verified
+
+- Verify signatures and timestamps.
+- Review trigger conditions so untrusted email/form data cannot launch sensitive actions.
+
+### 15. The app or workflow can be exported, reviewed, and backed up
+
+- If there is no versioned export or Git sync, recovery and peer review are weak.
+
+Full guide: `references/ai-ide-no-code-security.md`
 
 ---
 

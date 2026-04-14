@@ -2,86 +2,86 @@
 
 > **Blocked by missing corpus in this session**
 >
-> Vous avez demandé un audit critique de **35 fichiers de `references/`**, au format :
+> You requested a critical audit of **35 files from `references/`**, in the format:
 >
-> `fichier:ligne -> problème -> proposition de fix`
+> `file:line -> problem -> proposed fix`
 >
-> Dans cette session, le dépôt et les uploads annoncés ne sont pas visibles côté exécution. Je ne peux donc pas produire honnêtement des constats **ligne par ligne** sans inventer des preuves.
+> In this session, the repository and the announced uploads are not visible on the execution side. Therefore, producing honest **line-by-line** findings without fabricating evidence is not possible.
 >
-> Ce fichier sert de **rapport de blocage + grille de revue hostile** à remplir dès que le corpus réel est monté.
+> This file serves as a **blocking report + hostile review grid** to be filled in once the actual corpus is mounted.
 
-## Output format attendu
+## Expected output format
 
 | Severity | File:line | Problem | Proposed fix |
 |---|---|---|---|
-| Critical | `references/example.md:L42-L57` | Exemple de contrôle cassé ou obsolète | Remplacer par la configuration / la version / le pattern correct |
-| High | `references/example.md:L60-L82` | Advice contradictoire ou dangereux en prod | Réécrire avec préconditions, limites et contre-exemples |
-| Medium | `references/example.md:L90-L101` | Code qui compile mais ne tient pas en prod | Ajouter configuration, tests, erreur handling, telemetry |
-| Low | `references/example.md:L110-L118` | Terminologie ou version ambigüe | Mettre à jour la référence, préciser version et statut |
+| Critical | `references/example.md:L42-L57` | Example of a broken or obsolete control | Replace with the correct configuration / version / pattern |
+| High | `references/example.md:L60-L82` | Contradictory or actively dangerous advice in prod | Rewrite with preconditions, limitations, and counter-examples |
+| Medium | `references/example.md:L90-L101` | Code that compiles but does not hold up in prod | Add configuration, tests, error handling, telemetry |
+| Low | `references/example.md:L110-L118` | Ambiguous terminology or version | Update the reference, clarify version and status |
 
-## Checklist de revue hostile
+## Hostile review checklist
 
 ### Obsolescence / versions
-- versions de frameworks EOL ou proches EOL,
-- exemples Apollo Server v2/v3 encore présentés comme "normaux",
-- références à bibliothèques abandonnées,
-- références à algorithmes ou paramètres trop faibles,
-- docs de navigateurs/API présentant encore des features dépréciées comme recommandées.
+- EOL or near-EOL framework versions,
+- Apollo Server v2/v3 examples still presented as "normal",
+- references to abandoned libraries,
+- references to algorithms or parameters that are too weak,
+- browser/API docs still presenting deprecated features as recommended.
 
-### Faux sentiment de sécurité
-- bcrypt avec cost trop bas,
-- JWT sans contraintes `aud` / `iss` / rotation de clés,
-- "désactiver l'introspection suffit" comme message de sécurité GraphQL,
-- CSP permissive avec `'unsafe-inline'`,
+### False sense of security
+- bcrypt with cost factor too low,
+- JWT without `aud` / `iss` constraints / key rotation,
+- "disabling introspection is enough" as a GraphQL security message,
+- permissive CSP with `'unsafe-inline'`,
 - CORS wildcard + credentials,
-- "base64" ou opaque IDs traités comme contrôle d'autorisation.
+- "base64" or opaque IDs treated as an authorization control.
 
-### Contradictions entre fichiers
-- un document recommande APQ, un autre laisse la requête arbitraire,
-- un document recommande headers stricts incompatibles avec un autre exemple frontend,
-- un document exige MFA partout, un autre donne des exemples de service accounts persistants sans rotation,
-- un document prône uploads directs, un autre montre multipart sans CSRF.
+### Contradictions between files
+- one document recommends APQ, another allows arbitrary queries,
+- one document recommends strict headers incompatible with another frontend example,
+- one document requires MFA everywhere, another gives examples of persistent service accounts without rotation,
+- one document advocates direct uploads, another shows multipart without CSRF.
 
-### Code qui compile mais casse en prod
-- secret hardcodé,
-- absence de timeout, retries, circuit breaking,
-- absence de limites mémoire / taille / pagination,
-- manque de logging corrélé,
-- absence de validation des inputs ou des claims,
-- absence de contrôle d'accès par tenant/objet/propriété.
+### Code that compiles but breaks in prod
+- hardcoded secret,
+- missing timeout, retries, circuit breaking,
+- missing memory / size / pagination limits,
+- lack of correlated logging,
+- missing input or claims validation,
+- missing access control by tenant/object/property.
 
-### Outils / patterns abandonnés
-- bibliothèques non maintenues,
-- exemples reposant sur fonctionnalités supprimées,
-- références à headers legacy comme protection principale,
-- workflows GitHub Actions non pinés par SHA.
+### Abandoned tools / patterns
+- unmaintained libraries,
+- examples relying on removed functionality,
+- references to legacy headers as primary protection,
+- GitHub Actions workflows not pinned by SHA.
 
-## Priorisation suggérée
+## Suggested prioritization
 
 1. **Critical**  
-   Vulnérabilité exploitable ou conseil activement dangereux.
+   Exploitable vulnerability or actively dangerous advice.
 2. **High**  
-   Contrôle incomplet ou trompeur susceptible de mener à une faille.
+   Incomplete or misleading control likely to lead to a vulnerability.
 3. **Medium**  
-   Conseil correct en labo mais insuffisant en production.
+   Correct advice in a lab but insufficient in production.
 4. **Low**  
-   Dette documentaire, terminologie, clarté, versioning.
+   Documentation debt, terminology, clarity, versioning.
 
-## Ce qu'il faudra faire dès que le corpus est visible
+## What needs to be done once the corpus is visible
 
-1. Lister les 35 fichiers réellement présents.
-2. Extraire les snippets de code et les recommandations normatives.
-3. Vérifier :
+1. List the 35 files actually present.
+2. Extract code snippets and normative recommendations.
+3. Verify:
    - versions,
-   - maintien des dépendances,
-   - cohérence inter-documents,
-   - sécurité réelle en prod,
-   - état des outils cités.
-4. Produire le tableau final **max 50 issues**, trié par sévérité, avec références `fichier:ligne`.
+   - dependency maintenance,
+   - cross-document consistency,
+   - actual production security,
+   - state of cited tools.
+4. Produce the final table **max 50 issues**, sorted by severity, with `file:line` references.
 
-## Règle de qualité
+## Quality rule
 
-Aucune ligne ne doit être écrite sans preuve locale :
-- snippet exact,
-- ligne ou plage de lignes,
-- proposition de fix concrète et actionnable.
+No line should be written without local evidence:
+- exact snippet,
+- line or line range,
+- concrete and actionable proposed fix.

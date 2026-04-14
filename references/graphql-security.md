@@ -1,35 +1,35 @@
 # graphql-security.md
 
-GraphQL n'est pas "moins sûr" que REST, mais il **déplace** les points de contrôle. Le vrai risque n'est pas la présence d'un endpoint `/graphql`; c'est le fait qu'un client peut choisir **la forme, la profondeur, le coût et parfois les propriétés exactes** de la requête. Les contrôles doivent donc être pensés autour de quatre questions :
+GraphQL is not "less secure" than REST, but it **shifts** the control points. The real risk is not the presence of a `/graphql` endpoint; it is that a client can choose **the shape, depth, cost, and sometimes the exact properties** of the request. Controls must therefore be designed around four questions:
 
-1. **Qui peut appeler quoi ?**  
-   AuthN/AuthZ sur l'objet, le champ et l'action.
-2. **Quelle quantité de travail la requête déclenche-t-elle ?**  
-   Depth limit, complexity budget, alias/batching caps, fan-out backend.
-3. **Que révèle l'API sur elle-même ?**  
-   Introspection, suggestions de champs, messages d'erreur, IDs globaux.
-4. **Comment l'API sort du modèle request/response classique ?**  
-   Upload multipart, persisted queries, subscriptions WebSocket, N+1, telemetry.
+1. **Who can call what?**  
+   AuthN/AuthZ at the object, field, and action level.
+2. **How much work does the request trigger?**  
+   Depth limit, complexity budget, alias/batching caps, backend fan-out.
+3. **What does the API reveal about itself?**  
+   Introspection, field suggestions, error messages, global IDs.
+4. **How does the API deviate from the classic request/response model?**  
+   Multipart upload, persisted queries, WebSocket subscriptions, N+1, telemetry.
 
 ---
 
-## Baseline minimum
+## Minimum baseline
 
-- AuthN forte au niveau transport.
-- AuthZ **au niveau objet** et **au niveau propriété**.  
-  Un resolver qui "retourne l'objet si l'utilisateur est connecté" n'est pas suffisant.
-- Limites **de profondeur** et **de complexité/cost**.
-- Limites **de volume** : taille de document, nombre d'aliases, nombre d'opérations par lot, taille de réponse.
-- Introspection **désactivée en production** pour les clients non privilégiés.
-- Télémetrie par opération : nom, profondeur, coût, alias count, backend calls, latency, erreurs, principal, tenant.
-- Persisted queries **allowlistées** pour les surfaces publiques quand c'est possible.
-- Erreurs **masquées** côté client, détaillées seulement côté logs internes.
+- Strong AuthN at the transport level.
+- AuthZ **at the object level** and **at the property level**.  
+  A resolver that "returns the object if the user is logged in" is not sufficient.
+- **Depth** and **complexity/cost** limits.
+- **Volume** limits: document size, number of aliases, number of operations per batch, response size.
+- Introspection **disabled in production** for unprivileged clients.
+- Per-operation telemetry: name, depth, cost, alias count, backend calls, latency, errors, principal, tenant.
+- Persisted queries **allowlisted** for public surfaces when possible.
+- Errors **masked** on the client side, detailed only in internal logs.
 
 ---
 
 ## 1) Depth limit
 
-La profondeur limite les arbres du style :
+Depth limits trees of the form:
 
 ```graphql
 query {
@@ -51,24 +51,24 @@ query {
 }
 ```
 
-### Recommandation
+### Recommendation
 
-- Public API : profondeur max **6 à 8** pour commencer.
-- API interne / BFF : **8 à 12** si la télémétrie montre des besoins réels.
-- Exclure les champs triviaux du coût, **pas** de la profondeur, sauf justification.
-- Appliquer la règle avant exécution.
+- Public API: max depth **6 to 8** to start.
+- Internal API / BFF: **8 to 12** if telemetry shows real needs.
+- Exclude trivial fields from cost, **not** from depth, unless justified.
+- Apply the rule before execution.
 
-### À ne pas faire
+### What not to do
 
-- Se contenter d'un rate limit HTTP "par requête".
-- Autoriser une profondeur élevée sans complexity budget.
-- Exempter tout un client mobile sans métriques par opération.
+- Rely solely on an HTTP rate limit counted "per request".
+- Allow high depth without a complexity budget.
+- Exempt an entire mobile client without per-operation metrics.
 
 ---
 
 ## 2) Complexity analysis (cost-based)
 
-La profondeur seule ne voit pas les requêtes "plates" mais très coûteuses :
+Depth alone does not catch "flat" but very expensive queries:
 
 ```graphql
 query SearchEverything {
@@ -78,114 +78,114 @@ query SearchEverything {
 }
 ```
 
-### Modèle pratique
+### Practical model
 
-Définir un **coût** par champ :
+Define a **cost** per field:
 
-- scalaire simple : `1`
-- relation 1->1 : `2`
-- connexion paginée : `base + multiplicateur * first`
-- champs qui frappent un backend cher : coût majoré
-- champs "admin", "search", "export" : coût majoré + cap serveur
+- simple scalar: `1`
+- 1->1 relation: `2`
+- paginated connection: `base + multiplier * first`
+- fields hitting an expensive backend: higher cost
+- "admin", "search", "export" fields: higher cost + server cap
 
-Exemple simple :
+Simple example:
 
 ```text
 total_cost =
-  somme(des coûts des champs)
-  + somme(des multiplicateurs de pagination)
-  + surcharge sur les champs à fan-out backend
+  sum(field costs)
+  + sum(pagination multipliers)
+  + surcharge on backend fan-out fields
 ```
 
-### Recommandation
+### Recommendation
 
-- Fixer un **budget global** par opération, par exemple `300` ou `500`.
-- Ajouter un **budget par rôle** si certains clients sont internes.
-- Logger le coût calculé pour chaque opération.
-- Refuser les requêtes sans nom d'opération en prod si vous dépendez de métriques fines.
+- Set a **global budget** per operation, for example `300` or `500`.
+- Add a **per-role budget** if some clients are internal.
+- Log the computed cost for each operation.
+- Reject requests without an operation name in production if you depend on fine-grained metrics.
 
-### À ne pas faire
+### What not to do
 
-- Autoriser `first: 1000` partout parce que "le client en a besoin".
-- Compter seulement les nœuds GraphQL sans regarder le fan-out SQL/HTTP réel.
-- Réserver le cost analysis au gateway sans feedback sur les resolvers coûteux.
+- Allow `first: 1000` everywhere because "the client needs it".
+- Count only GraphQL nodes without looking at real SQL/HTTP fan-out.
+- Reserve cost analysis to the gateway without feedback on expensive resolvers.
 
 ---
 
 ## 3) Persisted queries / APQ
 
-Il faut distinguer deux mécanismes :
+Two mechanisms must be distinguished:
 
 ### APQ (Automatic Persisted Queries)
 
-- But principal : **performance**.
-- Le client envoie un **hash SHA-256**.
-- Si le serveur ne connaît pas ce hash, le client renvoie ensuite la requête complète.
-- Très utile pour réduire la taille des requêtes et améliorer le cache CDN.
+- Primary purpose: **performance**.
+- The client sends a **SHA-256 hash**.
+- If the server does not know the hash, the client then resends the full query.
+- Very useful for reducing request size and improving CDN caching.
 
-### Persisted queries allowlistées
+### Allowlisted persisted queries
 
-- But principal : **sécurité + stabilité**.
-- Seules les requêtes connues, versionnées et publiées dans un manifeste sont acceptées.
-- Beaucoup plus fort contre la découverte opportuniste, le batching arbitraire et les requêtes "handcrafted".
+- Primary purpose: **security + stability**.
+- Only known, versioned, and manifest-published queries are accepted.
+- Much stronger against opportunistic discovery, arbitrary batching, and handcrafted queries.
 
-### Recommandation
+### Recommendation
 
-- **Surface publique / mobile / web grand public** : privilégier l'**allowlist**.
-- **Surface interne** : APQ possible, mais garder depth/complexity/rate limits.
-- Ne pas vendre APQ comme un contrôle de sécurité en soi.
+- **Public / mobile / consumer web surface**: prefer the **allowlist**.
+- **Internal surface**: APQ is possible, but keep depth/complexity/rate limits.
+- Do not sell APQ as a security control in itself.
 
 ### Anti-pattern
 
-- "On a APQ, donc on peut laisser l'introspection et les batch requests".
-- "On allowliste les requêtes, donc on n'a plus besoin d'AuthZ au niveau champ".
+- "We have APQ, so we can leave introspection and batch requests open".
+- "We allowlist queries, so we no longer need field-level AuthZ".
 
 ---
 
-## 4) Introspection en production
+## 4) Introspection in production
 
-L'introspection n'est pas une vulnérabilité en soi, mais elle :
+Introspection is not a vulnerability in itself, but it:
 
-- accélère la cartographie par un attaquant,
-- révèle les types, relations, mutations admin et noms de champs,
-- augmente l'efficacité des attaques de fuzzing et BOLA/BOPLA.
+- speeds up mapping by an attacker,
+- reveals types, relations, admin mutations, and field names,
+- increases the effectiveness of fuzzing attacks and BOLA/BOPLA.
 
-### Recommandation
+### Recommendation
 
-- **Désactiver en prod** pour les clients non privilégiés.
-- Si vous devez la garder :
-  - restreindre aux admin/dev internes,
-  - loguer les appels,
-  - exiger un client ID approuvé ou une origine de confiance.
+- **Disable in production** for unprivileged clients.
+- If you must keep it:
+  - restrict to internal admins/devs,
+  - log all calls,
+  - require an approved client ID or trusted origin.
 
 ### Anti-pattern
 
-- Laisser GraphiQL / Playground en prod "car il faut bien débugger".
-- Confondre désactivation de l'IDE et désactivation de l'introspection.
+- Leaving GraphiQL / Playground in production "because debugging is needed".
+- Confusing IDE disabling with introspection disabling.
 
 ---
 
 ## 5) Batching attacks
 
-Si votre serveur accepte un tableau d'opérations dans une même requête HTTP, un attaquant peut :
+If your server accepts an array of operations in a single HTTP request, an attacker can:
 
-- contourner un rate limit compté "par requête",
-- mélanger de petites requêtes d'énumération,
-- amplifier l'impact CPU/mémoire.
+- bypass a rate limit counted "per request",
+- mix small enumeration queries,
+- amplify CPU/memory impact.
 
-### Recommandation
+### Recommendation
 
-- Désactiver le batching si vous n'en avez pas besoin.
-- Sinon :
-  - caper le nombre d'opérations par lot,
-  - appliquer le coût **sur l'ensemble du batch**,
-  - compter le batch comme **N opérations** pour le rate limiting.
+- Disable batching if you do not need it.
+- Otherwise:
+  - cap the number of operations per batch,
+  - apply cost **across the entire batch**,
+  - count the batch as **N operations** for rate limiting.
 
 ---
 
 ## 6) Alias-based DoS
 
-Exemple :
+Example:
 
 ```graphql
 query {
@@ -197,147 +197,147 @@ query {
 }
 ```
 
-Un rate limit naïf voit "une requête". Le backend voit potentiellement **500 exécutions**.
+A naive rate limit sees "one request". The backend potentially sees **500 executions**.
 
-### Recommandation
+### Recommendation
 
-- Caper le **nombre d'aliases**.
-- Intégrer `alias_count` dans le coût.
-- Rejeter les documents avec trop de tokens ou de champs répétés.
+- Cap the **number of aliases**.
+- Include `alias_count` in the cost.
+- Reject documents with too many tokens or repeated fields.
 
 ---
 
 ## 7) Field suggestions leak
 
-Beaucoup de serveurs répondent :
+Many servers respond:
 
 > Cannot query field `usrs`. Did you mean `users`?
 
-C'est très utile pour un développeur, et très utile aussi pour un attaquant en phase de cartographie.
+This is very useful for a developer, and equally useful for an attacker in the mapping phase.
 
-### Recommandation
+### Recommendation
 
-- Désactiver les suggestions en production si le framework le permet.
-- Sinon, masquer les détails côté client via un error presenter / formatter.
-- Ne jamais renvoyer la stack interne ou les noms de types admin.
+- Disable suggestions in production if the framework allows it.
+- Otherwise, hide the details on the client side via an error presenter / formatter.
+- Never return the internal stack or admin type names.
 
 ---
 
 ## 8) IDOR via node IDs (Relay)
 
-Relay et les global IDs ne suppriment **pas** le risque d'IDOR/BOLA.  
-Un ID global n'est qu'un autre identifiant. Même s'il est base64-encodé, il reste souvent :
+Relay and global IDs do **not** eliminate the IDOR/BOLA risk.  
+A global ID is just another identifier. Even if base64-encoded, it often remains:
 
-- prévisible,
-- rejouable,
-- ou facilement collectable depuis l'UI.
+- predictable,
+- replayable,
+- or easily collectable from the UI.
 
-### Recommandation
+### Recommendation
 
-- Contrôler l'accès **dans le resolver de l'objet**, pas seulement dans le parent.
-- Vérifier `tenant_id`, ownership, relation métier, état de l'objet.
-- Imposer des caps de pagination sur les connexions Relay.
-- Logger les `node(id:)` et les IDs décodés côté serveur.
+- Control access **in the object resolver**, not only in the parent.
+- Verify `tenant_id`, ownership, business relationship, object state.
+- Enforce pagination caps on Relay connections.
+- Log `node(id:)` calls and server-side decoded IDs.
 
 ### Anti-pattern
 
-- "Le global ID n'est pas séquentiel, donc ce n'est pas de l'IDOR."
-- Contrôle d'accès au niveau liste, mais pas au niveau `node(id:)`.
+- "The global ID is not sequential, so it is not IDOR."
+- Access control at the list level, but not at the `node(id:)` level.
 
 ---
 
 ## 9) N+1 abuse
 
-Le N+1 n'est pas qu'un problème de perf accidentelle. C'est aussi une surface d'abus :
+N+1 is not just an accidental performance problem. It is also an abuse surface:
 
-- un client peut forcer un fan-out énorme,
-- provoquer de la saturation SQL/HTTP,
-- exploiter des champs apparemment innocents mais très chers.
+- a client can force enormous fan-out,
+- cause SQL/HTTP saturation,
+- exploit fields that appear innocent but are very expensive.
 
-### Recommandation
+### Recommendation
 
-- Utiliser des dataloaders / batch resolvers.
-- Instrumenter `resolver_count`, `db.query.count`, `downstream_call_count`.
-- Ajouter un coût spécifique aux champs qui fan-outent.
-- Mettre un plafond serveur sur `first`, `last`, `limit`.
+- Use dataloaders / batch resolvers.
+- Instrument `resolver_count`, `db.query.count`, `downstream_call_count`.
+- Add a specific cost to fields that fan out.
+- Set a server-side ceiling on `first`, `last`, `limit`.
 
 ---
 
 ## 10) Error masking
 
-En prod, le client ne doit pas recevoir :
+In production, the client must not receive:
 
 - stack trace,
-- nom de table,
-- message SQL,
-- détails d'upstream,
-- noms de types/resolvers internes.
+- table name,
+- SQL message,
+- upstream details,
+- internal type/resolver names.
 
-### Recommandation
+### Recommendation
 
-- Répondre avec un message générique.
-- Mettre un code stable côté `extensions.code` si besoin.
-- Conserver le détail complet en logs/traces corrélés.
+- Respond with a generic message.
+- Set a stable code in `extensions.code` if needed.
+- Keep full detail in correlated logs/traces.
 
 ### Anti-pattern
 
-- Réutiliser tel quel `err.Error()` depuis l'ORM ou l'upstream.
-- Faire dépendre le comportement client d'un message d'erreur non stable.
+- Reusing `err.Error()` as-is from the ORM or upstream.
+- Making client behavior depend on an unstable error message.
 
 ---
 
 ## 11) File upload via multipart spec
 
-Le **meilleur** modèle pour les fichiers reste :
+The **best** model for files remains:
 
-1. mutation pour demander une URL signée,
-2. upload direct vers storage,
-3. mutation de confirmation avec métadonnées serveur.
+1. mutation to request a signed URL,
+2. direct upload to storage,
+3. confirmation mutation with server-side metadata.
 
-### Pourquoi éviter le multipart GraphQL natif ?
+### Why avoid native GraphQL multipart?
 
-- surface CSRF/browser plus subtile,
-- backpressure plus difficile,
-- parsing plus risqué,
-- mélange de logique API et de transport fichier,
-- validation et scanning souvent oubliés.
+- more subtle CSRF/browser surface,
+- harder backpressure,
+- riskier parsing,
+- mixing of API logic and file transport,
+- validation and scanning often forgotten.
 
-### Si vous devez accepter le multipart GraphQL
+### If you must accept GraphQL multipart
 
-- limiter **taille**, **type MIME**, **nombre de fichiers**,
-- scanner antivirus / malware,
-- renommer côté serveur,
-- interdire les noms/path fournis par le client,
-- isoler le stockage,
-- exiger protection CSRF adaptée,
-- ne jamais faire confiance au `Content-Type` seul.
+- limit **size**, **MIME type**, **number of files**,
+- antivirus / malware scan,
+- rename on the server side,
+- forbid client-supplied names/paths,
+- isolate storage,
+- require appropriate CSRF protection,
+- never trust `Content-Type` alone.
 
 ---
 
 ## 12) Subscription auth (WebSocket upgrade)
 
-Les subscriptions cassent l'illusion "un token vérifié par requête HTTP suffit".
+Subscriptions break the illusion that "one verified token per HTTP request is sufficient".
 
-### Points de contrôle
+### Control points
 
-- Auth au moment du **WebSocket upgrade** ou du `connection_init`.
-- Contexte d'autorisation injecté dans la subscription.
-- Revalidation si token expiré ou refresh nécessaire.
-- Vérification **à chaque événement** si le droit dépend de l'objet/tenant.
-- `CheckOrigin` / origin allowlist strict.
-- Quotas de connexions simultanées et de subscriptions par socket.
+- Auth at the time of the **WebSocket upgrade** or `connection_init`.
+- Authorization context injected into the subscription.
+- Revalidation if the token is expired or a refresh is needed.
+- Verification **on each event** if the right depends on the object/tenant.
+- `CheckOrigin` / strict origin allowlist.
+- Quotas for concurrent connections and subscriptions per socket.
 
 ### Anti-pattern
 
-- Vérifier seulement la présence d'un token, pas sa validité.
-- Faire l'AuthZ au moment de la souscription, puis pousser des événements sans re-filtrage.
-- Accepter toute origine WebSocket.
+- Checking only the presence of a token, not its validity.
+- Performing AuthZ at subscription time, then pushing events without re-filtering.
+- Accepting any WebSocket origin.
 
 ---
 
-## Apollo Server (Node) — exemples
+## Apollo Server (Node) — examples
 
-### 1. Base sécurisée : introspection off, erreurs masquées, CSRF, depth limit
+### 1. Secure base: introspection off, masked errors, CSRF, depth limit
 
 ```ts
 import { ApolloServer } from "@apollo/server";
@@ -352,7 +352,7 @@ const server = new ApolloServer({
     depthLimit(8),
   ],
   formatError(formattedError) {
-    // Garder le détail dans les logs; renvoyer un message stable au client.
+    // Keep detail in logs; return a stable message to the client.
     return {
       message: "Request rejected",
       extensions: {
@@ -390,9 +390,9 @@ const server = new ApolloServer({
 });
 ```
 
-> Astuce : pour les champs chers, déclarez un coût via une extension de schéma ou un registre côté serveur, puis majorer les connexions paginées.
+> Tip: for expensive fields, declare a cost via a schema extension or a server-side registry, then increase the cost for paginated connections.
 
-### 3. Persisted queries allowlistées
+### 3. Allowlisted persisted queries
 
 ```ts
 import crypto from "node:crypto";
@@ -402,7 +402,7 @@ const app = express();
 app.use(express.json());
 
 const allowlist = new Set([
-  // SHA-256 d'opérations normalisées et publiées
+  // SHA-256 of normalized and published operations
   "7b3f6e4c2f5d6a4f6b1d54b9f3f5a4e9c7f3b1d8a9c4e2f6d1b3c5a7e9f1d2c3",
 ]);
 
@@ -417,7 +417,7 @@ app.use("/graphql", (req, res, next) => {
 });
 ```
 
-### 4. Upload : préférer URL signée ; si multipart obligé, l'entourer sévèrement
+### 4. Upload: prefer signed URL; if multipart is required, wrap it tightly
 
 ```ts
 import express from "express";
@@ -444,7 +444,7 @@ const server = new ApolloServer({
           throw new Error("Unsupported media type");
         }
 
-        // Ne pas utiliser le nom fourni par le client comme chemin final.
+        // Do not use the client-supplied name as the final path.
         const safeObjectKey = `avatars/${ctx.principal.userId}/${crypto.randomUUID()}`;
         // stream -> AV scan -> object storage
         return { ok: true, objectKey: safeObjectKey };
@@ -484,15 +484,15 @@ useServer(
 );
 ```
 
-**À ajouter en vrai** : allowlist d'origines, quotas par socket, revalidation du token avant push d'événements sensibles.
+**To add in production**: origin allowlist, per-socket quotas, token revalidation before pushing sensitive events.
 
 ---
 
-## Strawberry (Python) — exemples
+## Strawberry (Python) — examples
 
-> Les exemples ci-dessous montrent surtout la structure des contrôles. Adaptez l'intégration (ASGI, FastAPI, Django, etc.) à votre stack.
+> The examples below primarily show the structure of controls. Adapt the integration (ASGI, FastAPI, Django, etc.) to your stack.
 
-### 1. Désactiver IDE, introspection et field suggestions
+### 1. Disable IDE, introspection, and field suggestions
 
 ```python
 import strawberry
@@ -514,12 +514,12 @@ schema = strawberry.Schema(
     ),
     extensions=[
         AddValidationRules([NoSchemaIntrospectionCustomRule]),
-        # Ajoutez ici vos règles depth / alias / token caps
+        # Add your depth / alias / token cap rules here
     ],
 )
 ```
 
-### 2. Intégration FastAPI avec contexte d'auth
+### 2. FastAPI integration with auth context
 
 ```python
 from fastapi import FastAPI, Request, WebSocket
@@ -535,15 +535,15 @@ async def get_context(request: Request | WebSocket):
 graphql_app = GraphQLRouter(
     schema,
     context_getter=get_context,
-    graphql_ide=None,                 # pas d'IDE en prod
-    multipart_uploads_enabled=False,  # garder False par défaut
+    graphql_ide=None,                 # no IDE in production
+    multipart_uploads_enabled=False,  # keep False by default
 )
 
 app = FastAPI()
 app.include_router(graphql_app, prefix="/graphql")
 ```
 
-### 3. Mutation avec AuthZ objet / propriété
+### 3. Mutation with object / property AuthZ
 
 ```python
 @strawberry.type
@@ -561,10 +561,10 @@ class Mutation:
         return True
 ```
 
-### 4. Upload : préférence pour URL signée, sinon encadrer très fort
+### 4. Upload: preference for signed URL, otherwise enforce very strict bounds
 
 ```python
-# Modèle recommandé
+# Recommended model
 @strawberry.type
 class Mutation:
     @strawberry.mutation
@@ -582,23 +582,23 @@ class Mutation:
         )
 ```
 
-### 5. Notes Strawberry spécifiques
+### 5. Strawberry-specific notes
 
-- `graphql_ide=None` en production.
-- `multipart_uploads_enabled=False` par défaut : gardez ce choix tant que possible.
-- `disable_field_suggestions=True` réduit la fuite d'information de type "Did you mean...".
-- `relay_max_results` doit être serré pour empêcher les connexions trop larges.
-- Ajoutez des extensions/règles pour :
-  - profondeur,
-  - nombre d'aliases,
-  - nombre de tokens,
-  - taille de document.
+- `graphql_ide=None` in production.
+- `multipart_uploads_enabled=False` by default: keep this choice as long as possible.
+- `disable_field_suggestions=True` reduces information leakage of the "Did you mean..." type.
+- `relay_max_results` must be tight to prevent overly broad connections.
+- Add extensions/rules for:
+  - depth,
+  - number of aliases,
+  - number of tokens,
+  - document size.
 
 ---
 
-## gqlgen (Go) — exemples
+## gqlgen (Go) — examples
 
-### 1. Serveur minimal sans introspection en prod + complexity limit
+### 1. Minimal server without introspection in production + complexity limit
 
 ```go
 package main
@@ -648,7 +648,7 @@ func main() {
 }
 ```
 
-### 2. Subscription auth au `connection_init` + origin allowlist
+### 2. Subscription auth at `connection_init` + origin allowlist
 
 ```go
 srv.AddTransport(transport.Websocket{
@@ -674,15 +674,15 @@ srv.AddTransport(transport.Websocket{
 })
 ```
 
-### 3. Upload via multipart spec : bornes mémoire et taille
+### 3. Upload via multipart spec: memory and size bounds
 
 ```yaml
 # gqlgen.yml
 uploadMaxSize: 10485760   # 10 MiB
-uploadMaxMemory: 1048576  # 1 MiB en mémoire avant spill to disk
+uploadMaxMemory: 1048576  # 1 MiB in memory before spill to disk
 ```
 
-### 4. Resolver avec contrôle d'accès objet
+### 4. Resolver with object access control
 
 ```go
 func (r *queryResolver) Invoice(ctx context.Context, id string) (*model.Invoice, error) {
@@ -706,18 +706,18 @@ func (r *queryResolver) Invoice(ctx context.Context, id string) (*model.Invoice,
 
 ---
 
-## Contrôles complémentaires à prévoir côté gateway / edge
+## Additional controls to plan at the gateway / edge
 
-- Rate limit par :
+- Rate limit by:
   - IP,
-  - utilisateur,
+  - user,
   - client ID,
   - operation name,
-  - coût cumulé.
-- Rejet des documents anonymes ou trop gros.
-- Taille max de body.
-- Quotas distincts pour mutations, subscriptions et requêtes coûteuses.
-- Journalisation de :
+  - cumulative cost.
+- Rejection of anonymous or oversized documents.
+- Maximum body size.
+- Separate quotas for mutations, subscriptions, and expensive queries.
+- Logging of:
   - `operation_name`,
   - `principal`,
   - `tenant`,
@@ -732,60 +732,88 @@ func (r *queryResolver) Invoice(ctx context.Context, id string) (*model.Invoice,
 
 ---
 
-## Checklist de revue hostile
+## Hostile review checklist
 
-| Contrôle | Ce qu'il faut voir | Red flag |
+| Control | What to look for | Red flag |
 |---|---|---|
-| Depth limit | Règle active en prod | seulement en staging |
-| Complexity budget | coût max + logs | aucune télémétrie par opération |
-| Persisted queries | manifeste versionné / allowlist | APQ seule vendue comme sécurité |
-| Introspection | désactivée ou restreinte | GraphiQL/Playground exposé en prod |
-| Alias / batching | caps explicites | batch libre et non compté |
-| AuthZ objet | vérification dans chaque resolver sensible | contrôle seulement au parent |
-| AuthZ propriété | whitelist/guards de champs sensibles | `roles`, `ssn`, `apiKeys` sortent au client standard |
-| Error masking | presenter/formatter | `err.Error()` renvoyé tel quel |
-| Upload | URL signée ou bornes strictes | multipart sans AV, sans CSRF, sans caps |
-| Subscriptions | Auth au handshake + revalidation | token lu une fois puis oublié |
-| Relay/node IDs | vérification ownership/tenant | confiance dans l'opacité base64 |
-| N+1 | dataloaders + métriques | fan-out backend non mesuré |
+| Depth limit | Rule active in production | only in staging |
+| Complexity budget | max cost + logs | no per-operation telemetry |
+| Persisted queries | versioned manifest / allowlist | APQ alone sold as security |
+| Introspection | disabled or restricted | GraphiQL/Playground exposed in production |
+| Alias / batching | explicit caps | free and uncounted batch |
+| Object AuthZ | check in each sensitive resolver | control only at the parent |
+| Property AuthZ | whitelist/guards on sensitive fields | `roles`, `ssn`, `apiKeys` returned to standard client |
+| Error masking | presenter/formatter | `err.Error()` returned as-is |
+| Upload | signed URL or strict bounds | multipart without AV, without CSRF, without caps |
+| Subscriptions | Auth at handshake + revalidation | token read once then forgotten |
+| Relay/node IDs | ownership/tenant verification | trusting base64 opacity |
+| N+1 | dataloaders + metrics | unmeasured backend fan-out |
 
 ---
 
 ## CWE mapping
 
-| Sujet | CWE principal | Notes |
+| Topic | Primary CWE | Notes |
 |---|---|---|
 | IDOR / BOLA | CWE-639 | Authorization Bypass Through User-Controlled Key |
-| BOPLA / surexposition de champs | CWE-200 / CWE-863 | exposition de données + authz insuffisante |
-| Mass assignment | CWE-915 | modification de propriétés dynamiques non contrôlée |
-| JWT `alg=none` / confusion de claims | CWE-345 / CWE-347 | authenticité / signature mal vérifiées |
+| BOPLA / field overexposure | CWE-200 / CWE-863 | data exposure + insufficient authz |
+| Mass assignment | CWE-915 | uncontrolled dynamic property modification |
+| JWT `alg=none` / claims confusion | CWE-345 / CWE-347 | authenticity / signature poorly verified |
 | SSRF | CWE-918 | Server-Side Request Forgery |
 | Alias DoS / batching / N+1 abuse | CWE-400 | Uncontrolled Resource Consumption |
-| Introspection / suggestions / erreurs bavardes | CWE-200 / CWE-209 | divulgation d'information |
-| Upload multipart mal encadré | CWE-434 | upload de type dangereux ; compléter avec contrôles CSRF |
-| Subscription auth insuffisante | CWE-306 / CWE-862 | fonction critique non suffisamment authentifiée/autorisée |
+| Introspection / suggestions / verbose errors | CWE-200 / CWE-209 | information disclosure |
+| Poorly bounded multipart upload | CWE-434 | dangerous type upload; complement with CSRF controls |
+| Insufficient subscription auth | CWE-306 / CWE-862 | critical function insufficiently authenticated/authorized |
 
 ---
 
-## Mapping OWASP API Security Top 10 (2023)
+## OWASP API Security Top 10 mapping (2023)
 
 | GraphQL risk | OWASP API Top 10 |
 |---|---|
-| IDOR via `node(id:)`, objets REST/GraphQL voisins | API1: Broken Object Level Authorization |
-| JWT faible, subscription auth faible | API2: Broken Authentication |
+| IDOR via `node(id:)`, neighboring REST/GraphQL objects | API1: Broken Object Level Authorization |
+| Weak JWT, weak subscription auth | API2: Broken Authentication |
 | Sensitive field overfetch, mass assignment | API3: Broken Object Property Level Authorization |
 | Depth/complexity/batching/alias/N+1 abuse | API4: Unrestricted Resource Consumption |
-| Introspection, field suggestions, GraphiQL en prod, erreurs détaillées | API8: Security Misconfiguration |
+| Introspection, field suggestions, GraphiQL in production, detailed errors | API8: Security Misconfiguration |
 | SSRF via fetchers / webhooks / URL import | API7: Server-Side Request Forgery |
-| Flows de login exposés au credential stuffing | API6: Unrestricted Access to Sensitive Business Flows |
+| Login flows exposed to credential stuffing | API6: Unrestricted Access to Sensitive Business Flows |
 
 ---
 
-## Règles simples de design
+## Simple design rules
 
-- **AuthN/AuthZ partout où l'objet redevient adressable**.
-- **Ce qui est coûteux doit être mesuré, puis borné**.
-- **Ce qui aide le développeur en prod aide aussi l'attaquant**.
-- **Un hash (APQ) n'est pas une allowlist**.
-- **Base64 n'est pas une autorisation**.
-- **Une subscription n'est pas une requête HTTP longue : c'est un canal vivant**.
+- **AuthN/AuthZ everywhere an object becomes addressable again**.
+- **What is expensive must be measured, then bounded**.
+- **What helps the developer in production also helps the attacker**.
+- **A hash (APQ) is not an allowlist**.
+- **Base64 is not an authorization**.
+- **A subscription is not a long HTTP request: it is a live channel**.
+
+---
+
+## GDPR relevance
+
+GraphQL touches GDPR primarily through **data minimisation** and **security of processing**. The controls below have a direct Article mapping.
+
+| Control | GDPR Article | Rationale |
+|---|---|---|
+| Field-level AuthZ (object + property) | Art. 5(1)(c) — Minimisation; Art. 25 — Privacy by default | Users and roles should only receive the personal data fields they legitimately need. A resolver returning `ssn`, `salary`, `mfaSecret`, or `recoveryCodes` to a low-privilege principal violates minimisation by default. |
+| Disabled introspection in production | Art. 25 — Privacy by default | Introspection exposes the full data model including field names that hint at personal data categories. Disabling it by default limits unnecessary data disclosure to unauthenticated or low-privilege clients. |
+| IDOR / BOLA controls on `node(id:)` and REST-equivalent resolvers | Art. 32 — Security of processing | Unauthorized access to personal data objects via predictable IDs constitutes a personal data breach under Art. 4(12) and may trigger Art. 33 notification. Resolver-level ownership checks are a required technical measure. |
+| Error masking | Art. 32 — Security of processing; Art. 5(1)(f) — Confidentiality | Stack traces, table names, and field names in error responses can reveal personal data schema. Error presenters are a confidentiality control. |
+| Upload controls (MIME, size, AV scan, server-side rename) | Art. 32 — Security of processing | Malicious uploads can compromise the system storing personal data. Upload hardening reduces the attack surface on data stores. |
+| Persisted query allowlist | Art. 25 — Privacy by default | An allowlist enforces that only known, reviewed queries — assessed for necessity and proportionality — can execute. Ad-hoc queries from unknown clients bypass minimisation intent. |
+| Complexity / depth / batching limits | Art. 32 — Security of processing | Unconstrained queries can trigger mass extraction of personal data (bulk export via deep traversal or alias amplification). Resource limits are also data exfiltration controls. |
+
+### Practical implication for DPIA
+
+If the GraphQL API exposes personal data (user profiles, health data, financial data, etc.), a DPIA screening should check:
+
+1. Is field-level AuthZ enforced at the resolver level — not only at the parent query?
+2. Can any query path return more personal data than the use case requires?
+3. Is introspection disabled or restricted to authenticated internal principals?
+4. Are IDOR/BOLA controls in place for every globally addressable object carrying personal data?
+5. Are logs structured to detect abnormal access patterns (volume, field selection, principal/tenant mismatch)?
+
+These five questions map directly to Art. 35(7)(d) — technical and organisational measures adopted to address identified risks.

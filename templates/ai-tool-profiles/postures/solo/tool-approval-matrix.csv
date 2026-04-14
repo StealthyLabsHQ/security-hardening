@@ -1,0 +1,10 @@
+action_class,default_disposition,approval_owner,notes
+read_repo,allow,developer,review-first
+edit_workspace,ask,developer,diff review before commit
+install_dependencies,ask,developer,prefer lockfile-only changes
+external_network,ask,developer,allowlist only
+git_push,deny,developer,manual push only
+deploy,deny,developer,manual only
+database_migration,ask,developer,review generated SQL or migration plan
+delete_files,ask,developer,verify target path first
+read_secrets,deny,developer,only explicit user override

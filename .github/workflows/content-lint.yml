@@ -1,0 +1,71 @@
+name: Content Policy
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions: {}
+
+concurrency:
+  group: content-policy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs-policy:
+    name: SKILL budget + reference metadata
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Enforce SKILL size budget and metadata headers on changed refs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          skill_bytes="$(wc -c < SKILL.md | tr -d ' ')"
+          if [ "$skill_bytes" -gt 1024 ]; then
+            echo "SKILL.md is ${skill_bytes} bytes; keep it <= 1024 bytes for cross-tool skill manifest compatibility."
+            exit 1
+          fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="${{ github.event.pull_request.base.sha }}"
+            head="${{ github.event.pull_request.head.sha }}"
+          else
+            base="${{ github.event.before }}"
+            head="${{ github.sha }}"
+          fi
+
+          if [ "$base" = "0000000000000000000000000000000000000000" ]; then
+            mapfile -t files < <(git ls-files 'references/*.md')
+          else
+            mapfile -t files < <(git diff --name-only "$base" "$head" -- 'references/*.md')
+          fi
+
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No changed reference files to validate."
+            exit 0
+          fi
+
+          for file in "${files[@]}"; do
+            metadata_line="$(sed -n '3p' "$file")"
+
+            if [[ ! "$metadata_line" =~ ^\>\ Last\ reviewed: ]]; then
+              echo "Missing review metadata header on line 3 in ${file}"
+              exit 1
+            fi
+
+            for token in "Next review:" "Priority:" "Automation:"; do
+              if [[ "$metadata_line" != *"$token"* ]]; then
+                echo "Missing '${token}' in metadata header for ${file}"
+                exit 1
+              fi
+            done
+          done

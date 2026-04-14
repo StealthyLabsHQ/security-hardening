@@ -1,8 +1,10 @@
 # Coverage Matrix
 
+> Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 3 | Automation: None (meta inventory document)
+
 Overview of all reference files: depth, review frequency, priority, and automation availability.
 
-Last matrix review: **2026-04-06**
+Last matrix review: **2026-04-14**
 
 ---
 
@@ -27,12 +29,16 @@ Last matrix review: **2026-04-06**
 | `llm-agent-security.md` | LLM/Agent/MCP security | Medium | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (output validation; prompt injection mostly manual) |
 | `mcp-security.md` | MCP attack vectors (SSRF, path traversal, injection, spoofing) | High | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (manifest static analysis; parameter validation in code; injection manual) |
 | `ai-cli-hardening.md` | AI coding CLI baseline controls, policy-as-code, permission tiers | High | Essential | 2-3 | Bi-annual (fast-moving field) | Partial (policy lint and CI gates automatable; approvals/manual review needed) |
+| `ai-tool-profiles.md` | Copy-paste defensive profiles and posture overlays for AI tools/builders | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (template sync/checks automatable; approval and rollout decisions manual) |
+| `ai-bundle-presets.md` | Ready-made merged bundles for common high-security AI tool scenarios | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (template sync/checks automatable; rollout and exception handling manual) |
+| `ai-ide-no-code-security.md` | AI IDE, browser builder, and no-code / low-code security | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (secret scans, audit exports, webhook tests; connector and publish controls manual) |
 | `ai-agent-incident-response.md` | Incident response playbook for AI agents and MCP workflows | High | Recommended | 3-4 | Bi-annual (fast-moving field) | Partial (detection/containment automatable; investigation/communications manual) |
 | `mobile-security.md` | iOS/Android security | High | Recommended | 2-3 | Annual (OWASP Mobile release cycle) | Partial (MobSF, static analysis; cert pinning needs manual) |
 | `desktop-app-security.md` | C/C++/C#/Electron | High | Recommended | 2-3 | Annual | Partial (compiler flags, Electronegativity; DLL hijacking needs manual) |
 | `endpoint-vba-security.md` | Endpoints, VBA macros | Medium | Recommended | 3 | Annual | Partial (CIS-CAT, OSQuery; macro policy needs GPO/manual) |
 | `active-directory-hardening.md` | AD/Entra ID | High | Recommended | 3-4 | Annual | Partial (BloodHound, PingCastle; PIM/Conditional Access needs manual) |
 | `social-engineering-physical.md` | Phishing, BEC, physical | Medium | Recommended | 3-4 | Annual | Partial (DMARC/SPF/DKIM automatable; phishing sim manual) |
+| `defensive-security-baseline.md` | Personal, executive, and small-team defensive baseline | High | Essential | 1-3 | Bi-annual | Partial (device compliance, backup verification, SaaS audit logs automatable; opsec drills manual) |
 | `iot-ot-security.md` | IoT/OT/Industrial | Medium | Context-Dependent | 3-4 | Annual | Partial (Zeek/Nozomi monitoring; OT IR manual) |
 | `security-audit-levels.md` | Audit framework | Medium | Essential | All | Annual | None (framework document) |
 | `security-testing-examples.md` | Executable security tests | High | Recommended | 2-3 | Annual | Full (all tests runnable in CI) |
@@ -42,6 +48,7 @@ Last matrix review: **2026-04-06**
 | `frontend-frameworks-security.md` | SSR leaks, DOM XSS, prototype pollution, CSP for SPAs | High | Recommended | 2-3 | Annual | Partial (ESLint security, Semgrep; SSR leaks and prototype pollution manual) |
 | `supply-chain-security.md` | SLSA, SBOM, dependency confusion, Cosign, CI/CD pipeline | High | Recommended | 3 | Annual | Partial (Syft/Trivy SBOM, Cosign, govulncheck; SLSA provenance manual) |
 | `applied-cryptography.md` | Algorithm selection, AEAD, CSPRNG, password hashing | High | Recommended | 2-3 | Annual | Partial (Semgrep/Bandit detect deprecated algos; key length manual) |
+| `gdpr-security-ops.md` | GDPR governance, TOMs, breach handling, vendor/transfer controls | High | Essential | 2-4 | Annual | Partial (inventory and breach logging automatable; legal assessments manual) |
 | `privacy-data-minimization.md` | PII in logs, retention, erasure, analytics | High | Recommended | 2-3 | Annual | Partial (log PII scanning; retention jobs manual) |
 | `vuln-management.md` | Triage SLA, false positives, risk acceptance, metrics | High | Recommended | 3 | Annual | Partial (SLA tracking automatable; triage and acceptance manual) |
 | `coverage-matrix.md` | This document | Medium | Recommended | 3 | Annual | None (meta document) |
@@ -52,6 +59,10 @@ Last matrix review: **2026-04-06**
 
 | File | Purpose | Trigger |
 |------|---------|---------|
+| `.github/workflows/content-lint.yml` | Enforce SKILL size budget and review metadata headers on refs | Every push / PR |
+| `.github/workflows/lint.yml` | actionlint + markdown link checking | Every push / PR / weekly |
+| `.github/workflows/scorecard.yml` | OpenSSF Scorecard with SARIF upload | Push to `main` / weekly |
+| `.github/workflows/script-lint.yml` | Shell and PowerShell script linting | Script changes |
 | `.github/workflows/security.yml` | Gitleaks + Semgrep + Trivy + SBOM + Dep Review | Every push / PR |
 | `.github/pull_request_template.md` | Security checklist | Every PR (manual) |
 
@@ -93,8 +104,8 @@ Last matrix review: **2026-04-06**
 
 | Gap | Priority | Notes |
 |-----|----------|-------|
-| Security testing examples (pytest, Jest, ZAP) | Recommended | Show how to write security-specific tests |
-| Container and Kubernetes hardening | Recommended | Separate from endpoint; growing attack surface |
-| CI/CD pipeline hardening (GitHub Actions, GitLab CI) | Recommended | Secrets in CI, runner permissions, artifact integrity |
-| Privacy by design / GDPR technical controls | Context-Dependent | Data minimization, right to erasure implementation |
-| Cloud misconfigurations (AWS/GCP/Azure) | Recommended | IAM least privilege, public S3, security groups |
+| Browser isolation / workstation examples per OS | Recommended | Add Windows/macOS/Linux step-by-step hardening snippets |
+| Detection engineering playbooks and alert examples | Recommended | Map common app, identity, and AI incidents to concrete detections |
+| Compliance control crosswalks (GDPR, ISO 27001, NIS2, SOC 2) | Context-Dependent | Show how guidance maps to audit evidence and control owners |
+| GraphQL runnable tests and secure defaults | Recommended | Add executable examples and schema policy patterns |
+| Hostile corpus / prompt-injection review workflow | Recommended | Show how to review untrusted docs, tickets, and MCP-fed content safely |

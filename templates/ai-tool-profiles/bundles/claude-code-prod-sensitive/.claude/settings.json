@@ -1,0 +1,46 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(rg:*)"
+    ],
+    "ask": [
+      "Edit",
+      "MultiEdit",
+      "Write",
+      "Bash(pytest:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(cargo test:*)",
+      "Bash(git commit:*)",
+      "WebFetch"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/.env)",
+      "Read(./**/.env.*)",
+      "Read(./secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
+      "Read(./**/*dump*)",
+      "Read(./exports/**)",
+      "Read(./backups/**)",
+      "Read(./support-dumps/**)",
+      "Bash(curl:*)",
+      "Bash(wget:*)",
+      "Bash(git push:*)",
+      "Bash(kubectl:*)",
+      "Bash(terraform apply:*)",
+      "Bash(rm -rf:*)",
+      "WebSearch"
+    ],
+    "disableBypassPermissionsMode": "disable"
+  },
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1"
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "contextFileName": [
+    "GEMINI.md",
+    "AGENTS.md"
+  ],
+  "fileFiltering": {
+    "respectGitIgnore": true,
+    "enableRecursiveFileSearch": false
+  },
+  "coreTools": [
+    "ReadFileTool",
+    "ReadManyFilesTool",
+    "GlobTool",
+    "GrepTool",
+    "LSTool",
+    "ShellTool(git status)",
+    "ShellTool(git diff)",
+    "ShellTool(rg)"
+  ],
+  "allowMCPServers": [],
+  "autoAccept": false,
+  "sandbox": "docker",
+  "telemetry": {
+    "enabled": false
+  },
+  "usageStatisticsEnabled": false,
+  "excludedProjectEnvVars": [
+    "DEBUG",
+    "DEBUG_MODE",
+    "NODE_ENV",
+    "OPENAI_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "GEMINI_API_KEY",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "GOOGLE_APPLICATION_CREDENTIALS"
+  ]
+}
