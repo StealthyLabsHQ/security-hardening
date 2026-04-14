@@ -58,11 +58,10 @@ jobs:
       - name: Run lychee
         uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
+          # Config file holds all exclusions / accepted statuses / cache
+          # settings so they stay out of this workflow file.
           args: >-
-            --cache
-            --max-cache-age 7d
+            --config lychee.toml
             --no-progress
-            --exclude-mail
-            --accept 200,206,429
             './**/*.md'
           fail: true
