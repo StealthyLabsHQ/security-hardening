@@ -5,6 +5,17 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Eleventh batch
+
+### Added
+- `.github/workflows/script-lint.yml` - Dedicated lint pipeline for small ops/installer scripts. Runs `shellcheck` on `.sh`/`.bash` (severity=warning, all checks enabled, treated as errors) and `PSScriptAnalyzer` on `.ps1`/`.psm1`/`.psd1` with the security rule set (`PSAvoidUsingInvokeExpression`, `PSAvoidUsingConvertToSecureStringWithPlainText`, `PSAvoidUsingPlainTextForPassword`, `PSAvoidUsingComputerNameHardcoded`, etc.). Path-filtered to stay fast.
+
+### Updated
+- `references/language-patterns.md` - Added Bash / POSIX shell section: command injection / word splitting (CWE-78/77), unquoted expansion (the `rm -rf $TMPDIR/*` bug), missing `set -Eeuo pipefail` (CWE-754), `find -exec` and `xargs` injection, insecure download / `curl | sh` pattern with SHA-256 pinning fix (CWE-494/829/319), path traversal with `realpath` bounding (CWE-22), temp file races and `mktemp` (CWE-377/367), secrets on the command line via argv (CWE-214), `IFS` and `PATH` tampering (CWE-807), shebang and privilege escalation anti-patterns, per-script audit checklist, `shellcheck` detection commands.
+- `README.md` - Added Bash / POSIX shell row to the language-patterns coverage table; added `script-lint.yml` to the Automation section.
+
+---
+
 ## [2026-04-14] - Tenth batch
 
 ### Updated

