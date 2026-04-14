@@ -43,10 +43,22 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  if (!fs.existsSync(COPILOT_FILE)) return;
+  const content = fs.readFileSync(COPILOT_FILE, 'utf8');
+  const sectionRe = new RegExp(
+    `\\n?## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`,
+    'g'
+  );
+  const updated = content.replace(sectionRe, '');
+  fs.writeFileSync(COPILOT_FILE, updated, 'utf8');
+}
+
 module.exports = {
   name: 'copilot',
   label: 'GitHub Copilot',
   detect,
   install,
   installedSkills,
+  remove,
 };

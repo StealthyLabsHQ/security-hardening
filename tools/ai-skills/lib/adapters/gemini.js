@@ -42,10 +42,22 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  if (!fs.existsSync(GEMINI_FILE)) return;
+  const content = fs.readFileSync(GEMINI_FILE, 'utf8');
+  const sectionRe = new RegExp(
+    `\\n?## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`,
+    'g'
+  );
+  const updated = content.replace(sectionRe, '');
+  fs.writeFileSync(GEMINI_FILE, updated, 'utf8');
+}
+
 module.exports = {
   name: 'gemini',
   label: 'Gemini CLI',
   detect,
   install,
   installedSkills,
+  remove,
 };

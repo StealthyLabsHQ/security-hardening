@@ -41,6 +41,18 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  if (!fs.existsSync(INSTRUCTIONS_FILE)) return;
+  const content = fs.readFileSync(INSTRUCTIONS_FILE, 'utf8');
+  // Remove from "## skillName" up to (but not including) the next "## " or EOF
+  const sectionRe = new RegExp(
+    `\\n?## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`,
+    'g'
+  );
+  const updated = content.replace(sectionRe, '');
+  fs.writeFileSync(INSTRUCTIONS_FILE, updated, 'utf8');
+}
+
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
@@ -51,4 +63,5 @@ module.exports = {
   detect,
   install,
   installedSkills,
+  remove,
 };

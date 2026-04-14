@@ -31,10 +31,18 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  const dest = path.join(WINDSURF_RULES_DIR, `${skillName}.mdc`);
+  if (fs.existsSync(dest)) {
+    fs.unlinkSync(dest);
+  }
+}
+
 module.exports = {
   name: 'windsurf',
   label: 'Windsurf',
   detect,
   install,
   installedSkills,
+  remove,
 };

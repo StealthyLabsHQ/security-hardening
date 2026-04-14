@@ -27,10 +27,18 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  const dest = path.join(SKILLS_DIR, `${skillName}.md`);
+  if (fs.existsSync(dest)) {
+    fs.unlinkSync(dest);
+  }
+}
+
 module.exports = {
   name: 'claude',
   label: 'Claude Code',
   detect,
   install,
   installedSkills,
+  remove,
 };

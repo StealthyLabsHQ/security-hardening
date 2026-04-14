@@ -5,6 +5,14 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Nineteenth batch
+
+### Changed
+- `tools/ai-skills/` — redesigned CLI UX: `npx ai-skill add owner/repo` replaces `install <name>`. Package renamed `ai-skill` (v0.2.0). Adds `remove` command, `~/.ai-skill/installed.json` store, `remove()` on all adapters, and GitHub raw URL resolution from `owner/repo[@branch]` refs.
+- `README.md` — updated Quick install section with new `npx ai-skill add` UX.
+
+---
+
 ## [2026-04-14] - Eighteenth batch
 
 ### Added
