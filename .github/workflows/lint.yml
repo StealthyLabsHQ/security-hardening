@@ -1,0 +1,68 @@
+name: Lint
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Re-run weekly so dead external links are caught even without commits.
+    - cron: '0 7 * * 1'
+
+permissions: {}
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------
+  # Validate every workflow file in .github/workflows/
+  # ---------------------------------------------------------------
+  actionlint:
+    name: actionlint (workflow validation)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Run actionlint
+        uses: reviewdog/action-actionlint@6fb7acc99f4a1008869fa8a0f09cfca740837d9d # v1.72.0
+        with:
+          reporter: github-check
+          fail_on_error: true
+
+  # ---------------------------------------------------------------
+  # Check that all markdown links resolve (catches broken external refs)
+  # ---------------------------------------------------------------
+  link-check:
+    name: Markdown link check (lychee)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write # lychee can open an issue if links break on schedule
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Restore lychee cache
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+
+      - name: Run lychee
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
+        with:
+          args: >-
+            --cache
+            --max-cache-age 7d
+            --no-progress
+            --exclude-mail
+            --accept 200,206,429
+            './**/*.md'
+          fail: true

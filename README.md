@@ -6,17 +6,20 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ---
 
-## Install in Claude Code
+## Install
 
-This repository is a Claude Code skill. Once installed, Claude automatically applies the security references when you ask it to review, audit, or harden code.
+This repository is designed as a portable security knowledge base. It is primarily packaged as a **Claude Code skill**, but the same `SKILL.md` + `references/` corpus can be loaded into any AI coding assistant. Installation guides for all major tools are below.
 
-### 1. Clone the repository
+### 0. Clone the repository
 
 ```bash
 git clone https://github.com/StealthyLabsHQ/security-hardening.git
+cd security-hardening
 ```
 
-### 2. Register the skill in Claude Code
+---
+
+### Install in Claude Code (CLI / IDE)
 
 Add the skill to your Claude Code settings file (`~/.claude/settings.json`):
 
@@ -31,23 +34,96 @@ Add the skill to your Claude Code settings file (`~/.claude/settings.json`):
 }
 ```
 
-Replace `/path/to/security-hardening` with the actual path where you cloned the repo.
+Claude Code will auto-load `SKILL.md` and the `references/` directory whenever a security trigger fires. Replace `/path/to/security-hardening` with your local clone path.
 
-### 3. Use it
+---
 
-In any Claude Code session, the skill is triggered automatically when you ask security-related questions:
+### Install in Claude on the Web (claude.ai Projects / Skills)
 
+Claude on the web supports **Skills** and **Projects** with attached files.
+
+**Option A - Skills (recommended):**
+
+1. Open [claude.ai](https://claude.ai) > **Settings** > **Capabilities** > **Skills** > **Create skill**.
+2. Name it `security-hardening`.
+3. Upload `SKILL.md` and every file under `references/` (drag-and-drop the folder).
+4. The skill activates automatically on security questions.
+
+**Option B - Project knowledge:**
+
+1. Create a new **Project** named "Security Hardening".
+2. In **Project knowledge**, upload `SKILL.md` + the `references/` folder (zip if needed).
+3. Paste the body of `SKILL.md` into the **Custom instructions** field so the model always applies the workflow.
+
+---
+
+### Install in Gemini CLI
+
+[Gemini CLI](https://github.com/google-gemini/gemini-cli) reads context from `GEMINI.md` files and supports extensions.
+
+**Option A - Project context (per-repo):**
+
+```bash
+cp /path/to/security-hardening/SKILL.md ./GEMINI.md
+ln -s /path/to/security-hardening/references ./.gemini/security-references
 ```
-"Is this code secure?"
-"Review my authentication logic"
-"Audit this API endpoint for OWASP issues"
-"Harden my nginx config"
-"Check for secret leaks in this file"
+
+**Option B - Global context (all projects):**
+
+```bash
+mkdir -p ~/.gemini
+cat /path/to/security-hardening/SKILL.md >> ~/.gemini/GEMINI.md
+ln -s /path/to/security-hardening/references ~/.gemini/security-references
 ```
 
-Claude will reference the appropriate files from `references/` and apply the checklists, patterns, and mitigations documented here.
+Gemini CLI loads `GEMINI.md` automatically at session start. Reference individual files inline with `@.gemini/security-references/owasp-top10.md`.
 
-### 4. Add the CI pipeline to your project
+---
+
+### Install in ChatGPT (Custom GPT or Project)
+
+**Option A - Custom GPT (shareable):**
+
+1. Go to [chatgpt.com/gpts/editor](https://chatgpt.com/gpts/editor) > **Create**.
+2. Name: `Security Hardening Auditor`.
+3. **Instructions:** paste the contents of `SKILL.md`.
+4. **Knowledge:** upload every file under `references/` (max 20 files per GPT - if you exceed the limit, zip rarely-used references or split into two GPTs by category).
+5. **Capabilities:** enable **Code Interpreter** for log/config parsing.
+6. Save and pin to your sidebar.
+
+**Option B - Project (single account):**
+
+1. Create a new **Project** in ChatGPT.
+2. Add `SKILL.md` content as **Project instructions**.
+3. Upload `references/*.md` to **Project files**.
+4. Every chat in that Project will use the security knowledge base.
+
+---
+
+### Install in Codex / OpenAI Codex CLI
+
+[Codex CLI](https://github.com/openai/codex) reads `AGENTS.md` files (project-level and global) for persistent instructions.
+
+**Option A - Per-repo:**
+
+```bash
+cp /path/to/security-hardening/SKILL.md ./AGENTS.md
+cp -r /path/to/security-hardening/references ./.codex/security-references
+```
+
+**Option B - Global (all repos):**
+
+```bash
+mkdir -p ~/.codex
+cat /path/to/security-hardening/SKILL.md >> ~/.codex/AGENTS.md
+cp -r /path/to/security-hardening/references ~/.codex/security-references
+```
+
+Codex loads `AGENTS.md` from the working directory and `~/.codex/AGENTS.md` globally on every session.
+
+---
+
+### Add the CI pipeline to your project
 
 Copy the GitHub Actions workflow into your own project to get automated security scanning on every push:
 
@@ -55,12 +131,26 @@ Copy the GitHub Actions workflow into your own project to get automated security
 mkdir -p your-project/.github/workflows
 cp .github/workflows/security.yml your-project/.github/workflows/
 cp .github/pull_request_template.md your-project/.github/
+cp .github/dependabot.yml your-project/.github/
 ```
 
-### 5. Add the .gitignore template
+### Add the .gitignore template
 
 ```bash
 cat .gitignore-security-template >> your-project/.gitignore
+```
+
+### Trigger phrases (any tool)
+
+Once installed, the skill activates on prompts like:
+
+```
+"Is this code secure?"
+"Review my authentication logic"
+"Audit this API endpoint for OWASP issues"
+"Harden my nginx config"
+"Check for secret leaks in this file"
+"Threat-model this feature"
 ```
 
 ---
@@ -87,6 +177,15 @@ Quick-reference for the **OWASP Top 10 (2021)**. For each category: what it is, 
 
 Covers: Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Auth Failures, Integrity Failures, Logging Failures, SSRF.
 
+### `references/database-security.md`
+**Database hardening** patterns: parameterized queries by ORM, Postgres Row-Level Security (RLS), least-privilege application accounts, encryption at rest, backup security, audit logging.
+
+### `references/webhooks-security.md`
+**Webhook security**: HMAC signature verification (timing-safe compare), replay protection (timestamp + nonce), idempotency keys, retry handling, IP allowlist limitations, secret rotation.
+
+### `references/threat-modeling.md`
+**Threat modeling** methodologies: STRIDE, LINDDUN (privacy), PASTA (risk-centric), Data Flow Diagrams, trust boundaries, abuse cases, threat library, sample workshop agenda.
+
 ### `references/api-security.md`
 **OWASP API Security Top 10 (2023)** with code examples for every risk.
 
@@ -108,6 +207,7 @@ Per-language **dangerous code patterns** with vulnerable vs. safe alternatives f
 | Go | Template injection, command injection, path traversal, SQL injection |
 | Ruby | Command injection, `eval`/ERB, `Marshal.load`, mass assignment |
 | Java | SQL injection, XXE, unsafe deserialization |
+| PowerShell | `Invoke-Expression`, command injection, path traversal, `ConvertTo-SecureString -AsPlainText`, TLS bypass, download-and-run, ExecutionPolicy myth, PSScriptAnalyzer rules |
 
 ### `references/secret-leak-prevention.md`
 Complete guide to preventing, detecting, and responding to secret leaks in Git. Covers every stage: pre-commit blocking, CI scanning, GitHub push protection, incident response (revoke first, then clean history), detection by secret type, frontend special cases, safe-by-design patterns, and a `.gitignore` security template.
