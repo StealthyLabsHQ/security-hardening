@@ -207,6 +207,7 @@ Per-language **dangerous code patterns** with vulnerable vs. safe alternatives f
 | Go | Template injection, command injection, path traversal, SQL injection |
 | Ruby | Command injection, `eval`/ERB, `Marshal.load`, mass assignment |
 | Java | SQL injection, XXE, unsafe deserialization |
+| PowerShell | `Invoke-Expression`, command injection, path traversal, `ConvertTo-SecureString -AsPlainText`, TLS bypass, download-and-run, ExecutionPolicy myth, PSScriptAnalyzer rules |
 
 ### `references/secret-leak-prevention.md`
 Complete guide to preventing, detecting, and responding to secret leaks in Git. Covers every stage: pre-commit blocking, CI scanning, GitHub push protection, incident response (revoke first, then clean history), detection by secret type, frontend special cases, safe-by-design patterns, and a `.gitignore` security template.
