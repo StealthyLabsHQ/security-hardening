@@ -1,5 +1,7 @@
 # browser-security-modern.md
 
+> Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (CSP/COOP/COEP headers automatable via helmet or CF Workers; Trusted Types and SRI review manual)
+
 This document complements `secure-headers.md`. The goal is not to pile on headers "at random", but to address attacks that get through **after** classic defenses:
 
 - DOM XSS in modern sinks,

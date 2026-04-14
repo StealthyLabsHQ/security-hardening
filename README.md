@@ -508,7 +508,7 @@ Tracks all additions, updates, and deprecations with dates. Includes a backlog o
 | OWASP LLM Top 10 | https://owasp.org/www-project-top-10-for-large-language-model-applications/ |
 | OWASP ASVS | https://owasp.org/www-project-application-security-verification-standard/ |
 | OWASP Secure Headers | https://owasp.org/www-project-secure-headers/ |
-| NIST SP 800-82 Rev 3 (OT) | https://csrc.nist.gov/publications/detail/sp/800-82/rev-3/final |
+| NIST SP 800-82 Rev 3 (OT) | https://csrc.nist.gov/pubs/sp/800/82/r3/final |
 | NIST SP 800-63B (Auth) | https://pages.nist.gov/800-63-3/sp800-63b.html |
 | CIS Benchmarks | https://www.cisecurity.org/cis-benchmarks/ |
 | MITRE ATT&CK for ICS | https://attack.mitre.org/matrices/ics/ |

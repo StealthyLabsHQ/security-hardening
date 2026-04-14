@@ -5,6 +5,13 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Seventeenth batch
+
+### Updated
+- `SKILL.md` - Added a dedicated `Validate` step for security tests and regression proof, expanded triggers to cover CI/CD, supply chain, cloud IAM, containers/K8s, and IaC, and extended references toward testing, infrastructure, and incident-response material while keeping the manifest portable.
+
+---
+
 ## [2026-04-14] - Sixteenth batch
 
 ### Added
