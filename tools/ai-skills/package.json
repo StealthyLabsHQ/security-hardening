@@ -1,9 +1,9 @@
 {
-  "name": "ai-skill",
+  "name": "@stealthylabs/ai-skill",
   "version": "0.2.0",
   "description": "Universal AI CLI skill installer — Claude, Codex, Gemini, Cursor, Copilot, Windsurf",
   "bin": {
-    "ai-skill": "./bin/ai-skills.js"
+    "ai-skill": "bin/ai-skills.js"
   },
   "main": "./lib/cli.js",
   "engines": {

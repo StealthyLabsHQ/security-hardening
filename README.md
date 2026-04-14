@@ -11,32 +11,32 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 Install skills from any GitHub repository into **any** AI CLI with one command:
 
 ```bash
-npx ai-skill add StealthyLabsHQ/security-hardening
+npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening
 ```
 
 This fetches the `registry.json` from the target repo, auto-detects which AI CLIs are installed on your machine (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf), and installs each skill in the right format.
 
 ```bash
 # install all skills from this repo
-npx ai-skill add StealthyLabsHQ/security-hardening
+npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening
 
 # install a specific skill only
-npx ai-skill add StealthyLabsHQ/security-hardening security-review
+npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening security-review
 
 # target specific CLIs
-npx ai-skill add StealthyLabsHQ/security-hardening --for claude,codex
+npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening --for claude,codex
 
 # install from a specific branch
-npx ai-skill add StealthyLabsHQ/security-hardening@dev
+npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening@dev
 
 # show installed skills
-npx ai-skill list
+npx @stealthylabs/ai-skill list
 
 # remove a skill
-npx ai-skill remove security-review
+npx @stealthylabs/ai-skill remove security-review
 
 # show detected AI CLIs on this machine
-npx ai-skill targets
+npx @stealthylabs/ai-skill targets
 ```
 
 **Any** GitHub repo with a `registry.json` at its root works as a skill source. The CLI lives in [`tools/ai-skills/`](tools/ai-skills/).
@@ -267,10 +267,20 @@ Covers: Broken Access Control, Cryptographic Failures, Injection, Insecure Desig
 
 Covers: BOLA/IDOR, BFLA, mass assignment, rate limiting, JSON schema validation, SSRF, secure error handling, webhook signature verification, GraphQL depth/complexity limits, pagination security.
 
+### `references/graphql-security.md`
+**GraphQL security** beyond generic API checks.
+
+Covers: object and field-level authorization, introspection disablement, depth and complexity budgets, alias/batching caps, persisted queries, multipart upload risks, WebSocket subscriptions, telemetry, and N+1 / backend fan-out abuse.
+
 ### `references/secure-headers.md`
 Production-ready **HTTP security headers** with copy-paste values.
 
 Covers: HSTS, CSP (nonce/hash-based), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COEP/COOP/CORP, cookie attributes (`Secure`, `HttpOnly`, `SameSite`), CORS, headers to remove, drop-in blocks for **Nginx** and **Cloudflare Workers**.
+
+### `references/browser-security-modern.md`
+**Modern browser hardening** beyond classic headers.
+
+Covers: Trusted Types, Subresource Integrity (SRI), COOP/COEP/CORP isolation, Permissions Policy, Worker / WebSocket / WASM surfaces, and report-only rollout strategy for legacy frontends.
 
 ### `references/language-patterns.md`
 Per-language **dangerous code patterns** with vulnerable vs. safe alternatives for security audits.
@@ -318,6 +328,11 @@ Covers: `eval`, `pickle.loads`, `shell=True`, SHA-256 for passwords, CORS wildca
 ### `references/secure-headers.md`
 See [Web Application Security](#web-application-security) above - also includes Nginx hardening block and Cloudflare Workers config.
 
+### `references/rate-limiting-infrastructure.md`
+**Infrastructure rate limiting patterns** at the edge, proxy, app, and shared-store layers.
+
+Covers: Nginx examples, Redis-backed counters, per-route and per-identity quotas, `Retry-After`, 429 telemetry, proxy trust pitfalls, and abuse-specific limit design for login, OTP, search, uploads, and GraphQL.
+
 ### `references/iot-ot-security.md`
 **IoT and OT/Industrial** network security.
 
@@ -331,6 +346,16 @@ Covers: Purdue Model segmentation (IT/OT DMZ), default credential elimination, l
 **RBAC, ABAC, and ReBAC** models with code examples. Deny-by-default pattern and IDOR/BOLA prevention.
 
 Covers: RBAC implementation, ABAC with OPA, ReBAC with OpenFGA, deny-by-default, IDOR/BOLA safe patterns, common anti-patterns (frontend-only check, role from client payload), 404 vs 403 strategy.
+
+### `references/session-management.md`
+**Session management** after login, not just authentication at the front door.
+
+Covers: session rotation after login or privilege change, server-side invalidation, logout-all-devices, idle and absolute timeouts, fixation prevention, refresh-token revocation, cookie baselines, and concurrent session handling.
+
+### `references/webauthn-fido2.md`
+**WebAuthn / FIDO2 implementation guide** for phishing-resistant authentication.
+
+Covers: RP ID and origin verification, challenge lifecycle, registration/authentication ceremonies, passkeys, user-verification defaults, attestation decisions, counter handling, and secure recovery design.
 
 ### `references/active-directory-hardening.md`
 **Active Directory and Entra ID (Azure AD)** hardening.
@@ -388,6 +413,11 @@ Covers: Prompt injection (direct and indirect), sensitive data disclosure via co
 
 Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/volume configs, narrow endpoint design), Indirect Prompt Injection via MCP (step-by-step attack chain, LLM-as-a-Judge sanitization, chained-action prevention), Server Spoofing and malicious manifests (allowlist enforcement, static manifest validation, supply chain audit), Path Traversal and SSRF in MCP tool parameters (Python validators for `read_file` and `fetch_url`, Pydantic schema enforcement, SSRF blocklist with private ranges and AWS IMDS).
 
+### `references/hostile-corpus-review.md`
+**Hostile corpus review workflow** for untrusted prompts, docs, tickets, MCP output, and copied code.
+
+Covers: trust tiering, ingest-without-executing, normalization, hidden-instruction stripping, known-bad pattern scanning, fact-vs-instruction separation, quarantine decisions, and validation before adoption.
+
 ### `references/ai-cli-hardening.md`
 **Operational hardening baseline for AI coding CLIs** (Claude Code, Codex CLI, Gemini CLI, and similar tools).
 
@@ -441,6 +471,11 @@ Structured **7-axis defense-in-depth improvement plan** with quick wins and long
 
 Axes: code security, authentication, infrastructure, supply chain, CI/CD DevSecOps, monitoring/incident response, offensive testing.
 
+### `references/detection-engineering.md`
+**Detection engineering starter pack** for app, identity, GraphQL, AI, cloud, and supply-chain abuse.
+
+Covers: Sigma-style rules, threshold guidance, required log sources, and example detections for credential stuffing, token replay, IDOR/BOLA, GraphQL introspection or alias abuse, IMDS probing, suspicious AI tool sequences, Kubernetes secret/exec abuse, and CI/CD tampering.
+
 ### `references/frontend-frameworks-security.md`
 **Security risks specific to modern SPA and SSR frameworks** (React, Next.js, Vue, Nuxt) beyond classic OWASP XSS coverage.
 
@@ -461,6 +496,11 @@ Covers: password hashing (Argon2id vs bcrypt vs MD5 - why fast hashes are wrong)
 
 Covers: injection, authentication, access control, cryptography, secrets, supply chain. Includes quick tool command reference (Semgrep, Bandit, Gosec, Gitleaks, Trivy, OWASP ZAP).
 
+### `references/compliance-mapping.md`
+**Compliance crosswalk** linking the repo guidance to evidence expectations.
+
+Covers: high-level mapping toward SOC 2, ISO 27001:2022, PCI-DSS v4.0, HIPAA, GDPR/RGPD, NIS2, and DORA, plus the evidence types auditors usually expect for technical and organizational controls.
+
 ### `references/security-audit-levels.md`
 Progressive audit framework from solo developer to expert review. Tells you exactly where to start, what to check at each level, how long it takes, which tools to use, and when to move to the next level.
 
@@ -476,7 +516,7 @@ Also includes a coverage matrix linking every reference file in this repo to its
 ### `references/security-testing-examples.md`
 Executable security tests ready to add to your test suite. Failing tests mean the security control is missing.
 
-Covers (pytest, Jest, Go): IDOR/authorization, rate limiting, file upload (extension, MIME, size, path traversal, SVG XSS), SSRF (localhost, AWS metadata, private ranges), error handling (no stack trace, reference ID), security headers, webhook signature verification. Includes OWASP ZAP Docker baseline scan.
+Covers (pytest, Jest, Go): IDOR/authorization, rate limiting, GraphQL introspection/depth/alias/authz checks, file upload (extension, MIME, size, path traversal, SVG XSS), SSRF (localhost, AWS metadata, private ranges), error handling (no stack trace, reference ID), security headers, webhook signature verification. Includes OWASP ZAP Docker baseline scan.
 
 ### `references/cloud-iam-hardening.md`
 **AWS, GCP, and Azure** hardening with audit commands and copy-paste configurations.
