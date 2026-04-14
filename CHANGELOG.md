@@ -5,6 +5,25 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Ninth batch
+
+### Added
+- `SECURITY.md` - Coordinated disclosure policy, supported branches, scope, safe harbor, hall of fame.
+- `.github/dependabot.yml` - Weekly Dependabot updates for pinned GitHub Actions (SHA + version comment).
+- `.github/CODEOWNERS` - Mandatory security review for every change; extra reviewers required for `.github/workflows/`.
+- `.github/workflows/scorecard.yml` - OpenSSF Scorecard analysis on a weekly schedule and on push to `main`, with SARIF upload to GitHub code scanning.
+- `.github/workflows/lint.yml` - actionlint (workflow validation) + lychee (markdown link check) on push, PR, and weekly cron.
+- `references/database-security.md` - Parameterized queries by ORM, least-privilege DB accounts, Postgres Row-Level Security, encryption at rest, backup security, audit logging, network exposure checks, detection cheat sheet.
+- `references/webhooks-security.md` - HMAC verification with timing-safe compare (Node/Python/Go), replay protection (timestamp + nonce), idempotency strategies, retry handling, IP allowlist limitations, secret rotation with two active keys, SSRF risk for receivers.
+- `references/threat-modeling.md` - STRIDE / LINDDUN / PASTA cheat sheet, DFD primer, trust boundaries, abuse cases, reusable threat library, 90-minute workshop agenda, repo cross-references.
+
+### Updated
+- `SKILL.md` - Trimmed to under 1024 characters so it fits in the manifest budget enforced by claude.ai Skills and similar tools.
+- `README.md` - "Install" section rewritten to cover Claude Code, Claude on the web (Skills + Projects), Gemini CLI, ChatGPT (Custom GPT + Project), and Codex / Codex CLI. Added new database / webhooks / threat-modeling references to the Web Application Security index.
+- `.github/workflows/security.yml` - SHA-pinned every action with version comments, set workflow-level `permissions: {}` and minimal per-job permissions, added `concurrency` with `cancel-in-progress`, replaced obsolete `returntocorp/semgrep` image with `semgrep/semgrep:1.159.0`, added `persist-credentials: false` on every checkout, added `ignore-unfixed` to Trivy, set explicit retention on the SBOM artifact, enabled `comment-summary-in-pr: on-failure` for Dependency Review.
+
+---
+
 ## [2026-04-06] - Eighth batch
 
 ### Added
