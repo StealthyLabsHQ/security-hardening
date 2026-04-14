@@ -5,6 +5,14 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Eighteenth batch
+
+### Added
+- `tools/ai-skills/` — zero-dependency Node.js CLI (`npx ai-skills`) that installs skills from this repo into any AI CLI: Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf. Auto-detects installed CLIs. Ships 7 bundled skills: `security-review`, `api-security`, `secret-leak-prevention`, `llm-agent-security`, `mcp-security`, `graphql-security`, `vibecoder-traps`. Supports remote registries via `--registry <url>`.
+- `README.md` — new **Quick install** section documenting `npx ai-skills` usage.
+
+---
+
 ## [2026-04-14] - Seventeenth batch
 
 ### Updated

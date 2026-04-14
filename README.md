@@ -6,7 +6,40 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ---
 
-## Install
+## Quick install — `ai-skills` CLI
+
+Install individual skills from this repository into **any** AI CLI with one command:
+
+```bash
+npx ai-skills install security-review
+```
+
+This auto-detects which AI CLIs are installed on your machine (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf) and installs the skill in the right format for each.
+
+```bash
+# install a specific skill for all detected CLIs
+npx ai-skills install mcp-security
+
+# target specific CLIs only
+npx ai-skills install api-security --for claude,codex,gemini
+
+# see all available skills
+npx ai-skills list
+
+# search skills
+npx ai-skills search "prompt injection"
+
+# see which AI CLIs are detected on your machine
+npx ai-skills targets
+```
+
+**Available skills:** `security-review`, `api-security`, `secret-leak-prevention`, `llm-agent-security`, `mcp-security`, `graphql-security`, `vibecoder-traps`
+
+The CLI lives in [`tools/ai-skills/`](tools/ai-skills/) and can be used standalone or extended with a `--registry <url>` flag to pull from any remote skill registry.
+
+---
+
+## Manual install
 
 This repository is designed as a portable security knowledge base. It is primarily packaged as a **Claude Code skill**, but the same `SKILL.md` + `references/` corpus can be loaded into any AI coding assistant. Installation guides for all major tools are below.
 
