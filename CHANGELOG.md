@@ -13,6 +13,22 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Nineteenth batch
+
+### Added
+- `references/rate-limiting-infrastructure.md` - Edge/proxy/app/Redis rate limiting patterns with Nginx, identity-aware quotas, `Retry-After` handling, telemetry, and abuse-specific tuning for login, OTP, search, uploads, and GraphQL.
+- `references/session-management.md` - Session rotation, fixation prevention, server-side invalidation, concurrent-session handling, logout-all-devices, cookie baseline, and refresh-token revocation guidance.
+- `references/webauthn-fido2.md` - Passkeys / WebAuthn implementation guide covering RP ID and origin verification, challenge lifecycle, registration/authentication ceremonies, and recovery design.
+
+### Updated
+- `references/hostile-corpus-review.md` - Replaced the earlier placeholder with a real workflow for reviewing untrusted docs, prompts, MCP output, and copied code before adoption.
+- `references/security-testing-examples.md` - Added GraphQL security tests for introspection disablement, depth/complexity caps, alias fan-out, and field-level authorization.
+- `README.md` - Surfaced `browser-security-modern.md`, `graphql-security.md`, `rate-limiting-infrastructure.md`, `session-management.md`, `webauthn-fido2.md`, `hostile-corpus-review.md`, `detection-engineering.md`, and `compliance-mapping.md`.
+- `references/coverage-matrix.md` - Added missing rows for existing high-value references and refreshed the backlog to reflect completed GraphQL and hostile-corpus coverage.
+- `SKILL.md` - Compressed the manifest to stay under the 1024-byte portability limit while restoring discoverability for threat-modeling, GraphQL, browser hardening, and detection engineering references.
+
+---
+
 ## [2026-04-14] - Eighteenth batch
 
 ### Added

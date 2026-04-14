@@ -1,6 +1,6 @@
 # Security Testing Examples
 
-> Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Full (all examples runnable in CI)
+> Last reviewed: 2026-04-14 | Next review: 2027-04-14 | Priority: Recommended | Audit Level: 2-3 | Automation: Full (all examples runnable in CI)
 
 Executable security tests you can add to your test suite today. Each test validates a specific security control - failing tests mean the control is missing or broken.
 
@@ -120,6 +120,80 @@ def test_password_reset_rate_limit():
         requests.post(f"{BASE}/auth/reset-password", json={"email": "x@x.com"})
     r = requests.post(f"{BASE}/auth/reset-password", json={"email": "x@x.com"})
     assert r.status_code == 429
+```
+
+---
+
+## GraphQL Security Tests
+
+```python
+GRAPHQL_URL = f"{BASE}/graphql"
+
+def gql(query: str, variables=None, headers=None):
+    return requests.post(
+        GRAPHQL_URL,
+        json={"query": query, "variables": variables or {}},
+        headers=headers or HEADERS,
+    )
+
+def test_graphql_blocks_introspection_in_production():
+    """Unprivileged clients must not get schema introspection in production."""
+    r = gql("{ __schema { types { name } } }")
+    assert r.status_code in (200, 400, 403), f"Unexpected status for introspection: {r.status_code}"
+    if r.status_code == 200:
+        body = r.json()
+        assert "__schema" not in (body.get("data") or {}), "GraphQL introspection enabled for unprivileged client"
+
+def test_graphql_depth_limit():
+    """Deep nested queries must be rejected or short-circuited."""
+    query = """
+    query {
+      me {
+        manager {
+          manager {
+            manager {
+              reports {
+                manager {
+                  reports { id }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    """
+    r = gql(query)
+    body = r.json() if "json" in r.headers.get("Content-Type", "").lower() else {}
+    assert r.status_code in (400, 413, 422, 429) or body.get("errors"), \
+        "Deep GraphQL query executed without a depth or complexity guard"
+
+def test_graphql_alias_fanout_limit():
+    """Alias fan-out must not allow cheap DoS against the same resolver."""
+    aliases = "\n".join([f"u{i}: user(id: \\\"me\\\") {{ id }}" for i in range(40)])
+    r = gql(f"query {{\n{aliases}\n}}")
+    body = r.json() if "json" in r.headers.get("Content-Type", "").lower() else {}
+    assert r.status_code in (400, 413, 422, 429) or body.get("errors"), \
+        "Alias fan-out executed without cost / alias guardrails"
+
+def test_graphql_blocks_admin_only_fields():
+    """Sensitive fields must not be exposed just because the client asks for them."""
+    query = """
+    query {
+      me {
+        id
+        email
+        mfaSecret
+        billingCustomerId
+      }
+    }
+    """
+    r = gql(query)
+    assert r.status_code in (200, 400, 403), f"Unexpected status for field-level authz: {r.status_code}"
+    if r.status_code == 200:
+        me = (r.json().get("data") or {}).get("me") or {}
+        assert me.get("mfaSecret") in (None, ""), "Field-level authz failure: mfaSecret exposed"
+        assert me.get("billingCustomerId") in (None, ""), "Field-level authz failure: billingCustomerId exposed"
 ```
 
 ---
