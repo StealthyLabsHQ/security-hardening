@@ -8,38 +8,29 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ## Quick install — `ai-skill` CLI
 
-Install skills from any GitHub repository into **any** AI CLI with one command:
+Clone the repo once, then use the CLI to install skills into any AI CLI on your machine:
 
 ```bash
-npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening
+git clone https://github.com/StealthyLabsHQ/security-hardening.git
+cd security-hardening
+node tools/ai-skills/bin/ai-skills.js add StealthyLabsHQ/security-hardening
 ```
 
-This fetches the `registry.json` from the target repo, auto-detects which AI CLIs are installed on your machine (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf), and installs each skill in the right format.
+For repeated use, add a shell alias:
 
 ```bash
-# install all skills from this repo
-npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening
+# bash/zsh (~/.bashrc or ~/.zshrc)
+alias ai-skill="node /path/to/security-hardening/tools/ai-skills/bin/ai-skills.js"
 
-# install a specific skill only
-npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening security-review
-
-# target specific CLIs
-npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening --for claude,codex
-
-# install from a specific branch
-npx @stealthylabs/ai-skill add StealthyLabsHQ/security-hardening@dev
-
-# show installed skills
-npx @stealthylabs/ai-skill list
-
-# remove a skill
-npx @stealthylabs/ai-skill remove security-review
-
-# show detected AI CLIs on this machine
-npx @stealthylabs/ai-skill targets
+# then use it from anywhere
+ai-skill add StealthyLabsHQ/security-hardening
+ai-skill add StealthyLabsHQ/security-hardening security-review --for claude,codex
+ai-skill list
+ai-skill remove security-review
+ai-skill targets
 ```
 
-**Any** GitHub repo with a `registry.json` at its root works as a skill source. The CLI lives in [`tools/ai-skills/`](tools/ai-skills/).
+Auto-detects Claude Code, Codex, Gemini CLI, Cursor, Copilot, and Windsurf. Any GitHub repo with a `registry.json` at its root works as a skill source. The CLI lives in [`tools/ai-skills/`](tools/ai-skills/).
 
 ---
 
