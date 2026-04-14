@@ -1,0 +1,30 @@
+# Dependabot configuration
+#
+# Keeps GitHub Actions pinned-by-SHA fresh. When a new release is published,
+# Dependabot opens a PR replacing the pinned SHA and updates the trailing
+# version comment, so we get reproducibility (SHA) AND patch updates.
+#
+# Reference: supply-chain-security.md "GitHub Actions hardening".
+
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Etc/UTC
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - github-actions
+      - security
+    commit-message:
+      prefix: "ci"
+      include: scope
+    groups:
+      actions-minor-and-patch:
+        update-types:
+          - minor
+          - patch
