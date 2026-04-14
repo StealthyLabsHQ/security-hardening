@@ -75,4 +75,7 @@ exclude = [
   # require authentication from CI runners.
   '^https://www\.cisa\.gov/ics-advisories',
   '^https://raw\.githubusercontent\.com/google-gemini/gemini-cli/',
+
+  # sigstore.dev resets connections from GitHub Actions runners (transient network issue).
+  '^https://docs\.sigstore\.dev',
 ]
