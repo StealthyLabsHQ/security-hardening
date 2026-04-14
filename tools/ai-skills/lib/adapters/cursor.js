@@ -27,10 +27,18 @@ function installedSkills() {
   }
 }
 
+function remove(skillName) {
+  const dest = path.join(CURSOR_RULES_DIR, `${skillName}.md`);
+  if (fs.existsSync(dest)) {
+    fs.unlinkSync(dest);
+  }
+}
+
 module.exports = {
   name: 'cursor',
   label: 'Cursor',
   detect,
   install,
   installedSkills,
+  remove,
 };

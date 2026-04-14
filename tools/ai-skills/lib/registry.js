@@ -5,10 +5,9 @@ const path = require('path');
 const https = require('https');
 
 const LOCAL_REGISTRY = path.join(__dirname, '..', 'registry.json');
-const SKILLS_DIR = path.join(__dirname, '..', 'skills');
 
 /**
- * Fetch a URL and return the body as a string.
+ * Fetch a URL and return the body as a string (follows one redirect).
  * @param {string} url
  * @returns {Promise<string>}
  */
@@ -19,9 +18,8 @@ function fetchUrl(url) {
         return fetchUrl(res.headers.location).then(resolve, reject);
       }
       if (res.statusCode !== 200) {
-        reject(new Error(`HTTP ${res.statusCode} fetching ${url}`));
         res.resume();
-        return;
+        return reject(new Error(`HTTP ${res.statusCode} fetching ${url}`));
       }
       const chunks = [];
       res.on('data', (chunk) => chunks.push(chunk));
@@ -32,8 +30,47 @@ function fetchUrl(url) {
 }
 
 /**
- * Load the skill registry. Fetches remote if registryUrl provided, else reads local.
- * @param {string} [registryUrl]
+ * Parse "owner/repo@branch" or "owner/repo" into { owner, repo, branch }.
+ * branch defaults to "main".
+ * @param {string} ref
+ * @returns {{ owner: string, repo: string, branch: string }}
+ */
+function resolveRef(ref) {
+  const [ownerRepo, branch = 'main'] = ref.split('@');
+  const [owner, repo] = ownerRepo.split('/');
+  if (!owner || !repo) {
+    throw new Error(`Invalid ref "${ref}". Expected "owner/repo" or "owner/repo@branch".`);
+  }
+  return { owner, repo, branch };
+}
+
+/**
+ * Fetch registry.json from GitHub raw URL.
+ * @param {string} ownerRepo  e.g. "StealthyLabsHQ/security-hardening"
+ * @param {string} [branch]   defaults to "main"
+ * @returns {Promise<object>}
+ */
+async function fetchRegistry(ownerRepo, branch = 'main') {
+  const url = `https://raw.githubusercontent.com/${ownerRepo}/${branch}/registry.json`;
+  const raw = await fetchUrl(url);
+  return JSON.parse(raw);
+}
+
+/**
+ * Fetch a single skill .md file from GitHub raw URL.
+ * @param {string} ownerRepo  e.g. "StealthyLabsHQ/security-hardening"
+ * @param {string} branch
+ * @param {string} filePath   relative path from registry's "file" field
+ * @returns {Promise<string>}
+ */
+async function fetchSkillContent(ownerRepo, branch, filePath) {
+  const url = `https://raw.githubusercontent.com/${ownerRepo}/${branch}/${filePath}`;
+  return fetchUrl(url);
+}
+
+/**
+ * Load the local bundled registry (fallback / offline use).
+ * @param {string} [registryUrl]  optional remote URL
  * @returns {Promise<object>}
  */
 async function loadRegistry(registryUrl) {
@@ -57,28 +94,6 @@ async function loadRegistry(registryUrl) {
  */
 function getSkill(name, registry) {
   return registry.skills[name] || null;
-}
-
-/**
- * Read the content of a skill — from bundled file or remote URL.
- * @param {object} skill  — skill metadata object from registry
- * @returns {Promise<string>}
- */
-async function readSkillContent(skill) {
-  if (skill.url) {
-    try {
-      return await fetchUrl(skill.url);
-    } catch (err) {
-      console.warn(`Warning: could not fetch skill content from ${skill.url}: ${err.message}`);
-    }
-  }
-  if (skill.file) {
-    const filePath = path.isAbsolute(skill.file)
-      ? skill.file
-      : path.join(path.dirname(LOCAL_REGISTRY), skill.file);
-    return fs.readFileSync(filePath, 'utf8');
-  }
-  throw new Error('Skill has neither file nor url.');
 }
 
 /**
@@ -112,4 +127,12 @@ function searchSkills(registry, query) {
   return results.sort((a, b) => b.score - a.score);
 }
 
-module.exports = { loadRegistry, getSkill, readSkillContent, listSkills, searchSkills };
+module.exports = {
+  resolveRef,
+  fetchRegistry,
+  fetchSkillContent,
+  loadRegistry,
+  getSkill,
+  listSkills,
+  searchSkills,
+};
