@@ -6,31 +6,31 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ---
 
-## Quick install — `ai-skills` CLI
+## Quick install — `skilldrop` CLI
 
 Install individual skills from this repository into **any** AI CLI with one command:
 
 ```bash
-npx ai-skills install security-review
+npx skilldrop install security-review
 ```
 
 This auto-detects which AI CLIs are installed on your machine (Claude Code, Codex, Gemini CLI, Cursor, Copilot, Windsurf) and installs the skill in the right format for each.
 
 ```bash
 # install a specific skill for all detected CLIs
-npx ai-skills install mcp-security
+npx skilldrop install mcp-security
 
 # target specific CLIs only
-npx ai-skills install api-security --for claude,codex,gemini
+npx skilldrop install api-security --for claude,codex,gemini
 
 # see all available skills
-npx ai-skills list
+npx skilldrop list
 
 # search skills
-npx ai-skills search "prompt injection"
+npx skilldrop search "prompt injection"
 
 # see which AI CLIs are detected on your machine
-npx ai-skills targets
+npx skilldrop targets
 ```
 
 **Available skills:** `security-review`, `api-security`, `secret-leak-prevention`, `llm-agent-security`, `mcp-security`, `graphql-security`, `vibecoder-traps`
