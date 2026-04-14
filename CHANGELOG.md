@@ -5,6 +5,84 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Sixteenth batch
+
+### Added
+- `references/ai-bundle-presets.md` - Ready-made merged bundle map for common high-security scenarios, with direct copy paths for Claude Code, Cursor, Gemini CLI, Codex, and no-code / low-code.
+- `templates/ai-tool-profiles/bundles/` - Pre-merged bundles:
+  - `claude-code-prod-sensitive`
+  - `cursor-prod-sensitive`
+  - `gemini-cli-prod-sensitive`
+  - `codex-gdpr-sensitive`
+  - `no-code-gdpr-sensitive`
+
+### Updated
+- `templates/ai-tool-profiles/README.md` - Added visibility for the new ready-made merged bundles.
+- `README.md` - Added the bundle pack to the installation/usage overview and linked the new bundle reference.
+- `references/coverage-matrix.md` - Added coverage row for `ai-bundle-presets.md`.
+
+---
+
+## [2026-04-14] - Fifteenth batch
+
+### Added
+- `templates/ai-tool-profiles/postures/` - Posture overlay pack with `solo`, `startup`, `prod-sensitive`, and `gdpr-sensitive` variants. Each includes `ROOT-INSTRUCTIONS.md`, `.ai/agent-policy.yaml`, and `tool-approval-matrix.csv` for merging onto the base AI tool profiles.
+
+### Updated
+- `templates/ai-tool-profiles/README.md` - Added copy instructions for posture overlays in addition to the base tool profiles.
+- `references/ai-tool-profiles.md` - Added the posture overlay model, selection table, and rollout sequence combining base profile + risk posture.
+- `README.md` - Added visibility for the new `solo` / `startup` / `prod-sensitive` / `gdpr-sensitive` overlays.
+- `references/coverage-matrix.md` - Expanded the `ai-tool-profiles.md` row to reflect the new posture overlay coverage.
+
+---
+
+## [2026-04-14] - Fourteenth batch
+
+### Added
+- `references/ai-tool-profiles.md` - New reference mapping copy-paste defensive profiles to Claude Code, Codex, Gemini CLI, Cursor, and no-code / low-code tools, with official vendor documentation links.
+- `templates/ai-tool-profiles/` - Ready-to-copy defensive baseline pack:
+  - `claude-code/.claude/settings.json` + `CLAUDE.md`
+  - `codex/AGENTS.md` + launch guidance
+  - `gemini-cli/.gemini/settings.json` + `GEMINI.md`
+  - `cursor/.cursorignore` + `.cursor/rules/security-hardening.mdc` + `AGENTS.md`
+  - `no-code/connector-register.csv` + `release-gate-checklist.md`
+
+### Updated
+- `README.md` - Added the new copy-paste AI tool profile pack and linked the new profile-map reference.
+- `references/coverage-matrix.md` - Added coverage row for `ai-tool-profiles.md`.
+
+---
+
+## [2026-04-14] - Thirteenth batch
+
+### Added
+- `references/ai-ide-no-code-security.md` - Dedicated hardening guide for AI IDE assistants, browser builders, and no-code / low-code tools: workspace indexing risk, extension/plugin trust, public previews, connector sprawl, service-account ownership, publish gates, exportability, and mandatory human-review zones.
+
+### Updated
+- `references/ai-cli-hardening.md` - Clarified that CLI controls must be paired with adjacent AI IDE, browser-builder, and no-code controls; added a short mapping table and pointer to the new guide.
+- `references/quick-start-ai-coding.md` - Added extra checks for Cursor-style IDEs, browser builders, and no-code tools: protected previews, service-account ownership, prompt hygiene, webhook verification, and exportability.
+- `SKILL.md` - Updated triggers and references so the skill now explicitly points at IDE / no-code hardening, not only CLI-style agent security.
+- `README.md` - Added the new AI IDE / no-code reference and included it in the maximum-protection quick-start sequence.
+- `.github/pull_request_template.md` - Added a review gate for no-code connectors, webhooks, preview links, and publish scopes.
+- `references/coverage-matrix.md` - Added coverage row for the new AI IDE / no-code security guide.
+
+---
+
+## [2026-04-14] - Twelfth batch
+
+### Added
+- `references/defensive-security-baseline.md` - Maximum-protection defensive baseline for developers, founders, executives, and small teams: priority account hardening, workstation controls, data separation, BEC-resistant comms, travel/remote work, SaaS/AI tool hardening, backup resilience, and incident readiness rollout.
+- `references/gdpr-security-ops.md` - Operational GDPR / RGPD security guide mapping Articles 5/25/28/30/32/33/35 and transfer controls to concrete engineering, vendor, DSAR, breach, and evidence-management actions.
+- `.github/workflows/content-lint.yml` - Content policy workflow enforcing the `SKILL.md` 1024-byte portability budget and presence of review metadata headers on every reference file.
+
+### Updated
+- `SKILL.md` - Expanded the skill from pure vuln-finding to a more defensive posture including privacy, recovery, vendor risk, phishing/ransomware triggers, and GDPR impact reporting while keeping it portable.
+- `README.md` - Added a maximum-protection quick-start path, a new Personal / Executive Defense section, the GDPR security operations guide, and the content-policy / scorecard / lint workflows to the Automation section.
+- `.github/pull_request_template.md` - Added Privacy / GDPR and AI / Automation review gates so downstream projects are pushed to check data minimization, retention, processor impact, prompt-injection risk, and bot permissions.
+- `references/coverage-matrix.md` - Added both new references, expanded the automation files list, refreshed the review date, and replaced stale closed gaps with a more accurate backlog (workstation examples, detections, compliance crosswalks, GraphQL tests, hostile-corpus review).
+
+---
+
 ## [2026-04-14] - Eleventh batch
 
 ### Added

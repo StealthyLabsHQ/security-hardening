@@ -1,0 +1,9 @@
+action_class,default_disposition,approval_owner,notes
+connector_change,deny,privacy-owner+security,service-account only
+publish,deny,app-owner+privacy,manual release gate
+preview_sharing,ask,app-owner,review disclosure impact
+processor_change,deny,privacy-owner,DPA/subprocessor review required
+retention_or_deletion_change,deny,privacy-owner,dual control
+analytics_change,deny,privacy-owner,PII exposure review required
+read_personal_data,deny,privacy-owner,use synthetic or masked data instead
+export_or_backup_access,ask,privacy-owner,track access and retention

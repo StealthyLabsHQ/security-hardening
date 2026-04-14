@@ -1,0 +1,61 @@
+version: 1
+profile: startup
+
+default:
+  agent_mode: review_first
+  network: allowlist
+  filesystem: workspace_only
+  mcp: allowlist
+  git:
+    allow_commit: true
+    allow_push: false
+
+allowlists:
+  domains:
+    - api.github.com
+    - registry.npmjs.org
+    - pypi.org
+  mcp_servers:
+    - github
+    - docs
+
+approvals:
+  require_for:
+    - install_dependencies
+    - new_mcp_server
+    - external_network_not_allowlisted
+    - git_push
+    - release
+    - deploy
+    - database_migration
+    - workflow_change
+    - permission_change
+  ttl_minutes: 15
+
+protected_paths:
+  deny_read:
+    - ".env"
+    - ".env.*"
+    - "**/.env"
+    - "**/.env.*"
+    - "secrets/**"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/*dump*"
+    - "exports/**"
+  high_review:
+    - ".github/workflows/**"
+    - "infra/**"
+    - "auth/**"
+    - "billing/**"
+
+manual_review:
+  required_paths:
+    - auth
+    - billing
+    - webhooks
+    - uploads
+    - infra
+    - ci_cd
+    - retention
+    - deletion

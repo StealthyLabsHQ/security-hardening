@@ -1,21 +1,21 @@
 # detection-engineering.md
 
-> **Portée et hypothèses**
+> **Scope and Assumptions**
 >
-> - Le fichier source `references/threat-modeling.md` n'est pas visible dans cette session. Les règles ci-dessous couvrent donc une **threat library réutilisable inférée** à partir des menaces explicitement demandées et des patterns d'attaque les plus probables.
-> - Le format est **Sigma YAML + métadonnées opérationnelles**. Les blocs `threshold`, `required_log_sources` et `falsepositives` sont des **extensions de déploiement** à traduire dans votre backend SIEM/XDR (Elastic, Sentinel, Splunk, Panther, etc.).
-> - Les champs supposent une normalisation proche d'ECS/OCSF : `source.ip`, `user.id`, `event.action`, `http.request.body.content`, `graphql.*`, etc.
-> - Les seuils ci-dessous sont des **valeurs de départ**, pas des vérités universelles. Ajustez-les par application, par route, par client et par tenant.
+> - The source file `references/threat-modeling.md` is not visible in this session. The rules below therefore cover an **inferred reusable threat library** derived from explicitly requested threats and the most probable attack patterns.
+> - The format is **Sigma YAML + operational metadata**. The `threshold`, `required_log_sources` and `falsepositives` blocks are **deployment extensions** to be translated into your SIEM/XDR backend (Elastic, Sentinel, Splunk, Panther, etc.).
+> - Fields assume normalization close to ECS/OCSF: `source.ip`, `user.id`, `event.action`, `http.request.body.content`, `graphql.*`, etc.
+> - The thresholds below are **starting values**, not universal truths. Tune them per application, per route, per client and per tenant.
 
 ## Coverage snapshot
 
 - Auth abuse: credential stuffing, token/session replay
 - Authorization abuse: IDOR/BOLA, BOPLA, mass assignment
 - GraphQL abuse: introspection, alias DoS, batching, APQ probing, N+1
-- Cloud abuse: SSRF vers IMDS / réseau interne
-- AI/agent abuse: prompt injection, exfiltration, séquences d'outils suspectes
+- Cloud abuse: SSRF to IMDS / internal network
+- AI/agent abuse: prompt injection, exfiltration, suspicious tool sequences
 - Cloud-native abuse: Kubernetes secrets / exec
-- Supply chain: npm typosquatting, postinstall malveillant, GitHub Actions SHA replacement
+- Supply chain: npm typosquatting, malicious postinstall, GitHub Actions SHA replacement
 
 ## Sigma rules
 
@@ -26,8 +26,8 @@ title: Credential Stuffing Burst From Single Source
 rule_ref: DET-001
 id: c4f52662-79ff-464b-b771-120d667f5829
 status: experimental
-description: Detecte une vague d'échecs d'authentification depuis une même source IP contre de nombreux comptes, signature
-  classique d'un credential stuffing non distribué.
+description: Detects a burst of authentication failures from a single source IP against many accounts, the classic
+  signature of non-distributed credential stuffing.
 references:
 - references/threat-modeling.md#credential-stuffing
 logsource:
@@ -84,8 +84,8 @@ title: Credential Stuffing Low-and-Slow Distributed Across Many Sources
 rule_ref: DET-002
 id: b1cac2a9-0247-4771-87b4-519e57c3ea1b
 status: experimental
-description: Détecte des échecs d'authentification pour un même compte ou un petit groupe de comptes depuis de multiples IP/ASN
-  sur une fenêtre plus longue, typique d'un botnet ou d'une attaque low-and-slow.
+description: Detects authentication failures against the same account or small group of accounts from multiple IPs/ASNs
+  over a longer window, typical of a botnet or low-and-slow attack.
 references:
 - references/threat-modeling.md#credential-stuffing
 logsource:
@@ -136,8 +136,8 @@ title: Refresh Token or Session Replay From Divergent Network Contexts
 rule_ref: DET-003
 id: 8b9c4554-031b-4ae2-9ad7-94d3a3eb194a
 status: experimental
-description: Détecte la réutilisation d'un même refresh token, session ID ou cookie depuis plusieurs IP, ASNs ou user-agents
-  incompatibles avec un usage normal, signal de vol de session ou token replay.
+description: Detects reuse of the same refresh token, session ID or cookie from multiple IPs, ASNs or user-agents
+  incompatible with normal usage, a signal of session theft or token replay.
 references:
 - references/threat-modeling.md#session-hijack
 - references/threat-modeling.md#token-replay
@@ -191,8 +191,8 @@ title: IDOR Enumeration Over Sequential REST Object Identifiers
 rule_ref: DET-004
 id: b79d3f6c-1c51-4972-b859-3ec5954bc363
 status: experimental
-description: Détecte un client authentifié qui parcourt rapidement de nombreux identifiants séquentiels ou voisins sur un
-  même type de ressource, indicateur d'énumération IDOR/BOLA.
+description: Detects an authenticated client rapidly iterating over many sequential or near-sequential identifiers on the
+  same resource type, an indicator of IDOR/BOLA enumeration.
 references:
 - references/threat-modeling.md#idor
 - references/threat-modeling.md#bola
@@ -254,8 +254,8 @@ title: GraphQL Relay Node ID Enumeration
 rule_ref: DET-005
 id: 8fc90ad7-0897-4021-bb6e-43b1656368f3
 status: experimental
-description: Détecte des requêtes GraphQL ciblant massivement `node(id:)` ou des champs équivalents avec de nombreux IDs globaux
-  distincts, indicateur d'IDOR/BOLA sur des objets Relay.
+description: Detects GraphQL requests massively targeting `node(id:)` or equivalent fields with many distinct global IDs,
+  an indicator of IDOR/BOLA on Relay objects.
 references:
 - references/threat-modeling.md#idor
 - references/threat-modeling.md#graphql-id-enumeration
@@ -311,8 +311,8 @@ title: Sensitive Field Overfetch by Low-Privilege Principal
 rule_ref: DET-006
 id: 125a1c93-e1c8-422c-b4c9-da0621e70586
 status: experimental
-description: Détecte des requêtes GraphQL ou REST qui demandent des propriétés sensibles normalement absentes du parcours
-  utilisateur courant, indicateur de BOPLA / excessive data exposure.
+description: Detects GraphQL or REST requests asking for sensitive properties normally absent from the current user's
+  journey, an indicator of BOPLA / excessive data exposure.
 references:
 - references/threat-modeling.md#bopla
 - references/threat-modeling.md#excessive-data-exposure
@@ -372,8 +372,8 @@ title: Mass Assignment Attempt on Protected Properties
 rule_ref: DET-007
 id: 66ebe964-5c97-4464-ba5a-f95a4c676812
 status: experimental
-description: Détecte une requête de création ou de mise à jour qui essaie de définir des champs normalement protégés côté
-  serveur (`role`, `isAdmin`, `tenantId`, `createdBy`, etc.).
+description: Detects a create or update request attempting to set fields normally protected server-side (`role`,
+  `isAdmin`, `tenantId`, `createdBy`, etc.).
 references:
 - references/threat-modeling.md#mass-assignment
 logsource:
@@ -436,8 +436,8 @@ title: JWT 'alg=none' Token Observed or Accepted
 rule_ref: DET-008
 id: f8a69076-e412-480e-a36e-92a879ae7943
 status: experimental
-description: Détecte un jeton JWT portant `alg=none` ou une réponse applicative indiquant qu'un tel jeton a été accepté, signal
-  de validation JWT gravement incorrecte.
+description: Detects a JWT bearing `alg=none` or an application response indicating such a token was accepted, a signal
+  of critically broken JWT validation.
 references:
 - references/threat-modeling.md#jwt-none-alg
 logsource:
@@ -491,8 +491,8 @@ title: JWT Claim Confusion or Token Validation Bypass Attempt
 rule_ref: DET-009
 id: 2d491767-8ded-431d-967d-1547cb775c69
 status: experimental
-description: Détecte des tokens avec `iss`, `aud`, `kid` ou claims de rôle incohérents pour l'application cible, ainsi que
-  les élévations de privilège soudaines liées à des claims inattendus.
+description: Detects tokens with `iss`, `aud`, `kid` or role claims inconsistent with the target application, as well as
+  sudden privilege escalations tied to unexpected claims.
 references:
 - references/threat-modeling.md#jwt-confusion
 - references/threat-modeling.md#claim-tampering
@@ -557,8 +557,8 @@ title: GraphQL Introspection Queried in Production
 rule_ref: DET-010
 id: c9432058-ed02-4f6c-bfb6-3634b3d172b9
 status: experimental
-description: Détecte des requêtes d'introspection (`__schema`, `__type`) dans un environnement de production où l'introspection
-  devrait être désactivée ou réservée à l'admin.
+description: Detects introspection queries (`__schema`, `__type`) in a production environment where introspection
+  should be disabled or restricted to admins.
 references:
 - references/threat-modeling.md#graphql-introspection
 logsource:
@@ -610,8 +610,8 @@ title: GraphQL Alias-Based DoS Pattern
 rule_ref: DET-011
 id: 102202bd-7d75-46e2-8c71-02a61b8f5456
 status: experimental
-description: Détecte une requête GraphQL avec un nombre excessif d'aliases, typique d'une tentative de contournement des limites
-  naïves ou d'un DoS logique.
+description: Detects a GraphQL request with an excessive number of aliases, typical of an attempt to bypass naive rate
+  limits or to cause a logic-level DoS.
 references:
 - references/threat-modeling.md#graphql-alias-dos
 logsource:
@@ -662,8 +662,8 @@ title: GraphQL Batch Request Abuse
 rule_ref: DET-012
 id: cf73bd50-016b-426d-b5d3-94f90d1eb11d
 status: experimental
-description: Détecte des requêtes HTTP contenant un tableau d'opérations GraphQL ou un nombre anormal d'opérations par lot,
-  technique courante pour contourner le rate limiting par requête.
+description: Detects HTTP requests containing an array of GraphQL operations or an abnormal number of operations per
+  batch, a common technique to bypass per-request rate limiting.
 references:
 - references/threat-modeling.md#graphql-batching
 logsource:
@@ -711,8 +711,8 @@ title: Persisted Query / APQ Miss Storm
 rule_ref: DET-013
 id: ae43d85e-6737-4843-95cc-8ba1af9530f7
 status: experimental
-description: Détecte une vague de `PersistedQueryNotFound` ou de hashes APQ inconnus, signal de probing ou de tentative de
-  bypass d'une allowlist de requêtes persistées.
+description: Detects a burst of `PersistedQueryNotFound` errors or unknown APQ hashes, a signal of probing or an attempt
+  to bypass a persisted-query allowlist.
 references:
 - references/threat-modeling.md#apq-abuse
 - references/threat-modeling.md#allowlist-bypass
@@ -764,8 +764,8 @@ title: GraphQL N+1 or Excessive Fan-Out Behavior
 rule_ref: DET-014
 id: adeb95a2-1bfd-486b-a215-304a3b9fedda
 status: experimental
-description: Détecte une requête unique provoquant un nombre anormal d'appels backend / SQL / resolver invocations, signature
-  d'un abus N+1 ou d'une complexité logique non bornée.
+description: Detects a single request triggering an abnormal number of backend / SQL / resolver invocations, the signature
+  of N+1 abuse or unbounded logical complexity.
 references:
 - references/threat-modeling.md#graphql-n-plus-one
 - references/threat-modeling.md#resource-exhaustion
@@ -821,8 +821,8 @@ title: SSRF Attempt to Cloud Instance Metadata Service
 rule_ref: DET-015
 id: f57b5dc4-95f6-4aa9-9961-3ace4ac5ffd0
 status: experimental
-description: Détecte des requêtes sortantes ou applicatives visant explicitement les endpoints IMDS (AWS/Azure/GCP) ou l'adresse
-  169.254.169.254, forte suspicion de SSRF pour vol de credentials cloud.
+description: Detects outbound or application requests explicitly targeting IMDS endpoints (AWS/Azure/GCP) or the address
+  169.254.169.254, a strong indicator of SSRF for cloud credential theft.
 references:
 - references/threat-modeling.md#ssrf-imds
 logsource:
@@ -877,8 +877,8 @@ title: SSRF Attempt to RFC1918, Loopback or Internal Control Plane
 rule_ref: DET-016
 id: 035ec5d0-8d54-4767-91a2-1ea0f55bda5b
 status: experimental
-description: Détecte des requêtes vers `127.0.0.1`, `localhost`, plages RFC1918 ou noms DNS internes depuis une fonctionnalité
-  de fetch / webhook / import URL exposée aux utilisateurs.
+description: Detects requests to `127.0.0.1`, `localhost`, RFC1918 ranges or internal DNS names from a user-exposed
+  fetch / webhook / URL import feature.
 references:
 - references/threat-modeling.md#ssrf-internal-network
 logsource:
@@ -939,8 +939,8 @@ title: Prompt Injection Markers in User-Supplied Content
 rule_ref: DET-017
 id: 7bfe718f-222f-47ee-bfc4-8b8adc3d1217
 status: experimental
-description: Détecte des marqueurs textuels de prompt injection dans l'entrée utilisateur transmise à un LLM ou agent, par
-  exemple `ignore previous instructions` ou `BEGIN SYSTEM PROMPT`.
+description: Detects textual prompt injection markers in user input passed to an LLM or agent, for example
+  `ignore previous instructions` or `BEGIN SYSTEM PROMPT`.
 references:
 - references/threat-modeling.md#prompt-injection
 logsource:
@@ -997,8 +997,8 @@ title: LLM Exfiltration Request for System Prompt, Secrets or Tool Policy
 rule_ref: DET-018
 id: ef268f37-492e-46b1-93ef-32f82a1e9655
 status: experimental
-description: Détecte une tentative explicite de faire révéler le system prompt, les secrets, les instructions développeur
-  ou la liste des outils disponibles.
+description: Detects an explicit attempt to make the LLM reveal the system prompt, secrets, developer instructions
+  or the list of available tools.
 references:
 - references/threat-modeling.md#prompt-exfiltration
 - references/threat-modeling.md#agent-pivot
@@ -1055,8 +1055,8 @@ title: 'Suspicious Agent Tool Sequence: Browse -> Secret/File Read -> Outbound S
 rule_ref: DET-019
 id: 28d5a8af-748f-43f1-bd64-eabd1a12e3f4
 status: experimental
-description: Détecte une séquence ordonnée d'actions d'agent où du contenu externe est consulté, puis un fichier/secret local
-  ou connecté est lu, puis une action sortante (email, webhook, upload) est effectuée dans la même session.
+description: Detects an ordered sequence of agent actions where external content is browsed, then a local or connected
+  file/secret is read, then an outbound action (email, webhook, upload) is performed within the same session.
 references:
 - references/threat-modeling.md#agent-tool-pivot
 - references/threat-modeling.md#prompt-injection
@@ -1123,8 +1123,8 @@ title: Suspicious Agent Override Then Connector Export
 rule_ref: DET-020
 id: a2340c79-10d5-4857-8fb6-ebd370928c37
 status: experimental
-description: Détecte un enchaînement où un message utilisateur tente d'outrepasser les garde-fous, suivi d'un accès à un connecteur
-  sensible et d'un export massif dans la même conversation.
+description: Detects a sequence where a user message attempts to override safeguards, followed by access to a sensitive
+  connector and a bulk export within the same conversation.
 references:
 - references/threat-modeling.md#agent-override
 - references/threat-modeling.md#prompt-exfiltration
@@ -1194,8 +1194,8 @@ title: Kubernetes Secret Listing by Unexpected Principal
 rule_ref: DET-021
 id: 1bb571d5-69e4-458b-bc18-943d301296c9
 status: experimental
-description: Détecte des appels Kubernetes `list/get/watch` sur la ressource `secrets` par un service account, un utilisateur
-  ou un job qui n'est normalement pas censé y accéder.
+description: Detects Kubernetes `list/get/watch` calls on the `secrets` resource by a service account, user or job
+  that is not normally expected to access it.
 references:
 - references/threat-modeling.md#k8s-secret-access
 logsource:
@@ -1249,8 +1249,8 @@ title: Kubernetes Exec or Attach by Automation / CI Principal
 rule_ref: DET-022
 id: b8dbe5e9-21eb-4410-b25c-1b5baeecf062
 status: experimental
-description: Détecte des appels `create` sur `pods/exec` ou `pods/attach` depuis un principal CI/CD, bot ou service account,
-  indicateur de pivot interactif dans le cluster.
+description: Detects `create` calls on `pods/exec` or `pods/attach` from a CI/CD principal, bot or service account,
+  an indicator of interactive pivot into the cluster.
 references:
 - references/threat-modeling.md#k8s-exec-abuse
 logsource:
@@ -1302,8 +1302,8 @@ title: npm Typosquatting or Dependency Confusion Install
 rule_ref: DET-023
 id: 6c1617ab-1696-4854-b49f-87f3e2791bac
 status: experimental
-description: Détecte l'installation d'un paquet npm signalé comme typosquat, confusion de dépendance ou paquet fraîchement
-  publié / à réputation faible par votre proxy ou votre pipeline.
+description: Detects installation of an npm package flagged as a typosquat, dependency confusion candidate, or a freshly
+  published / low-reputation package by your proxy or pipeline.
 references:
 - references/threat-modeling.md#npm-typosquatting
 - references/threat-modeling.md#dependency-confusion
@@ -1363,8 +1363,8 @@ title: npm Postinstall Egress or Shell Spawn in CI
 rule_ref: DET-024
 id: 876aafe5-183f-44d2-b34b-4dc06d159b71
 status: experimental
-description: Détecte l'exécution d'un script `postinstall` / `prepare` npm qui déclenche un shell, `curl`, `wget`, `powershell`
-  ou des connexions réseau inattendues pendant le build.
+description: Detects execution of an npm `postinstall` / `prepare` script that spawns a shell, `curl`, `wget`, `powershell`
+  or unexpected network connections during the build.
 references:
 - references/threat-modeling.md#npm-postinstall
 - references/threat-modeling.md#build-pipeline-execution
@@ -1428,8 +1428,8 @@ title: GitHub Action SHA Replacement or Unpinned Third-Party Action Introduced
 rule_ref: DET-025
 id: 230bed08-31ed-4e8c-a83c-20cf28c2e3b8
 status: experimental
-description: Détecte un changement de workflow GitHub Actions remplaçant une full-length commit SHA par un tag / short SHA,
-  ou introduisant une action tierce non pinée.
+description: Detects a GitHub Actions workflow change that replaces a full-length commit SHA with a tag / short SHA,
+  or introduces an unpinned third-party action.
 references:
 - references/threat-modeling.md#github-actions-sha-replacement
 - references/threat-modeling.md#ci-cd-supply-chain
@@ -1480,11 +1480,11 @@ falsepositives:
   - Suppress only when replacement SHA remains full-length and action owner is allowlisted
 ```
 
-## Matrice MITRE ATT&CK -> règle Sigma
+## MITRE ATT&CK -> Sigma Rule Matrix
 
-> **Note** : pour plusieurs abus applicatifs (GraphQL, prompt injection, agent abuse), ATT&CK n'offre pas toujours un sous-technique exact. La colonne ci-dessous indique donc le **closest mapping** utile pour le reporting.
+> **Note**: for several application-layer abuses (GraphQL, prompt injection, agent abuse), ATT&CK does not always provide an exact sub-technique. The column below therefore shows the **closest mapping** useful for reporting.
 
-| ATT&CK (closest) | Règles Sigma |
+| ATT&CK (closest) | Sigma Rules |
 |---|---|
 | T1110.004 Credential Stuffing | DET-001, DET-002 |
 | Valid Accounts / Session replay (closest mapping, no exact fit for app token replay) | DET-003 |
@@ -1494,3 +1494,103 @@ falsepositives:
 | T1552.007 Container API | DET-021, DET-022 |
 | Prompt injection / agent abuse (no precise ATT&CK today; closest: discovery, collection, exfiltration) | DET-017, DET-018, DET-019, DET-020 |
 | T1195.001 Compromise Software Dependencies and Development Tools | DET-023, DET-024, DET-025 |
+
+---
+
+## Appendix — GDPR / Art. 33 relevance
+
+Detection engineering intersects GDPR through two obligations:
+
+1. **Art. 32 (security of processing)** — monitoring is explicitly a required technical and organisational measure.
+2. **Art. 33 (notification of a personal data breach)** — the controller must notify the supervisory authority within **72 hours** of *becoming aware* of a breach. Detection rules directly determine *when* awareness begins.
+
+### Which rules support Art. 33 awareness
+
+The following Sigma rules are the most relevant to personal data incidents. When any of these fires and the affected resource processes personal data, the Art. 33 72h clock should be considered started.
+
+| Rule | Personal data risk | Art. 33 relevance |
+|---|---|---|
+| DET-001, DET-002 — Credential stuffing | Account takeover → access to personal data under victim identity | Confirmed account compromise affecting personal data = breach candidate |
+| DET-003 — Session / token replay | Unauthorized session → full account data exposure | Same as above; harder to detect, higher exfiltration potential |
+| DET-004, DET-005 — IDOR enumeration | Bulk extraction of personal records via predictable IDs | Direct personal data exfiltration; volume determines Art. 33(3)(c) count |
+| DET-006 — Sensitive field overfetch | `ssn`, `salary`, `recoveryCodes` returned to wrong principal | Confidentiality breach of special-category or sensitive data |
+| DET-007, DET-008 — Mass assignment / BOPLA | Unauthorized modification of personal data attributes | Integrity breach — Art. 4(12) includes "alteration" |
+| DET-015 — SSRF to IMDS | Cloud credential theft → potential access to all data stores | Indirect but high-impact; treat as breach candidate pending investigation |
+| DET-017, DET-018 — Prompt injection / agent exfiltration | LLM or agent exfiltrating personal data in responses or tool calls | Emerging vector; document as incident even without confirmed exfiltration |
+| DET-021, DET-022 — Kubernetes secrets access | Secret store access → downstream data store credentials | Investigate scope before Art. 33 assessment |
+
+### Recommended addition: personal data access anomaly rule
+
+The rules above are security-first. The following supplementary rule targets **abnormal bulk access to personal data** — a signal with direct GDPR relevance even when no exploit is involved (e.g. insider threat, misconfigured export job, over-privileged service account).
+
+```yaml
+title: Abnormal Bulk Access to Personal Data Endpoints
+rule_ref: DET-GDPR-001
+id: d4e8f2a1-3b7c-4f9e-a2d1-6c8b5e9f3a2d
+status: experimental
+description: >
+  Detects a single authenticated principal accessing an unusually large number of distinct
+  personal data records within a short window. Covers REST paths and GraphQL queries
+  returning user, patient, order, or financial records. Relevant to GDPR Art. 32 monitoring
+  obligations and provides the earliest signal for Art. 33 breach awareness.
+references:
+  - references/detection-engineering.md#det-004
+  - references/graphql-security.md#idor
+logsource:
+  product: webapp
+  category: webserver
+detection:
+  selection:
+    http.request.method:
+      - GET
+      - POST
+    url.path|re: '.*(users|patients|customers|orders|invoices|accounts|profiles|documents)/.*'
+    http.response.status_code:
+      - 200
+      - 206
+  condition: selection
+fields:
+  - user.id
+  - user.roles
+  - source.ip
+  - url.path
+  - http.response.status_code
+  - http.response.body.bytes
+level: high
+tags:
+  - appsec.gdpr
+  - appsec.idor
+  - appsec.data-exfiltration
+required_log_sources:
+  - Web server or API gateway logs with authenticated principal and response status
+  - Optional: response body size or record count from application audit logs
+threshold:
+  group_by:
+    - user.id
+  metric: distinct(url.path)
+  gte: 50
+  window: 10m
+  correlation_hint: >
+    Prefer backend correlation that resolves distinct record owners;
+    flag when majority of accessed records belong to principals other than the requester.
+falsepositives:
+  typical:
+    - Admin or support agents running legitimate bulk exports
+    - Scheduled reporting jobs using a service account
+  filtering:
+    - Allowlist approved bulk-export service accounts and admin roles
+    - Require unexpected tenant/owner mismatch or off-hours timing before escalating
+```
+
+### Art. 33 operational checklist for detection teams
+
+When a rule fires and the incident scope includes personal data:
+
+1. **Determine awareness time** — the timestamp of the first alert is the start of the 72h window.
+2. **Assess breach scope** — categories of data (Art. 33(3)(b)), approximate number of records (Art. 33(3)(c)), likely consequences (Art. 33(3)(d)).
+3. **Notify DPO immediately** — do not wait for the full investigation to complete.
+4. **Open breach register entry** — even if notification to the authority is ultimately not required (risk too low), the register must document the decision.
+5. **Document the detection rule** that provided awareness — this is evidence of the Art. 32 monitoring measure.
+6. **If 72h cannot be met** — notify anyway with available information and supplement later (Art. 33(4) allows phased notification).
+
+> **Note**: Art. 33 applies to **personal data breaches** — unauthorised access, disclosure, alteration, or destruction of personal data. Not every security incident is a personal data breach. The detection team's role is to provide timely awareness; the DPO makes the Art. 33(1) determination.

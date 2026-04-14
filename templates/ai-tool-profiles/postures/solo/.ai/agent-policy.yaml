@@ -1,0 +1,43 @@
+version: 1
+profile: solo
+
+default:
+  agent_mode: review_first
+  network: deny
+  filesystem: workspace_only
+  mcp: deny
+  git:
+    allow_commit: true
+    allow_push: false
+
+approvals:
+  require_for:
+    - install_dependencies
+    - external_network
+    - edit_outside_workspace
+    - git_push
+    - deploy
+    - database_migration
+    - destructive_filesystem_action
+  ttl_minutes: 15
+
+protected_paths:
+  deny_read:
+    - ".env"
+    - ".env.*"
+    - "**/.env"
+    - "**/.env.*"
+    - "secrets/**"
+    - "**/*.pem"
+    - "**/*.key"
+    - "**/*dump*"
+    - "exports/**"
+
+manual_review:
+  required_paths:
+    - auth
+    - billing
+    - webhooks
+    - uploads
+    - infra
+    - migrations

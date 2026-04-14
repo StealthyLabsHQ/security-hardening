@@ -1,21 +1,21 @@
 # browser-security-modern.md
 
-Ce document complète `secure-headers.md`. L'idée n'est pas d'empiler des headers "au hasard", mais de traiter des attaques qui passent **après** les défenses classiques :
+This document complements `secure-headers.md`. The goal is not to pile on headers "at random", but to address attacks that get through **after** classic defenses:
 
-- DOM XSS dans des sinks modernes,
-- cross-origin leaks et confusion de contexte,
-- abus des subresources tierces,
-- permissions browser trop larges,
-- surfaces WebSocket / Worker / WASM / SharedArrayBuffer,
-- politiques d'isolation mal comprises.
+- DOM XSS in modern sinks,
+- cross-origin leaks and context confusion,
+- abuse of third-party subresources,
+- overly broad browser permissions,
+- WebSocket / Worker / WASM / SharedArrayBuffer surfaces,
+- poorly understood isolation policies.
 
 ---
 
 ## 1) Trusted Types
 
-`Trusted Types` durcit les **DOM injection sinks** (`innerHTML`, `insertAdjacentHTML`, `srcdoc`, certains sinks de script/URL, etc.) en imposant que l'entrée passe par une **policy** explicite.
+`Trusted Types` hardens **DOM injection sinks** (`innerHTML`, `insertAdjacentHTML`, `srcdoc`, certain script/URL sinks, etc.) by requiring that input passes through an explicit **policy**.
 
-### CSP minimale
+### Minimal CSP
 
 ```http
 Content-Security-Policy:
@@ -23,20 +23,20 @@ Content-Security-Policy:
   trusted-types app-sanitize;
 ```
 
-### Pattern recommandé
+### Recommended pattern
 
-- Une policy **unique** ou très peu de policies nommées.
-- Une fonction de transformation qui :
-  - assainit le HTML,
-  - refuse les URLs/scripts non approuvés,
-  - centralise les exceptions.
-- Déploiement d'abord en **report-only** si le front est ancien.
+- A **single** policy or very few named policies.
+- A transformation function that:
+  - sanitizes the HTML,
+  - rejects unapproved URLs/scripts,
+  - centralizes exceptions.
+- Deploy first in **report-only** mode if the frontend is legacy.
 
-### Exemple
+### Example
 
 ```js
 if (typeof trustedTypes === "undefined") {
-  // tinyfill: garde le même chemin de code dans les navigateurs sans enforcement
+  // tinyfill: keeps the same code path in browsers without enforcement
   trustedTypes = { createPolicy: (_name, rules) => rules };
 }
 
@@ -48,37 +48,37 @@ const trustedHTML = policy.createHTML(userSuppliedHtml);
 document.querySelector("#content").innerHTML = trustedHTML;
 ```
 
-### Ce que Trusted Types ne fait pas
+### What Trusted Types does not do
 
-- ne remplace pas une vraie sanitization,
-- ne corrige pas un backend qui renvoie du HTML dangereux,
-- ne protège pas un code legacy si vous gardez des échappatoires partout.
+- does not replace actual sanitization,
+- does not fix a backend that returns dangerous HTML,
+- does not protect legacy code if you keep escape hatches everywhere.
 
-### À éviter
+### What to avoid
 
-- plusieurs policies "temporairement" permissives qui deviennent permanentes,
-- policy "default" qui retourne presque n'importe quoi,
-- conserver `'unsafe-inline'` et croire que TT compense tout.
+- multiple "temporarily" permissive policies that become permanent,
+- a "default" policy that returns almost anything,
+- keeping `'unsafe-inline'` and believing TT compensates for everything.
 
 ---
 
 ## 2) Sanitizer API
 
-La `Sanitizer API` fournit une sanitization native browser pour certains cas d'usage DOM.
+The `Sanitizer API` provides native browser sanitization for certain DOM use cases.
 
-### Quand l'utiliser
+### When to use it
 
 - **progressive enhancement**,
-- surfaces contrôlées de rendu HTML enrichi,
-- expérimentations où vous voulez éviter une dépendance JS lourde.
+- controlled surfaces for rich HTML rendering,
+- experiments where you want to avoid a heavy JS dependency.
 
-### Quand ne pas en dépendre seule
+### When not to rely on it alone
 
-- flotte navigateur hétérogène,
-- besoin de comportement identique partout,
-- besoin d'une politique de sanitization très contrôlée.
+- heterogeneous browser fleet,
+- need for identical behavior everywhere,
+- need for a tightly controlled sanitization policy.
 
-### Exemple
+### Example
 
 ```js
 const sanitizer = new Sanitizer();
@@ -86,95 +86,95 @@ const safe = Document.parseHTMLUnsafe(untrustedHtml, { sanitizer });
 document.querySelector("#preview").replaceChildren(...safe.body.childNodes);
 ```
 
-### Position pratique
+### Practical stance
 
-- Gardez **DOMPurify** (ou équivalent) comme base portable.
-- Utilisez Sanitizer API comme optimisation / amélioration progressive.
-- Si vous combinez avec Trusted Types, faites produire un `TrustedHTML` via votre policy.
+- Keep **DOMPurify** (or equivalent) as a portable baseline.
+- Use Sanitizer API as an optimization / progressive enhancement.
+- If combining with Trusted Types, produce a `TrustedHTML` through your policy.
 
 ---
 
-## 3) COEP / COOP / CORP en pratique
+## 3) COEP / COOP / CORP in practice
 
-Ces trois headers servent à isoler correctement votre document et ses sous-ressources.
+These three headers serve to properly isolate your document and its subresources.
 
-### Cas concret : SharedArrayBuffer
+### Concrete case: SharedArrayBuffer
 
-Si vous voulez `SharedArrayBuffer`, WebAssembly threads ou un profil d'isolation fort, il vous faut généralement :
+If you want `SharedArrayBuffer`, WebAssembly threads, or a strong isolation profile, you generally need:
 
 ```http
 Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: require-corp
 ```
 
-et des subresources compatibles (CORS ou CORP).
+and compatible subresources (CORS or CORP).
 
-### Rôles
+### Roles
 
 - **COOP** (`Cross-Origin-Opener-Policy`)  
-  Isole la page des autres contexts d'ouverture pour éviter certains partages de process/context.
+  Isolates the page from other opener contexts to prevent certain process/context sharing.
 - **COEP** (`Cross-Origin-Embedder-Policy`)  
-  Interdit d'embarquer des ressources cross-origin qui ne sont pas explicitement partageables.
+  Prohibits embedding cross-origin resources that are not explicitly shareable.
 - **CORP** (`Cross-Origin-Resource-Policy`)  
-  Déclare côté ressource si elle peut être chargée cross-origin.
+  Declares on the resource side whether it can be loaded cross-origin.
 
-### Exemple typique
+### Typical example
 
-Page principale :
+Main page:
 
 ```http
 Cross-Origin-Opener-Policy: same-origin
 Cross-Origin-Embedder-Policy: require-corp
 ```
 
-JS/wasm/font servi par votre CDN :
+JS/wasm/font served by your CDN:
 
 ```http
 Cross-Origin-Resource-Policy: same-site
 ```
 
-### Piège classique
+### Classic pitfall
 
-Vous activez COEP/COOP et soudain :
+You enable COEP/COOP and suddenly:
 
-- un script analytics tiers ne charge plus,
-- une police externe casse,
-- une iframe de paiement ne fonctionne plus,
-- `window.crossOriginIsolated` reste `false`.
+- a third-party analytics script no longer loads,
+- an external font breaks,
+- a payment iframe no longer works,
+- `window.crossOriginIsolated` stays `false`.
 
-### Méthode de déploiement
+### Deployment method
 
-1. Inventorier **toutes** les subresources et iframes.
-2. Décider ce qui doit être self-hosted.
-3. Faire corriger CORS/CORP sur les ressources nécessaires.
-4. Tester `window.crossOriginIsolated === true`.
-5. Déployer par environnement avec monitoring.
+1. Inventory **all** subresources and iframes.
+2. Decide what must be self-hosted.
+3. Have CORS/CORP corrected on the necessary resources.
+4. Test `window.crossOriginIsolated === true`.
+5. Deploy per environment with monitoring.
 
 ### `credentialless`
 
-`Cross-Origin-Embedder-Policy: credentialless` peut aider certains scénarios, mais il faut tester finement la compatibilité des navigateurs et le comportement attendu des requêtes sans credentials.
+`Cross-Origin-Embedder-Policy: credentialless` can help in certain scenarios, but browser compatibility and the expected behavior of credentialless requests must be tested carefully.
 
 ---
 
 ## 4) Fetch Metadata (`Sec-Fetch-*`)
 
-Les headers `Sec-Fetch-Site`, `Sec-Fetch-Mode`, `Sec-Fetch-Dest`, `Sec-Fetch-User` donnent au serveur le **contexte d'origine** et d'usage de la requête.
+The `Sec-Fetch-Site`, `Sec-Fetch-Mode`, `Sec-Fetch-Dest`, `Sec-Fetch-User` headers give the server the **origin context** and usage of the request.
 
-### Très utile pour
+### Very useful for
 
 - CSRF,
 - XSSI / XS-Leaks,
-- endpoints admin,
-- endpoints qui ne devraient jamais être appelés cross-site.
+- admin endpoints,
+- endpoints that should never be called cross-site.
 
-### Politique simple
+### Simple policy
 
-- autoriser :
+- allow:
   - `same-origin`,
-  - `same-site` si vos sous-domaines sont de confiance,
-  - `none` (navigation directe, bookmark, barre d'adresse),
-  - `GET + navigate` pour les pages publiques ;
-- bloquer par défaut les écritures cross-site (`POST`, `PUT`, `PATCH`, `DELETE`) sur les endpoints sensibles.
+  - `same-site` if your subdomains are trusted,
+  - `none` (direct navigation, bookmark, address bar),
+  - `GET + navigate` for public pages;
+- block cross-site writes by default (`POST`, `PUT`, `PATCH`, `DELETE`) on sensitive endpoints.
 
 ### Pseudo-code
 
@@ -193,17 +193,17 @@ function isAllowed(req) {
 
 ### Important
 
-- Ajouter `Vary: Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest`.
-- Prévoir une allowlist explicite pour les vraies API CORS publiques.
-- Ne pas remplacer CSRF tokens par Fetch Metadata seul sur les flux les plus sensibles.
+- Add `Vary: Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest`.
+- Provide an explicit allowlist for genuine public CORS APIs.
+- Do not replace CSRF tokens with Fetch Metadata alone on the most sensitive flows.
 
 ---
 
-## 5) Subresource Integrity (SRI) avec hash pinning
+## 5) Subresource Integrity (SRI) with hash pinning
 
-SRI protège contre la compromission ou la corruption d'une ressource tierce ou CDN.
+SRI protects against the compromise or corruption of a third-party or CDN resource.
 
-### Exemple
+### Example
 
 ```html
 <script
@@ -212,33 +212,33 @@ SRI protège contre la compromission ou la corruption d'une ressource tierce ou 
   crossorigin="anonymous"></script>
 ```
 
-### Bonnes pratiques
+### Best practices
 
-- Pinner **chaque version** d'asset.
-- Générer les hashes dans le pipeline CI/CD.
-- Stocker un manifeste versionné.
-- Éviter les URLs "toujours la même ressource" si le contenu bouge sans changer le hash/version.
-- Self-host si l'asset est critique et rarement mis à jour.
+- Pin **each version** of an asset.
+- Generate hashes in the CI/CD pipeline.
+- Store a versioned manifest.
+- Avoid "always the same resource" URLs if the content changes without updating the hash/version.
+- Self-host if the asset is critical and rarely updated.
 
-### Pièges
+### Pitfalls
 
-- Sur une ressource cross-origin, SRI suppose aussi un comportement CORS correct.
-- Un tag loader/script manager peut casser votre modèle de pinning si les assets changent hors pipeline.
-- Un hash qui change souvent sans gouvernance devient un simple bruit opérationnel.
+- For a cross-origin resource, SRI also requires correct CORS behavior.
+- A loader/script manager tag can break your pinning model if assets change outside the pipeline.
+- A hash that changes frequently without governance becomes mere operational noise.
 
-### Hash pinning pragmatique
+### Pragmatic hash pinning
 
-- assets critiques et stables : **hash pinning strict**,
-- analytics non critiques : idéalement self-host ou au minimum version explicite + revue fournisseur,
-- jamais de "charge un script distant mutable et on verra".
+- critical and stable assets: **strict hash pinning**,
+- non-critical analytics: ideally self-host or at minimum explicit version + vendor review,
+- never "load a mutable remote script and see what happens".
 
 ---
 
-## 6) Permissions Policy détaillée
+## 6) Permissions Policy in detail
 
-`Permissions-Policy` contrôle quelles APIs sensibles sont utilisables par votre document et ses iframes.
+`Permissions-Policy` controls which sensitive APIs are usable by your document and its iframes.
 
-### Header de départ
+### Starting header
 
 ```http
 Permissions-Policy:
@@ -250,13 +250,13 @@ Permissions-Policy:
   serial=()
 ```
 
-### Lecture rapide
+### Quick reference
 
-- `()` = personne n'a accès.
-- `(self)` = seulement votre origine.
-- `("https://widget.example")` = délégation explicite à une origine.
+- `()` = no one has access.
+- `(self)` = only your origin.
+- `("https://widget.example")` = explicit delegation to an origin.
 
-### Directives courantes à traiter explicitement
+### Common directives to address explicitly
 
 - `camera`
 - `microphone`
@@ -265,7 +265,7 @@ Permissions-Policy:
 - `usb`
 - `serial`
 
-### Exemple avec délégation ciblée à une iframe de confiance
+### Example with targeted delegation to a trusted iframe
 
 ```http
 Permissions-Policy:
@@ -279,27 +279,27 @@ Permissions-Policy:
 
 ### Anti-pattern
 
-- Ne rien définir et laisser les defaults du navigateur.
-- Déléguer trop large à toutes les iframes d'un domaine parent.
-- Oublier de revoir la policy après ajout d'un SDK ou d'un widget tiers.
+- Defining nothing and leaving browser defaults in place.
+- Delegating too broadly to all iframes of a parent domain.
+- Forgetting to review the policy after adding an SDK or a third-party widget.
 
 ---
 
-## 7) CSP nonce vs hash : compromis
+## 7) CSP nonce vs hash: trade-offs
 
-| Approche | Quand l'utiliser | Avantages | Inconvénients |
+| Approach | When to use | Advantages | Disadvantages |
 |---|---|---|---|
-| **Nonce** | HTML dynamique SSR, scripts inline générés par le serveur | flexible, compatible avec contenu inline qui change à chaque réponse | doit être **aléatoire par réponse**, injecté partout correctement, attention au cache |
-| **Hash** | snippets inline stables, bootstrap minimal, pages très statiques | pas de valeur aléatoire par réponse, plus simple à auditer sur du statique | casse dès que le contenu inline change, maintenance plus lourde sur HTML dynamique |
+| **Nonce** | Dynamic SSR HTML, inline scripts generated by the server | flexible, compatible with inline content that changes per response | must be **random per response**, injected everywhere correctly, watch out for caching |
+| **Hash** | stable inline snippets, minimal bootstrap, very static pages | no random value per response, easier to audit on static content | breaks as soon as inline content changes, heavier maintenance on dynamic HTML |
 
-### Règles simples
+### Simple rules
 
-- Si vous pouvez, **supprimez l'inline**.
-- Sinon, préférez :
-  - **nonce** pour le HTML dynamique,
-  - **hash** pour les snippets stables.
-- Évitez `'unsafe-inline'`.
-- Si vous utilisez `strict-dynamic`, soyez très clair sur ce qui est bootstrapé et par qui.
+- If you can, **remove the inline**.
+- Otherwise, prefer:
+  - **nonce** for dynamic HTML,
+  - **hash** for stable snippets.
+- Avoid `'unsafe-inline'`.
+- If using `strict-dynamic`, be very clear about what is bootstrapped and by whom.
 
 ---
 
@@ -309,91 +309,91 @@ Permissions-Policy:
 Origin-Agent-Cluster: ?1
 ```
 
-OAC demande que l'origine soit isolée dans un **origin-keyed agent cluster**.
+OAC requests that the origin be isolated in an **origin-keyed agent cluster**.
 
-### Ce que ça apporte
+### What it provides
 
-- meilleure isolation de performance/mémoire entre origines,
-- moins de partage implicite avec des pages same-site mais cross-origin,
-- utile quand une origine héberge des traitements lourds.
+- better performance/memory isolation between origins,
+- less implicit sharing with same-site but cross-origin pages,
+- useful when an origin hosts heavy processing.
 
-### Ce que ça n'est pas
+### What it is not
 
-- **pas** une frontière de sécurité forte à elle seule,
-- **pas** un remplacement de COOP/COEP/CORP.
+- **not** a strong security boundary on its own,
+- **not** a replacement for COOP/COEP/CORP.
 
-### Règle importante
+### Important rule
 
-Déployez OAC sur **toutes** les pages de l'origine, ou sur **aucune**.  
-Le comportement est plus prédictible ainsi.
+Deploy OAC on **all** pages of the origin, or on **none**.  
+Behavior is more predictable that way.
 
 ---
 
 ## 9) Document-Policy
 
-`Document-Policy` est utile pour **faire respecter ou reporter** certains comportements documentaires (ex. interdire `document.write`, signaler certains usages problématiques).
+`Document-Policy` is useful for **enforcing or reporting** certain document behaviors (e.g. prohibiting `document.write`, reporting certain problematic usages).
 
-### Position pratique
+### Practical stance
 
-- considérer cette feature comme **expérimentale / draft**,
-- utile surtout en laboratoire ou sur une flotte navigateur bien contrôlée,
-- ne pas en faire un contrôle critique unique.
+- consider this feature **experimental / draft**,
+- most useful in a lab environment or on a well-controlled browser fleet,
+- do not make it a sole critical control.
 
-### Exemple conceptuel
+### Conceptual example
 
 ```http
 Document-Policy: document-write=?0
 ```
 
-### Bon usage
+### Good use
 
-- rapporter l'usage de patterns legacy que vous voulez éliminer,
-- sécuriser progressivement un front historique.
+- reporting usage of legacy patterns you want to eliminate,
+- progressively hardening a historical frontend.
 
-### Mauvais usage
+### Bad use
 
-- croire que cela remplace CSP, Trusted Types ou une vraie refonte du code legacy.
+- believing it replaces CSP, Trusted Types, or a genuine legacy code overhaul.
 
 ---
 
 ## 10) Attribution Reporting
 
-L'Attribution Reporting API a un intérêt produit/mesure pub, pas un vrai rôle défensif applicatif. En plus, la technologie est désormais **dépréciée** côté documentation moderne.
+The Attribution Reporting API has a product/ad measurement interest, not a real defensive application security role. Furthermore, the technology is now **deprecated** in modern documentation.
 
-### Recommandation
+### Recommendation
 
-- **Ne pas adopter** pour du greenfield sécurité.
-- Si vous l'avez déjà :
-  - l'isoler derrière un flag,
-  - documenter le besoin business,
-  - prévoir sa sortie.
+- **Do not adopt** for greenfield security work.
+- If you already have it:
+  - isolate it behind a flag,
+  - document the business need,
+  - plan its removal.
 
 ---
 
-## Tableau synthétique : feature -> attaque mitigée -> support browser
+## Summary table: feature -> mitigated attack -> browser support
 
-> **Lecture** : cette table est volontairement qualitative. Vérifiez la compatibilité exacte sur votre flotte réelle avant activation globale.
+> **Note**: this table is intentionally qualitative. Verify exact compatibility on your actual browser fleet before global activation.
 
-| Feature | Attaque / risque mitigé | Support browser (pratique 2026) |
+| Feature | Mitigated attack / risk | Browser support (practical 2026) |
 |---|---|---|
-| Trusted Types | DOM XSS, injection dans les sinks HTML/script/URL | disponible sur les dernières versions majeures ; vérifier la flotte legacy |
-| Sanitizer API | injection HTML dans quelques flows de rendu | disponibilité limitée ; à traiter comme progressive enhancement |
-| COOP + COEP + CORP | XS-Leaks, confusion de contexte, prérequis pour SharedArrayBuffer/cross-origin isolation | support moderne, mais compatibilité forte à tester avec assets tiers |
-| Fetch Metadata | CSRF, XSSI, XS-Leaks, appels cross-site inattendus | largement exploitable sur navigateurs modernes, avec variations selon les headers |
-| Subresource Integrity | compromission d'asset CDN / tiers | largement supporté |
-| Permissions Policy | abus d'APIs sensibles (camera, mic, geolocation, payment, USB, serial) | support mixte / disponibilité limitée selon directives |
-| Origin-Agent-Cluster | meilleure isolation de process/contexte et moindre interférence same-site cross-origin | support moderne utile, mais à valider sur la flotte cible |
-| Document-Policy | réduction/reporting de patterns documentaires legacy | expérimental / draft |
-| Attribution Reporting | aucun gain sécurité défensif direct | déprécié ; éviter pour les nouveaux déploiements |
+| Trusted Types | DOM XSS, injection into HTML/script/URL sinks | available in recent major versions; verify legacy fleet |
+| Sanitizer API | HTML injection in some rendering flows | limited availability; treat as progressive enhancement |
+| COOP + COEP + CORP | XS-Leaks, context confusion, prerequisite for SharedArrayBuffer/cross-origin isolation | modern support, but strong compatibility testing needed with third-party assets |
+| Fetch Metadata | CSRF, XSSI, XS-Leaks, unexpected cross-site calls | broadly usable on modern browsers, with variations by header |
+| Subresource Integrity | CDN / third-party asset compromise | broadly supported |
+| Permissions Policy | abuse of sensitive APIs (camera, mic, geolocation, payment, USB, serial) | mixed support / limited availability depending on directives |
+| Origin-Agent-Cluster | better process/context isolation and reduced same-site cross-origin interference | useful modern support, but validate against target fleet |
+| Document-Policy | reduction/reporting of legacy document patterns | experimental / draft |
+| Attribution Reporting | no direct defensive security benefit | deprecated; avoid for new deployments |
 
 ---
 
-## Drop-in headers Nginx (complément à `secure-headers.md`)
+## Drop-in Nginx headers (complement to `secure-headers.md`)
 
-> **Important** : le nonce doit être généré **par réponse**, côté application ou composant capable de produire un aléa cryptographiquement fort. Le placeholder `$csp_nonce` ci-dessous est intentionnel.
+> **Important**: the nonce must be generated **per response**, on the application side or a component capable of producing a cryptographically strong random value. The `$csp_nonce` placeholder below is intentional.
 
 ```nginx
-# Baseline complémentaire moderne
+# Modern complementary baseline
 add_header Cross-Origin-Opener-Policy "same-origin" always;
 add_header Cross-Origin-Embedder-Policy "require-corp" always;
 add_header Cross-Origin-Resource-Policy "same-site" always;
@@ -403,7 +403,7 @@ add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 add_header X-Content-Type-Options "nosniff" always;
 
-# CSP moderne: à fusionner avec votre CSP existante
+# Modern CSP: merge with your existing CSP
 add_header Content-Security-Policy "
   default-src 'self';
   base-uri 'none';
@@ -418,22 +418,22 @@ add_header Content-Security-Policy "
 " always;
 ```
 
-### Variantes utiles
+### Useful variants
 
-- Si vous dépendez de tiers non compatibles, commencez par **ne pas activer COEP** partout.
-- Si vous avez besoin d'iframes cross-origin, testez précisément l'effet de `COOP: same-origin`.
-- Si votre app est très statique, remplacez les nonces par des **hashes CSP**.
+- If you depend on incompatible third parties, start by **not enabling COEP** everywhere.
+- If you need cross-origin iframes, test the exact effect of `COOP: same-origin` carefully.
+- If your app is highly static, replace nonces with **CSP hashes**.
 
 ---
 
-## Cloudflare Workers : headers + Fetch Metadata guard
+## Cloudflare Workers: headers + Fetch Metadata guard
 
 ```js
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
-    // Guard Fetch Metadata pour les endpoints sensibles
+    // Fetch Metadata guard for sensitive endpoints
     if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/account")) {
       const site = request.headers.get("sec-fetch-site") || "";
       const mode = request.headers.get("sec-fetch-mode") || "";
@@ -460,7 +460,7 @@ export default {
     headers.set("X-Content-Type-Options", "nosniff");
     headers.append("Vary", "Sec-Fetch-Site, Sec-Fetch-Mode, Sec-Fetch-Dest");
 
-    // Exemple: CSP sans nonce. Pour une vraie app SSR, injecter un nonce côté origin.
+    // Example: CSP without nonce. For a real SSR app, inject a nonce on the origin side.
     headers.set(
       "Content-Security-Policy",
       "default-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; " +
@@ -479,26 +479,59 @@ export default {
 
 ---
 
-## Déploiement progressif recommandé
+## Recommended progressive deployment
 
-1. **Mesurer avant de bloquer** : CSP report-only, inventaire des subresources, logs Fetch Metadata.
-2. **Réduire les permissions** : camera/microphone/geolocation/payment/usb/serial à `()`.
-3. **Activer Trusted Types** sur les surfaces les plus exposées au HTML.
-4. **Tester cross-origin isolation** si vous avez besoin de SAB/WASM threads.
-5. **Pinner les assets tiers** avec SRI.
-6. **Mettre OAC** de façon homogène sur l'origine.
-7. **Traiter Document-Policy et Attribution Reporting** comme non prioritaires / avancés.
+1. **Measure before blocking**: CSP report-only, subresource inventory, Fetch Metadata logs.
+2. **Reduce permissions**: camera/microphone/geolocation/payment/usb/serial to `()`.
+3. **Enable Trusted Types** on the surfaces most exposed to HTML.
+4. **Test cross-origin isolation** if you need SAB/WASM threads.
+5. **Pin third-party assets** with SRI.
+6. **Apply OAC** consistently across the origin.
+7. **Treat Document-Policy and Attribution Reporting** as non-priority / advanced.
 
 ---
 
-## Raccourcis utiles
+## Quick reference
 
-- **Trusted Types** : pour arrêter les DOM XSS modernes.
-- **Sanitizer API** : bonus, pas socle universel.
-- **COOP/COEP/CORP** : pour isoler correctement les contexts et débloquer SAB.
-- **Fetch Metadata** : pour filtrer les appels cross-site absurdes.
-- **SRI** : pour ne pas faire confiance aveuglément aux tiers.
-- **Permissions Policy** : pour fermer les APIs sensibles par défaut.
-- **OAC** : pour isoler l'origine plus proprement.
-- **Document-Policy** : expérimental, utile pour chasser le legacy.
-- **Attribution Reporting** : déprécié, hors trajectoire défensive.
+- **Trusted Types**: to stop modern DOM XSS.
+- **Sanitizer API**: a bonus, not a universal foundation.
+- **COOP/COEP/CORP**: to properly isolate contexts and unlock SAB.
+- **Fetch Metadata**: to filter out nonsensical cross-site calls.
+- **SRI**: to avoid blindly trusting third parties.
+- **Permissions Policy**: to close sensitive APIs by default.
+- **OAC**: to isolate the origin more cleanly.
+- **Document-Policy**: experimental, useful for hunting down legacy.
+- **Attribution Reporting**: deprecated, outside the defensive roadmap.
+
+---
+
+## GDPR relevance
+
+Several browser security controls have a direct mapping to GDPR obligations, primarily **Art. 25 (privacy by design/default)** and **Art. 32 (security of processing)**. They are not privacy controls in isolation, but they reduce the technical risk of personal data exposure at the browser layer.
+
+| Feature | GDPR Article | Rationale |
+|---|---|---|
+| **Permissions Policy** | Art. 25 — Privacy by default; Art. 7 — Conditions for consent | Restricting camera, microphone, geolocation, and payment APIs to `()` by default implements privacy-by-default at the browser API layer. Where these APIs require user consent (e.g. geolocation for a location feature), the Permissions Policy delegation must align with the consent signal collected by the CMP. A mismatch (policy allows, consent not collected, or vice versa) is an Art. 7 / Art. 25 finding. |
+| **COOP + COEP + CORP** | Art. 32 — Security of processing; Art. 5(1)(f) — Confidentiality | Cross-origin isolation prevents timing side-channels and Spectre-class attacks that could leak personal data across origins. For applications handling special-category data (Art. 9), cross-origin isolation is a proportionate technical measure under Art. 32(1). |
+| **Trusted Types + Sanitizer API** | Art. 32 — Security of processing | DOM XSS is one of the primary vectors for in-browser personal data exfiltration. Enforcing Trusted Types closes the most common injection sinks that attackers use to steal session tokens, form data, and page content containing personal data. |
+| **Subresource Integrity (SRI)** | Art. 32 — Security of processing; Art. 28 — Processor obligations | Third-party scripts loaded without integrity pinning can be silently replaced (supply chain compromise) to exfiltrate personal data entered on the page. SRI ensures the third-party processor (CDN / analytics vendor) cannot deliver modified code without detection. The CDN relationship may also require a DPA under Art. 28. |
+| **Fetch Metadata guard** | Art. 32 — Security of processing | Blocking unexpected cross-site writes (CSRF) on endpoints that process personal data prevents unauthorized modification of data subject records — an integrity obligation under Art. 5(1)(f). |
+| **Referrer-Policy: strict-origin-when-cross-origin** | Art. 5(1)(c) — Minimisation; Art. 25 — Privacy by default | Full referrer URLs can contain personal data (e.g. `/users/12345/profile`, search queries with names or health terms). A strict Referrer-Policy prevents leaking these to third-party origins by default. |
+| **Attribution Reporting (deprecated)** | Art. 6 — Legal basis; Art. 25 — Privacy by default | Attribution Reporting enables cross-site tracking for advertising measurement. If used, it requires a legal basis (legitimate interest or consent), a DPIA if large-scale profiling is involved, and must be reviewed against ePrivacy / cookie law. Current deprecation trajectory makes this a non-recommended path. |
+
+### Consent and CMP alignment
+
+The Permissions Policy must be reviewed alongside the Consent Management Platform (CMP) configuration:
+
+1. If the CMP collects consent for geolocation, the Permissions Policy must allow `geolocation=(self)` only after that consent is confirmed — never unconditionally.
+2. If the CMP does not collect consent for a sensor API (camera, microphone), the Permissions Policy must set that API to `()`.
+3. CMP configuration screenshots and Permissions Policy headers together constitute the Art. 7 / Art. 25 evidence package an auditor expects.
+
+### Privacy-by-design checklist for browser layer
+
+- [ ] Permissions Policy reviewed against CMP consent categories.
+- [ ] No third-party script loaded without SRI and a valid Art. 28 DPA with the CDN/vendor.
+- [ ] Referrer-Policy set to `strict-origin-when-cross-origin` or stricter on pages with personal data in URLs.
+- [ ] COOP/COEP assessed for surfaces processing special-category data (Art. 9).
+- [ ] Trusted Types enforced (or report-only with a tracked remediation plan) on forms collecting personal data.
+- [ ] Attribution Reporting not enabled without a documented legal basis and DPIA review.

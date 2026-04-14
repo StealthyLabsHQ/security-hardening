@@ -1,8 +1,10 @@
-# AI Coding CLI Hardening (Claude Code / Codex / Gemini CLI)
+# AI Coding CLI Hardening (Claude Code / Codex / Gemini CLI / Similar Tools)
 
 > Last reviewed: 2026-04-06 | Next review: 2026-10-06 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (policy lint + CI guardrails automatable; threat model/manual approvals required)
 
 This guide adds **operational hardening controls** for local and CI usage of AI coding CLIs (Claude Code, Codex CLI, Gemini CLI, and similar tools).
+
+If you use AI IDE assistants, browser builders, or no-code / low-code platforms, pair this guide with `ai-ide-no-code-security.md`.
 
 Use this when AI agents can read files, run commands, call external tools, or create commits.
 
@@ -135,6 +137,20 @@ Implementation differs by product, but the **security invariant** should not cha
 
 ---
 
+## 4.2 Adjacent Tool Families (IDE / Browser Builder / No-Code)
+
+CLI controls do not stop at the CLI. Apply the same defensive model to nearby tools:
+
+| Tool family | Equivalent control |
+|---|---|
+| AI IDE assistant (`Cursor`, similar editor agents) | Restrict workspace scope, review extensions/plugins, require diff review before apply |
+| Browser/cloud coding builder | Protect previews, separate environments, avoid raw production data and secrets in prompts |
+| No-code / low-code platform | Use service accounts, narrow connector scopes, require publish approval and exportability |
+
+See `ai-ide-no-code-security.md` for the full checklist.
+
+---
+
 ## 5. Prompt/Context Firewall for Coding Workflows
 
 Before any tool call from model output:
@@ -260,6 +276,7 @@ Recommended tools:
 
 - `references/llm-agent-security.md`
 - `references/mcp-security.md`
+- `references/ai-ide-no-code-security.md`
 - `references/secret-leak-prevention.md`
 - `references/pre-push-checklist.md`
 - `references/supply-chain-security.md`

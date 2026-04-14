@@ -1,0 +1,11 @@
+action_class,default_disposition,approval_owner,notes
+read_repo,allow,developer,only pseudonymized or non-personal data
+edit_workspace,ask,repo-owner,manual privacy review required
+install_dependencies,ask,repo-owner,review vendor/telemetry behavior
+external_network,deny,security-or-privacy,temporary allowlist only
+git_push,deny,repo-owner,PR flow only
+release,deny,repo-owner+privacy,dual control
+deploy,deny,repo-owner+privacy,dual control
+processor_change,deny,privacy-owner,DPA/subprocessor review required
+retention_or_deletion_change,deny,privacy-owner,dual control
+read_personal_data,deny,privacy-owner,use synthetic or masked data instead

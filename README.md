@@ -1,6 +1,6 @@
 # Security Hardening Reference
 
-A comprehensive, actionable security reference for developers, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, and AI/LLM agents.
+A comprehensive, actionable security reference for developers, founders, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, defensive operations, privacy, and AI/LLM agents.
 
 Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS**.
 
@@ -140,6 +140,33 @@ cp .github/dependabot.yml your-project/.github/
 cat .gitignore-security-template >> your-project/.gitignore
 ```
 
+### Copy-paste defensive AI tool profiles
+
+The repository now ships ready-to-copy profiles under `templates/ai-tool-profiles/` for:
+
+- `Claude Code`
+- `Codex`
+- `Gemini CLI`
+- `Cursor`
+- no-code / low-code / automation tools
+
+It also ships posture overlays under `templates/ai-tool-profiles/postures/` for:
+
+- `solo`
+- `startup`
+- `prod-sensitive`
+- `gdpr-sensitive`
+
+And ready-made merged bundles under `templates/ai-tool-profiles/bundles/` for:
+
+- `claude-code-prod-sensitive`
+- `cursor-prod-sensitive`
+- `gemini-cli-prod-sensitive`
+- `codex-gdpr-sensitive`
+- `no-code-gdpr-sensitive`
+
+See `references/ai-tool-profiles.md` for the right profile and copy path per tool.
+
 ### Trigger phrases (any tool)
 
 Once installed, the skill activates on prompts like:
@@ -153,6 +180,17 @@ Once installed, the skill activates on prompts like:
 "Threat-model this feature"
 ```
 
+### Maximum-Protection Quick Start
+
+If your goal is "defense first", work through the corpus in this order:
+
+1. `references/defensive-security-baseline.md`
+2. `references/quick-start-ai-coding.md` + `references/ai-cli-hardening.md`
+3. `references/ai-ide-no-code-security.md`
+4. `references/secret-leak-prevention.md` + `references/pre-push-checklist.md`
+5. `references/privacy-data-minimization.md` + `references/gdpr-security-ops.md`
+6. `references/incident-playbooks.md`
+
 ---
 
 ## Table of Contents
@@ -162,6 +200,7 @@ Once installed, the skill activates on prompts like:
 - [Identity & Access Management](#identity--access-management)
 - [Platform Security](#platform-security)
 - [Human Layer](#human-layer)
+- [Personal / Executive Defense](#personal--executive-defense)
 - [AI / LLM, Agent & MCP Security](#ai--llm--agent-security)
 - [Privacy and Operations](#privacy-and-operations)
 - [Improvement Plan & Audit Tools](#improvement-plan--audit-tools)
@@ -291,6 +330,15 @@ Covers: Email authentication (SPF, DKIM, DMARC `p=reject`), phishing-resistant M
 
 ---
 
+## Personal / Executive Defense
+
+### `references/defensive-security-baseline.md`
+**Maximum-protection defensive baseline** for developers, founders, executives, and small teams.
+
+Covers: priority account hardening (password manager + FIDO2), separate admin accounts, full-disk encryption, browser/profile separation, safe AI usage, BEC-resistant payment verification, travel mode, immutable backups, SaaS/SSO hardening, and a 30-minute / 7-day / 30-day rollout plan.
+
+---
+
 ## AI / LLM & Agent Security
 
 ### `references/llm-agent-security.md`
@@ -308,6 +356,21 @@ Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/vol
 
 Covers: default-deny permissions, tiered elevation model (read-only to high-impact actions), policy-as-code template, prompt/context firewall controls, secret-safe workflows, Git/release integrity controls, CI guardrails, and maturity roadmap by team size.
 
+### `references/ai-tool-profiles.md`
+**Copy-paste defensive profile map** for Claude Code, Codex, Gemini CLI, Cursor, and no-code / low-code tools.
+
+Covers: exact template paths, recommended launch posture, what each profile enforces, and links to official vendor documentation used for the field names or behavior.
+
+### `references/ai-bundle-presets.md`
+**Ready-made merged bundle map** for common high-security scenarios.
+
+Covers: direct copy paths for `claude-code-prod-sensitive`, `cursor-prod-sensitive`, `gemini-cli-prod-sensitive`, `codex-gdpr-sensitive`, and `no-code-gdpr-sensitive`.
+
+### `references/ai-ide-no-code-security.md`
+**Security guide for AI IDE assistants, browser builders, and no-code / low-code tools**.
+
+Covers: Cursor-style workspace risks, extension/plugin trust, public preview exposure, connector scope sprawl, service-account ownership, prompt/data hygiene, publish gates, exportability, and human review areas that cannot be delegated to the tool.
+
 ### `references/ai-agent-incident-response.md`
 **Incident response playbook dedicated to AI agents** and MCP-enabled workflows.
 
@@ -316,6 +379,11 @@ Covers: severity model, first 15-minute containment steps, evidence collection, 
 ---
 
 ## Privacy and Operations
+
+### `references/gdpr-security-ops.md`
+**Operational GDPR / RGPD security guide** mapping Articles 5/25/28/30/32/33/35 and transfer controls to engineering and security actions.
+
+Covers: data inventory, RoPA, technical and organizational measures, DPA / SCC / TIA vendor checks, breach notification timeline, DSAR/delete/export workflows, evidence pack for audits, and common red flags.
 
 ### `references/privacy-data-minimization.md`
 **Privacy by design** - how to stop leaking PII through logs, errors, exports, and analytics.
@@ -403,6 +471,15 @@ Covers: **Express**, **NestJS**, **FastAPI**, **Django**, **Laravel**, **Spring 
 
 ## Automation
 
+### `.github/workflows/content-lint.yml`
+**Content policy guardrail** for this repository. Fails if `SKILL.md` exceeds the 1024-byte portability budget or if a reference file loses its review metadata header.
+
+### `.github/workflows/lint.yml`
+**Workflow and documentation linting**: validates GitHub Actions with `actionlint` and checks Markdown links with `lychee`.
+
+### `.github/workflows/scorecard.yml`
+**OpenSSF Scorecard** analysis on schedule and on push to `main`, with SARIF upload to GitHub code scanning.
+
 ### `.github/workflows/script-lint.yml`
 **Lint pipeline for small ops/installer scripts** that often skip review: shellcheck for `.sh`/`.bash` (warning-as-error, all checks enabled) and PSScriptAnalyzer for `.ps1`/`.psm1`/`.psd1` (security-focused rule set: `PSAvoidUsingInvokeExpression`, `PSAvoidUsingConvertToSecureStringWithPlainText`, `PSAvoidUsingPlainTextForPassword`, etc.). Triggered only on script paths so it stays fast.
 
@@ -414,7 +491,7 @@ Jobs: Gitleaks (secret scanning), Semgrep (SAST), Trivy filesystem scan (depende
 ### `.github/pull_request_template.md`
 **Security checklist** enforced on every PR before review.
 
-Sections: input/output validation, authentication & authorization, secrets & sensitive data, dependencies, network & API, code quality.
+Sections: input/output validation, authentication & authorization, privacy / GDPR, secrets & sensitive data, AI / automation, dependencies, network & API, code quality.
 
 ### `CHANGELOG.md`
 Tracks all additions, updates, and deprecations with dates. Includes a backlog of planned improvements.

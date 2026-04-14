@@ -1,0 +1,2 @@
+connector_name,platform,environment,owner,account_type,scope_summary,data_types_touched,rotation_due,last_reviewed,approved_by,notes
+example-crm,Retool,prod,security@example.com,service-account,read:customers write:notes,customer-profile;support-notes,2026-07-01,2026-04-14,ciso@example.com,replace demo row

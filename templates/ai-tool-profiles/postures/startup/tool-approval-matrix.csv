@@ -1,0 +1,11 @@
+action_class,default_disposition,approval_owner,notes
+read_repo,allow,developer,normal analysis allowed
+edit_workspace,ask,developer,diff review and CI
+install_dependencies,ask,repo-owner,justify new package and lockfile
+external_network_allowlisted,ask,developer,document reason in task
+external_network_non_allowlisted,deny,repo-owner,add explicit allowlist first
+git_push,deny,repo-owner,PR flow preferred
+release,deny,repo-owner,manual release gate
+deploy,deny,repo-owner,manual only
+workflow_change,ask,security-or-devops,CODEOWNERS review
+read_secrets,deny,repo-owner,service accounts only
