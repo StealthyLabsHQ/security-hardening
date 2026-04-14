@@ -5,6 +5,14 @@ Format: `[YYYY-MM-DD] Description`
 
 ---
 
+## [2026-04-14] - Tenth batch
+
+### Updated
+- `references/language-patterns.md` - Added PowerShell section: `Invoke-Expression` / `iex` / `[scriptblock]::Create` (CWE-94/95), command injection via `cmd /c` and `Start-Process` string interpolation (CWE-78), path traversal in `Get-Content` / `Remove-Item` (CWE-22), `Import-Clixml` insecure deserialization (CWE-502), `ConvertTo-SecureString -AsPlainText -Force` and DPAPI footguns (CWE-798/321), `ServerCertificateValidationCallback` and `-SkipCertificateCheck` TLS bypass (CWE-295), download-and-run patterns (CWE-494/829), explanation that `ExecutionPolicy Bypass` is not a security boundary (Constrained Language Mode + WDAC are), per-script audit checklist, PSScriptAnalyzer + InjectionHunter detection commands.
+- `README.md` - Added PowerShell row to the language-patterns coverage table.
+
+---
+
 ## [2026-04-14] - Ninth batch
 
 ### Added
