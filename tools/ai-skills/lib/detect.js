@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 
 const HOME = os.homedir();
 
@@ -14,10 +14,8 @@ const HOME = os.homedir();
  */
 function binaryExists(name) {
   try {
-    const cmd = process.platform === 'win32'
-      ? `where ${name} 2>nul`
-      : `command -v ${name} 2>/dev/null`;
-    execSync(cmd, { stdio: 'pipe' });
+    const command = process.platform === 'win32' ? 'where.exe' : 'which';
+    execFileSync(command, [name], { stdio: 'pipe' });
     return true;
   } catch {
     return false;
@@ -38,6 +36,19 @@ function dirExists(dir) {
 }
 
 /**
+ * Check if a file exists.
+ * @param {string} file
+ * @returns {boolean}
+ */
+function fileExists(file) {
+  try {
+    return fs.statSync(file).isFile();
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Detect whether each AI CLI is installed on this machine.
  * Returns a map: adapterId -> boolean
  */
@@ -47,9 +58,9 @@ function detectAll() {
     codex:    binaryExists('codex')    || dirExists(path.join(HOME, '.codex')),
     gemini:   binaryExists('gemini')   || dirExists(path.join(HOME, '.gemini')),
     cursor:   binaryExists('cursor')   || dirExists(path.join(HOME, '.cursor')),
-    copilot:  binaryExists('gh')       || dirExists(path.join(HOME, '.config', 'gh')),
+    copilot:  fileExists(path.join(process.cwd(), '.github', 'copilot-instructions.md')),
     windsurf: binaryExists('windsurf') || dirExists(path.join(HOME, '.windsurf')),
   };
 }
 
-module.exports = { detectAll, binaryExists, dirExists };
+module.exports = { detectAll, binaryExists, dirExists, fileExists };

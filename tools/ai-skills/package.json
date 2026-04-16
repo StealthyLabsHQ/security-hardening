@@ -6,6 +6,10 @@
     "ai-skill": "bin/ai-skills.js"
   },
   "main": "./lib/cli.js",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:ci": "node --test test/*.test.js"
+  },
   "engines": {
     "node": ">=18"
   },

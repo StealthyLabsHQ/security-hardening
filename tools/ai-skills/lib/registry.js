@@ -3,29 +3,109 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const { validateRegistry, validateRelativeRepoPath } = require('./validation');
 
 const LOCAL_REGISTRY = path.join(__dirname, '..', 'registry.json');
+const RAW_GITHUB_HOST = 'raw.githubusercontent.com';
+const DEFAULT_TIMEOUT_MS = 10_000;
+const DEFAULT_MAX_REDIRECTS = 2;
+const DEFAULT_REGISTRY_BYTES = 256 * 1024;
+const DEFAULT_SKILL_BYTES = 512 * 1024;
+
+function normalizeUrl(url, allowedHosts) {
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    throw new Error(`Invalid URL "${url}".`);
+  }
+
+  if (parsed.protocol !== 'https:') {
+    throw new Error(`Only https:// URLs are allowed: ${url}`);
+  }
+
+  if (allowedHosts && !allowedHosts.includes(parsed.hostname)) {
+    throw new Error(`Host "${parsed.hostname}" is not in the allowlist.`);
+  }
+
+  return parsed;
+}
 
 /**
  * Fetch a URL and return the body as a string (follows one redirect).
  * @param {string} url
  * @returns {Promise<string>}
  */
-function fetchUrl(url) {
+function fetchUrl(url, options = {}) {
+  const allowedHosts = options.allowedHosts || [RAW_GITHUB_HOST];
+  const maxBytes = options.maxBytes || DEFAULT_REGISTRY_BYTES;
+  const timeoutMs = options.timeoutMs || DEFAULT_TIMEOUT_MS;
+  const maxRedirects = options.maxRedirects ?? DEFAULT_MAX_REDIRECTS;
+  const parsedUrl = normalizeUrl(url, allowedHosts);
+
   return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
+    let settled = false;
+    const fail = (error) => {
+      if (settled) return;
+      settled = true;
+      reject(error);
+    };
+    const succeed = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+
+    const req = https.get(parsedUrl, (res) => {
       if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-        return fetchUrl(res.headers.location).then(resolve, reject);
+        res.resume();
+        if (maxRedirects <= 0) {
+          fail(new Error(`Too many redirects fetching ${parsedUrl}`));
+          return;
+        }
+
+        let redirectUrl;
+        try {
+          redirectUrl = new URL(res.headers.location, parsedUrl).toString();
+        } catch {
+          fail(new Error(`Invalid redirect while fetching ${parsedUrl}`));
+          return;
+        }
+
+        fetchUrl(redirectUrl, {
+          allowedHosts,
+          maxBytes,
+          timeoutMs,
+          maxRedirects: maxRedirects - 1,
+        }).then(succeed, fail);
+        return;
       }
+
       if (res.statusCode !== 200) {
         res.resume();
-        return reject(new Error(`HTTP ${res.statusCode} fetching ${url}`));
+        fail(new Error(`HTTP ${res.statusCode} fetching ${parsedUrl}`));
+        return;
       }
+
       const chunks = [];
-      res.on('data', (chunk) => chunks.push(chunk));
-      res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-      res.on('error', reject);
-    }).on('error', reject);
+      let totalBytes = 0;
+      res.on('data', (chunk) => {
+        totalBytes += chunk.length;
+        if (totalBytes > maxBytes) {
+          res.destroy();
+          fail(new Error(`Response exceeded ${maxBytes} bytes fetching ${parsedUrl}`));
+          return;
+        }
+        chunks.push(chunk);
+      });
+      res.on('end', () => succeed(Buffer.concat(chunks).toString('utf8')));
+      res.on('error', fail);
+    });
+
+    req.setTimeout(timeoutMs, () => {
+      req.destroy(new Error(`Timed out after ${timeoutMs}ms fetching ${parsedUrl}`));
+    });
+    req.on('error', fail);
   });
 }
 
@@ -52,8 +132,11 @@ function resolveRef(ref) {
  */
 async function fetchRegistry(ownerRepo, branch = 'main') {
   const url = `https://raw.githubusercontent.com/${ownerRepo}/${branch}/registry.json`;
-  const raw = await fetchUrl(url);
-  return JSON.parse(raw);
+  const raw = await fetchUrl(url, {
+    allowedHosts: [RAW_GITHUB_HOST],
+    maxBytes: DEFAULT_REGISTRY_BYTES,
+  });
+  return validateRegistry(JSON.parse(raw));
 }
 
 /**
@@ -64,8 +147,12 @@ async function fetchRegistry(ownerRepo, branch = 'main') {
  * @returns {Promise<string>}
  */
 async function fetchSkillContent(ownerRepo, branch, filePath) {
-  const url = `https://raw.githubusercontent.com/${ownerRepo}/${branch}/${filePath}`;
-  return fetchUrl(url);
+  const safePath = validateRelativeRepoPath(filePath);
+  const url = `https://raw.githubusercontent.com/${ownerRepo}/${branch}/${safePath}`;
+  return fetchUrl(url, {
+    allowedHosts: [RAW_GITHUB_HOST],
+    maxBytes: DEFAULT_SKILL_BYTES,
+  });
 }
 
 /**
@@ -76,14 +163,17 @@ async function fetchSkillContent(ownerRepo, branch, filePath) {
 async function loadRegistry(registryUrl) {
   if (registryUrl) {
     try {
-      const raw = await fetchUrl(registryUrl);
-      return JSON.parse(raw);
+      const raw = await fetchUrl(registryUrl, {
+        allowedHosts: [RAW_GITHUB_HOST],
+        maxBytes: DEFAULT_REGISTRY_BYTES,
+      });
+      return validateRegistry(JSON.parse(raw));
     } catch (err) {
       console.warn(`Warning: could not fetch remote registry (${err.message}), falling back to local.`);
     }
   }
   const raw = fs.readFileSync(LOCAL_REGISTRY, 'utf8');
-  return JSON.parse(raw);
+  return validateRegistry(JSON.parse(raw));
 }
 
 /**

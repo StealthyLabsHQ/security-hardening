@@ -69,3 +69,22 @@ jobs:
               fi
             done
           done
+
+      - name: Block placeholders and generated-session artifacts in public docs
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          declare -a patterns=(
+            'security@stealthylabs\.example'
+            'replace with your actual contact'
+            'generated in this session'
+            'repository is not mounted in this environment'
+          )
+
+          for pattern in "${patterns[@]}"; do
+            if grep -RInE --include='*.md' --include='*.json' "$pattern" README.md SECURITY.md references tools/ai-skills; then
+              echo "Disallowed placeholder or generated text matched pattern: $pattern"
+              exit 1
+            fi
+          done

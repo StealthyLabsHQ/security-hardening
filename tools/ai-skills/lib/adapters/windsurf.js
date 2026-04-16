@@ -4,21 +4,16 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { binaryExists, dirExists } = require('../detect');
+const { writeNamedSkillFile, removeNamedSkillFile } = require('../adapter-utils');
 
 const WINDSURF_RULES_DIR = path.join(os.homedir(), '.windsurf', 'rules');
-
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 function detect() {
   return binaryExists('windsurf') || dirExists(path.join(os.homedir(), '.windsurf'));
 }
 
 function install(skillName, content) {
-  fs.mkdirSync(WINDSURF_RULES_DIR, { recursive: true });
-  const dest = path.join(WINDSURF_RULES_DIR, `${skillName}.mdc`);
-  fs.writeFileSync(dest, content, 'utf8');
+  writeNamedSkillFile(WINDSURF_RULES_DIR, skillName, '.mdc', content);
 }
 
 function installedSkills() {
@@ -32,10 +27,7 @@ function installedSkills() {
 }
 
 function remove(skillName) {
-  const dest = path.join(WINDSURF_RULES_DIR, `${skillName}.mdc`);
-  if (fs.existsSync(dest)) {
-    fs.unlinkSync(dest);
-  }
+  removeNamedSkillFile(WINDSURF_RULES_DIR, skillName, '.mdc');
 }
 
 module.exports = {

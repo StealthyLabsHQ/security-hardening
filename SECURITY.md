@@ -15,11 +15,12 @@ This repository is documentation-first. The `main` branch is the only supported 
 
 **Please do not open a public GitHub issue for security reports.**
 
-Use one of the private channels below:
+Use the private reporting channel below:
 
 1. **GitHub Private Vulnerability Reporting** (preferred) - open a report at
    <https://github.com/StealthyLabsHQ/security-hardening/security/advisories/new>
-2. **Email** - send a PGP-encrypted message to `security@stealthylabs.example` (replace with your actual contact). Include a `[security-hardening]` tag in the subject line.
+
+An alternate email channel should be published here only once it is monitored and tested end-to-end.
 
 When reporting, please include:
 
