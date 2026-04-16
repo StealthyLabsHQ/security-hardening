@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { dirExists } = require('../detect');
+const { writeNamedSkillFile, removeNamedSkillFile } = require('../adapter-utils');
 
 const SKILLS_DIR = path.join(os.homedir(), '.claude', 'skills');
 
@@ -12,9 +13,7 @@ function detect() {
 }
 
 function install(skillName, content) {
-  fs.mkdirSync(SKILLS_DIR, { recursive: true });
-  const dest = path.join(SKILLS_DIR, `${skillName}.md`);
-  fs.writeFileSync(dest, content, 'utf8');
+  writeNamedSkillFile(SKILLS_DIR, skillName, '.md', content);
 }
 
 function installedSkills() {
@@ -28,10 +27,7 @@ function installedSkills() {
 }
 
 function remove(skillName) {
-  const dest = path.join(SKILLS_DIR, `${skillName}.md`);
-  if (fs.existsSync(dest)) {
-    fs.unlinkSync(dest);
-  }
+  removeNamedSkillFile(SKILLS_DIR, skillName, '.md');
 }
 
 module.exports = {

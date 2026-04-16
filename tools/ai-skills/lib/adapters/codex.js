@@ -4,57 +4,46 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { binaryExists, dirExists } = require('../detect');
+const {
+  upsertNamedSection,
+  removeNamedSection,
+  listSectionNames,
+  writeFileAtomic,
+} = require('../adapter-utils');
 
 const CODEX_DIR = path.join(os.homedir(), '.codex');
-const INSTRUCTIONS_FILE = path.join(CODEX_DIR, 'instructions.md');
-
-const SECTION_MARKER = (name) => `## ${name}`;
+const AGENTS_FILE = path.join(CODEX_DIR, 'AGENTS.md');
+const LEGACY_INSTRUCTIONS_FILE = path.join(CODEX_DIR, 'instructions.md');
 
 function detect() {
   return binaryExists('codex') || dirExists(CODEX_DIR);
 }
 
-function install(skillName, content) {
+function migrateLegacyFile() {
   fs.mkdirSync(CODEX_DIR, { recursive: true });
-  const section = `${SECTION_MARKER(skillName)}\n\n${content}\n`;
-  if (fs.existsSync(INSTRUCTIONS_FILE)) {
-    const existing = fs.readFileSync(INSTRUCTIONS_FILE, 'utf8');
-    // Replace existing section if present, otherwise append
-    const sectionRe = new RegExp(`## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`, 'g');
-    if (sectionRe.test(existing)) {
-      fs.writeFileSync(INSTRUCTIONS_FILE, existing.replace(sectionRe, section.trimEnd()), 'utf8');
-    } else {
-      fs.appendFileSync(INSTRUCTIONS_FILE, `\n${section}`, 'utf8');
-    }
-  } else {
-    fs.writeFileSync(INSTRUCTIONS_FILE, section, 'utf8');
+
+  if (!fs.existsSync(LEGACY_INSTRUCTIONS_FILE) || fs.existsSync(AGENTS_FILE)) {
+    return;
   }
+
+  const legacyContent = fs.readFileSync(LEGACY_INSTRUCTIONS_FILE, 'utf8');
+  writeFileAtomic(AGENTS_FILE, legacyContent);
+  fs.rmSync(LEGACY_INSTRUCTIONS_FILE, { force: true });
+}
+
+function install(skillName, content) {
+  migrateLegacyFile();
+  upsertNamedSection(AGENTS_FILE, skillName, content);
 }
 
 function installedSkills() {
-  try {
-    const content = fs.readFileSync(INSTRUCTIONS_FILE, 'utf8');
-    const matches = content.match(/^## (.+)$/gm) || [];
-    return matches.map((m) => m.replace(/^## /, ''));
-  } catch {
-    return [];
-  }
+  migrateLegacyFile();
+  return listSectionNames(AGENTS_FILE);
 }
 
 function remove(skillName) {
-  if (!fs.existsSync(INSTRUCTIONS_FILE)) return;
-  const content = fs.readFileSync(INSTRUCTIONS_FILE, 'utf8');
-  // Remove from "## skillName" up to (but not including) the next "## " or EOF
-  const sectionRe = new RegExp(
-    `\\n?## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`,
-    'g'
-  );
-  const updated = content.replace(sectionRe, '');
-  fs.writeFileSync(INSTRUCTIONS_FILE, updated, 'utf8');
-}
-
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  removeNamedSection(AGENTS_FILE, skillName);
+  removeNamedSection(LEGACY_INSTRUCTIONS_FILE, skillName);
 }
 
 module.exports = {

@@ -6,6 +6,12 @@ const { resolveRef, fetchRegistry, fetchSkillContent, loadRegistry, getSkill } =
 const { record } = require('./store');
 const { detectAll } = require('./detect');
 const adapters = require('./adapters');
+const {
+  validateRegistry,
+  validateSkillName,
+  validateRelativeRepoPath,
+  isImmutableRef,
+} = require('./validation');
 
 const LOCAL_REGISTRY = path.join(__dirname, '..', 'registry.json');
 
@@ -16,9 +22,10 @@ const LOCAL_REGISTRY = path.join(__dirname, '..', 'registry.json');
  */
 async function readLocalSkillContent(skill) {
   if (skill.file) {
-    const filePath = path.isAbsolute(skill.file)
-      ? skill.file
-      : path.join(path.dirname(LOCAL_REGISTRY), skill.file);
+    const filePath = path.join(
+      path.dirname(LOCAL_REGISTRY),
+      validateRelativeRepoPath(skill.file)
+    );
     return fs.readFileSync(filePath, 'utf8');
   }
   throw new Error('Skill has no file path.');
@@ -63,6 +70,14 @@ function resolveTargets(forTargets) {
   return active.length > 0 ? active : Object.keys(adapters);
 }
 
+function warnIfMutableRef(ownerRepo, branch) {
+  if (!isImmutableRef(branch)) {
+    console.warn(
+      `Warning: ${ownerRepo}@${branch} is a mutable ref. Pin an immutable 40-character commit SHA for maximum supply-chain integrity.`
+    );
+  }
+}
+
 /**
  * Install skills from a GitHub-hosted registry (new primary flow).
  *
@@ -75,6 +90,7 @@ function resolveTargets(forTargets) {
 async function installFromRef(ref, skillName, opts = {}) {
   const { owner, repo, branch } = resolveRef(ref);
   const ownerRepo = `${owner}/${repo}`;
+  warnIfMutableRef(ownerRepo, branch);
 
   let registry;
   try {
@@ -83,6 +99,7 @@ async function installFromRef(ref, skillName, opts = {}) {
     throw new Error(`Could not fetch registry from ${ownerRepo}@${branch}: ${err.message}`);
   }
 
+  registry = validateRegistry(registry);
   const targetIds = resolveTargets(opts.targets);
 
   // Determine which skills to install
@@ -103,6 +120,7 @@ async function installFromRef(ref, skillName, opts = {}) {
 
   const output = [];
   for (const [name, skill] of skillEntries) {
+    validateSkillName(name);
     let content;
     try {
       content = await fetchSkillContent(ownerRepo, branch, skill.file);
@@ -135,7 +153,8 @@ async function installFromRef(ref, skillName, opts = {}) {
  * @returns {Promise<Array<{adapter: string, label: string, ok: boolean, error?: string}>>}
  */
 async function install(name, opts = {}) {
-  const registry = await loadRegistry(opts.registry);
+  validateSkillName(name);
+  const registry = validateRegistry(await loadRegistry(opts.registry));
   const skill = getSkill(name, registry);
 
   if (!skill) {

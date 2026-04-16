@@ -32,6 +32,14 @@ ai-skill targets
 
 Auto-detects Claude Code, Codex, Gemini CLI, Cursor, Copilot, and Windsurf. Any GitHub repo with a `registry.json` at its root works as a skill source. The CLI lives in [`tools/ai-skills/`](tools/ai-skills/).
 
+For maximum supply-chain integrity, pin a full commit SHA instead of a mutable branch:
+
+```bash
+ai-skill add StealthyLabsHQ/security-hardening@0123456789abcdef0123456789abcdef01234567
+```
+
+`GitHub Copilot` is intentionally opt-in when bootstrapping. Use `--for copilot` the first time so the CLI creates `.github/copilot-instructions.md` in the current repository.
+
 ---
 
 ## Manual install
@@ -148,6 +156,8 @@ cp -r /path/to/security-hardening/references ~/.codex/security-references
 ```
 
 Codex loads `AGENTS.md` from the working directory and `~/.codex/AGENTS.md` globally on every session.
+
+The `ai-skill` installer appends sections to the global `~/.codex/AGENTS.md` file so installed skills are available across repositories without copying files by hand.
 
 ---
 
