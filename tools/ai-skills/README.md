@@ -18,11 +18,17 @@ Install skills from a GitHub repository that contains a `registry.json`.
 # Install all skills from a repo
 npx ai-skill add StealthyLabsHQ/security-hardening
 
+# Pin an immutable commit SHA for maximum trust
+npx ai-skill add StealthyLabsHQ/security-hardening@0123456789abcdef0123456789abcdef01234567
+
 # Install a specific skill only
 npx ai-skill add StealthyLabsHQ/security-hardening security-review
 
 # Install into specific AI CLIs only
 npx ai-skill add StealthyLabsHQ/security-hardening --for claude,codex
+
+# Bootstrap GitHub Copilot explicitly
+npx ai-skill add StealthyLabsHQ/security-hardening --for copilot
 
 # Install from a specific branch
 npx ai-skill add StealthyLabsHQ/security-hardening@dev
@@ -77,11 +83,13 @@ Each `file` path is resolved relative to the repo root on GitHub raw.
 | ID       | Tool             | Install location                          |
 |----------|------------------|-------------------------------------------|
 | claude   | Claude Code      | `~/.claude/skills/<name>.md`              |
-| codex    | OpenAI Codex CLI | `~/.codex/instructions.md` (section)      |
+| codex    | OpenAI Codex CLI | `~/.codex/AGENTS.md` (section)            |
 | gemini   | Gemini CLI       | `~/.gemini/GEMINI.md` (section)           |
 | cursor   | Cursor           | `~/.cursor/rules/<name>.md`               |
 | copilot  | GitHub Copilot   | `.github/copilot-instructions.md` (section) |
 | windsurf | Windsurf         | `~/.windsurf/rules/<name>.mdc`            |
+
+`copilot` is not auto-detected from `gh` alone anymore. This avoids writing into the current repository unless you explicitly target Copilot or the repo already has `.github/copilot-instructions.md`.
 
 ## Requirements
 

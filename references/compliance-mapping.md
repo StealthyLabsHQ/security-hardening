@@ -2,7 +2,7 @@
 
 > **Scope and session limitation**
 >
-> This matrix is a **best-effort** based on the files explicitly visible in the request (`threat-modeling.md`, `api-security.md`, `secure-headers.md`) and the documents generated in this session. Since the actual repository is not mounted in this environment, it **does not claim to cover every existing file in `references/`**. Once the actual corpus is available, one row must be added per file actually present.
+> This matrix is a curated cross-reference for the files currently maintained in this repository. Treat it as living inventory: whenever `references/` changes, update one row per file that is added, removed, or materially re-scoped.
 
 ## Domain semantics
 
@@ -50,7 +50,7 @@ The **Scope** column distinguishes the nature of each reference to avoid conflat
 
 ## Gaps
 
-> **Principle**: this section lists the areas **likely not covered** by the references visible in the session. It must be recalculated when the actual `references/` folder is available.
+> **Principle**: this section lists the areas not yet mapped by the current corpus. Recalculate it whenever `references/` changes or when a document substantially changes scope.
 
 ### SOC 2 CC gaps
 

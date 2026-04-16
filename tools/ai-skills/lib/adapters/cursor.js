@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { binaryExists, dirExists } = require('../detect');
+const { writeNamedSkillFile, removeNamedSkillFile } = require('../adapter-utils');
 
 const CURSOR_RULES_DIR = path.join(os.homedir(), '.cursor', 'rules');
 
@@ -12,9 +13,7 @@ function detect() {
 }
 
 function install(skillName, content) {
-  fs.mkdirSync(CURSOR_RULES_DIR, { recursive: true });
-  const dest = path.join(CURSOR_RULES_DIR, `${skillName}.md`);
-  fs.writeFileSync(dest, content, 'utf8');
+  writeNamedSkillFile(CURSOR_RULES_DIR, skillName, '.md', content);
 }
 
 function installedSkills() {
@@ -28,10 +27,7 @@ function installedSkills() {
 }
 
 function remove(skillName) {
-  const dest = path.join(CURSOR_RULES_DIR, `${skillName}.md`);
-  if (fs.existsSync(dest)) {
-    fs.unlinkSync(dest);
-  }
+  removeNamedSkillFile(CURSOR_RULES_DIR, skillName, '.md');
 }
 
 module.exports = {
