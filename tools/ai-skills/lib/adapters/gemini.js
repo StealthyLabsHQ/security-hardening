@@ -1,56 +1,27 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const { binaryExists, dirExists } = require('../detect');
+const { upsertNamedSection, removeNamedSection, listSectionNames } = require('../adapter-utils');
 
 const GEMINI_DIR = path.join(os.homedir(), '.gemini');
 const GEMINI_FILE = path.join(GEMINI_DIR, 'GEMINI.md');
-
-function escapeRegex(str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 function detect() {
   return binaryExists('gemini') || dirExists(GEMINI_DIR);
 }
 
 function install(skillName, content) {
-  fs.mkdirSync(GEMINI_DIR, { recursive: true });
-  const section = `## ${skillName}\n\n${content}\n`;
-  if (fs.existsSync(GEMINI_FILE)) {
-    const existing = fs.readFileSync(GEMINI_FILE, 'utf8');
-    const sectionRe = new RegExp(`## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`, 'g');
-    if (sectionRe.test(existing)) {
-      fs.writeFileSync(GEMINI_FILE, existing.replace(sectionRe, section.trimEnd()), 'utf8');
-    } else {
-      fs.appendFileSync(GEMINI_FILE, `\n${section}`, 'utf8');
-    }
-  } else {
-    fs.writeFileSync(GEMINI_FILE, section, 'utf8');
-  }
+  upsertNamedSection(GEMINI_FILE, skillName, content);
 }
 
 function installedSkills() {
-  try {
-    const content = fs.readFileSync(GEMINI_FILE, 'utf8');
-    const matches = content.match(/^## (.+)$/gm) || [];
-    return matches.map((m) => m.replace(/^## /, ''));
-  } catch {
-    return [];
-  }
+  return listSectionNames(GEMINI_FILE);
 }
 
 function remove(skillName) {
-  if (!fs.existsSync(GEMINI_FILE)) return;
-  const content = fs.readFileSync(GEMINI_FILE, 'utf8');
-  const sectionRe = new RegExp(
-    `\\n?## ${escapeRegex(skillName)}[\\s\\S]*?(?=\\n## |$)`,
-    'g'
-  );
-  const updated = content.replace(sectionRe, '');
-  fs.writeFileSync(GEMINI_FILE, updated, 'utf8');
+  removeNamedSection(GEMINI_FILE, skillName);
 }
 
 module.exports = {
