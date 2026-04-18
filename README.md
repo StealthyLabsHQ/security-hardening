@@ -42,6 +42,9 @@ If the assistant supports `agentskill.sh`, give it this exact instruction:
 Install the skill "security-hardening" from https://agentskill.sh/@stealthylabshq/security-hardening
 ```
 
+`agentskill.sh` is a third-party skill installer. Review its source before trusting it in CI or on a shared machine.
+The official install paths are documented below.
+
 ### 1. Clone the repository
 
 ```bash
