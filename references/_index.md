@@ -112,6 +112,6 @@
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| Compliance Mapping | `compliance-mapping` | 3 | `3, 4` | stale | `references/compliance/compliance-mapping.md` |
+| Compliance Mapping | `compliance-mapping` | 3 | `3, 4` | 2026-04-18 | `references/compliance/compliance-mapping.md` |
 | Coverage Matrix | `coverage-matrix` | 2 | `3, 4` | 2026-04-14 | `references/compliance/coverage-matrix.md` |
 | CWE / OWASP / ASVS Mapping | `cwe-owasp-mapping` | 2 | `2, 3` | 2026-04-03 | `references/compliance/cwe-owasp-mapping.md` |
