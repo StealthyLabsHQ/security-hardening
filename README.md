@@ -1,6 +1,6 @@
 # Security Hardening Reference
 
-A comprehensive, actionable security reference and portable AI security skill for developers, founders, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, defensive operations, privacy, and AI/LLM agents.
+A portable defensive application security and AI-agent security skill for developers, founders, DevOps engineers, and security practitioners. Covers secure design, secure code review, infrastructure hardening, identity, privacy, incident response, vulnerability management, and AI/LLM agent security.
 
 Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS**.
 
