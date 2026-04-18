@@ -34,7 +34,15 @@ The practical implication for this repository is simple: as cyber-capable models
 
 This repository is designed as a portable security knowledge base. It is primarily packaged as a **Claude Code skill**, but the same `SKILL.md` + `references/` corpus can be loaded into any AI coding assistant. Installation guides for all major tools are below.
 
-### 0. Clone the repository
+### 0. Fast install prompt
+
+If the assistant supports `agentskill.sh`, give it this exact instruction:
+
+```text
+Install the skill "security-hardening" from https://agentskill.sh/@stealthylabshq/security-hardening
+```
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/StealthyLabsHQ/security-hardening.git
