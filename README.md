@@ -1,48 +1,36 @@
 # Security Hardening Reference
 
-A comprehensive, actionable security reference for developers, founders, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, defensive operations, privacy, and AI/LLM agents.
+A comprehensive, actionable security reference and portable AI security skill for developers, founders, DevOps engineers, and security practitioners. Covers secure coding, infrastructure hardening, identity, mobile, desktop, IoT/OT, the human layer, defensive operations, privacy, and AI/LLM agents.
 
 Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS**.
 
 ---
 
-## Quick install — `ai-skill` CLI
+## Core stance
 
-Clone the repo once, then use the CLI to install skills into any AI CLI on your machine:
-
-```bash
-git clone https://github.com/StealthyLabsHQ/security-hardening.git
-cd security-hardening
-node tools/ai-skills/bin/ai-skills.js add StealthyLabsHQ/security-hardening
-```
-
-For repeated use, add a shell alias:
-
-```bash
-# bash/zsh (~/.bashrc or ~/.zshrc)
-alias ai-skill="node /path/to/security-hardening/tools/ai-skills/bin/ai-skills.js"
-
-# then use it from anywhere
-ai-skill add StealthyLabsHQ/security-hardening
-ai-skill add StealthyLabsHQ/security-hardening security-review --for claude,codex
-ai-skill list
-ai-skill remove security-review
-ai-skill targets
-```
-
-Auto-detects Claude Code, Codex, Gemini CLI, Cursor, Copilot, and Windsurf. Any GitHub repo with a `registry.json` at its root works as a skill source. The CLI lives in [`tools/ai-skills/`](tools/ai-skills/).
-
-For maximum supply-chain integrity, pin a full commit SHA instead of a mutable branch:
-
-```bash
-ai-skill add StealthyLabsHQ/security-hardening@0123456789abcdef0123456789abcdef01234567
-```
-
-`GitHub Copilot` is intentionally opt-in when bootstrapping. Use `--for copilot` the first time so the CLI creates `.github/copilot-instructions.md` in the current repository.
+- Treat prompt injection, system prompt leakage, RAG poisoning, MCP abuse, and excessive agent autonomy as first-class security problems.
+- Do not treat the system prompt, model refusal behavior, or vendor defaults as security boundaries.
+- Prefer read-only defaults, explicit elevation, tool trust zones, structured validation, and operator-visible kill switches.
+- Use this repository as a portable skill and reference corpus; no local installer tooling is required.
 
 ---
 
-## Manual install
+## Official provider signals baked into this repo
+
+This corpus now explicitly incorporates recent official cybersecurity guidance and deployment signals from OpenAI, Google, and Anthropic:
+
+- **OpenAI - Trusted Access for Cyber (February 5, 2026):** OpenAI says `GPT-5.3-Codex` can work autonomously for hours or days on complex cyber tasks, and pairs that capability with identity verification, classifier-based monitoring, and trust-based access for higher-risk workflows. Source: [OpenAI - Introducing Trusted Access for Cyber](https://openai.com/index/trusted-access-for-cyber/)
+- **Google - SAIF Risk Assessment (October 24, 2024):** Google explicitly maps `Data Poisoning`, `Prompt Injection`, and `Model Source Tampering` to risk assessment and mitigation guidance for AI systems. Source: [Google - SAIF Risk Assessment](https://blog.google/innovation-and-ai/technology/safety-security/google-ai-saif-risk-assessment/)
+- **Google - AI security announcements (July 15, 2025):** Google says its `Big Sleep` agent found a real-world security flaw at risk of exploitation, reinforcing the case for AI-assisted defense with strong governance. Source: [Google - A summer of security: empowering cyber defenders with AI](https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/)
+- **Anthropic - Project Glasswing (April 2026):** Anthropic says `Claude Mythos Preview` can surpass all but the most skilled humans at finding and exploiting software vulnerabilities, so access is being limited to defensive partners rather than opened broadly. Source: [Anthropic - Project Glasswing](https://www.anthropic.com/glasswing)
+- **Anthropic - Mythos system card listing (April 2026):** Anthropic lists `Mythos Preview` on its official system cards page, which is the canonical public entry point for the model's capability and safety documentation. Source: [Anthropic - Model system cards](https://www.anthropic.com/system-cards)
+- **Anthropic - Responsible Scaling Policy updates (page reviewed April 18, 2026):** Anthropic's RSP updates and required safeguards reinforce that stronger frontier models need stronger operational controls, including reviewed infrastructure changes and cloud security posture management. Source: [Anthropic - Responsible Scaling Policy](https://www.anthropic.com/responsible-scaling-policy)
+
+The practical implication for this repository is simple: as cyber-capable models improve, the default answer is **not** to give them more power. The default answer is to improve gating, logging, trust separation, incident response, and recovery.
+
+---
+
+## Use as a skill
 
 This repository is designed as a portable security knowledge base. It is primarily packaged as a **Claude Code skill**, but the same `SKILL.md` + `references/` corpus can be loaded into any AI coding assistant. Installation guides for all major tools are below.
 
@@ -157,8 +145,6 @@ cp -r /path/to/security-hardening/references ~/.codex/security-references
 
 Codex loads `AGENTS.md` from the working directory and `~/.codex/AGENTS.md` globally on every session.
 
-The `ai-skill` installer appends sections to the global `~/.codex/AGENTS.md` file so installed skills are available across repositories without copying files by hand.
-
 ---
 
 ### Add the CI pipeline to your project
@@ -227,12 +213,15 @@ If your goal is "defense first", work through the corpus in this order:
 3. `references/ai-ide-no-code-security.md`
 4. `references/secret-leak-prevention.md` + `references/pre-push-checklist.md`
 5. `references/privacy-data-minimization.md` + `references/gdpr-security-ops.md`
-6. `references/incident-playbooks.md`
+6. `references/ai-agent-incident-response.md` + `references/incident-playbooks.md`
 
 ---
 
 ## Table of Contents
 
+- [Core Stance](#core-stance)
+- [Official Provider Signals Baked Into This Repo](#official-provider-signals-baked-into-this-repo)
+- [Use as a Skill](#use-as-a-skill)
 - [Web Application Security](#web-application-security)
 - [Infrastructure & Configuration](#infrastructure--configuration)
 - [Identity & Access Management](#identity--access-management)
@@ -407,7 +396,7 @@ Covers: priority account hardening (password manager + FIDO2), separate admin ac
 ### `references/llm-agent-security.md`
 **OWASP LLM Top 10 (2025)** and agentic security controls.
 
-Covers: Prompt injection (direct and indirect), sensitive data disclosure via context, excessive agency, RAG poisoning, secrets in system prompts, agentic action audit logging, tool permission tiers (Level 0-3), output validation before execution, MCP server security (authentication, tool allowlists, sandboxing).
+Covers: Prompt injection (direct and indirect), sensitive data disclosure via context, excessive agency, RAG poisoning, secrets in system prompts, agentic action audit logging, tool permission tiers (Level 0-3), output validation before execution, MCP server security (authentication, tool allowlists, sandboxing), plus official provider signals from **OpenAI**, **Google**, and **Anthropic** including `Claude Mythos Preview`.
 
 ### `references/mcp-security.md`
 **Dedicated MCP (Model Context Protocol) security reference** covering the four main attack vectors when giving an AI agent "hands and eyes" via external tools.
@@ -591,5 +580,11 @@ Tracks all additions, updates, and deprecations with dates. Includes a backlog o
 | CIS Benchmarks | https://www.cisecurity.org/cis-benchmarks/ |
 | MITRE ATT&CK for ICS | https://attack.mitre.org/matrices/ics/ |
 | MITRE ATLAS (AI/ML) | https://atlas.mitre.org/ |
+| OpenAI - Trusted Access for Cyber | https://openai.com/index/trusted-access-for-cyber/ |
+| Google - SAIF Risk Assessment | https://blog.google/innovation-and-ai/technology/safety-security/google-ai-saif-risk-assessment/ |
+| Google - A summer of security: empowering cyber defenders with AI | https://blog.google/innovation-and-ai/technology/safety-security/cybersecurity-updates-summer-2025/ |
+| Anthropic - Project Glasswing | https://www.anthropic.com/glasswing |
+| Anthropic - Model system cards | https://www.anthropic.com/system-cards |
+| Anthropic - Responsible Scaling Policy | https://www.anthropic.com/responsible-scaling-policy |
 | Mozilla Observatory | https://observatory.mozilla.org |
 | CISA ICS Advisories | https://www.cisa.gov/ics-advisories |
