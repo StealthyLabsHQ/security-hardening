@@ -1,0 +1,7 @@
+id: "c-021"
+input: "Before enabling browser use on our coding agent, build a defensive red-team and regression-gate plan for prompt injection, MCP abuse, and risky tool actions."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/agent-evals-red-teaming.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/appsec/framework-examples.md"]
+must_mention: ["regression", "prompt injection", "tool", "telemetry"]
+must_not_mention: []

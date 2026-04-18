@@ -19,16 +19,22 @@ Created during the phased refactor:
 - `docs/v2-upgrade-report.md`
 - `references/_core-invariants.md`
 - `references/_index.md` (generated index introduced in Phase 3)
+- `references/ai/_index.md`
+- `references/ai/agent-evals-red-teaming.md`
+- `references/ai/browser-computer-use-security.md`
+- `references/ai/rag-retrieval-security.md`
 - `scripts/build-index.py`
 - `scripts/lint-skill.py`
 - `evals/README.md`
 - `evals/run.py`
 - `evals/results/.gitignore`
-- `evals/cases/*.yaml` (`20` positive fixtures)
+- `evals/cases/*.yaml` (`23` positive fixtures)
 - `evals/negative/*.yaml` (`10` negative fixtures)
 - `CONTRIBUTING.md`
 - `CHANGELOG.md`
 - `INDEX.md`
+- `archive/README.md`
+- `archive/references/ai/ai-bundle-presets.md`
 
 Created and continuously updated as decision control points:
 
@@ -60,9 +66,11 @@ Compatibility support:
 
 ## Files Archived
 
-None.
+- `archive/references/ai/ai-bundle-presets.md`
 
-No files were removed during this phased upgrade, so `archive/` was not created or used.
+Archived during the AI-domain cleanup:
+
+- `references/ai/ai-bundle-presets.md` was merged into `references/ai/ai-tool-profiles.md` because it duplicated the same reader outcome as a packaging layer on top of tool profiles.
 
 ## Key Structural Changes
 
@@ -70,29 +78,34 @@ No files were removed during this phased upgrade, so `archive/` was not created 
 - `references/_core-invariants.md` holds the always-applied baseline once per task.
 - `README.md` is now explicitly human-facing.
 - `INDEX.md` is now explicitly machine-facing.
+- `references/ai/_index.md` now acts as a narrow router inside the AI domain.
+- `references/ai/ai-tool-profiles.md` now owns both base profiles and bundle-selection guidance.
+- `references/ai/agent-evals-red-teaming.md` adds a dedicated adversarial-evaluation and regression-gate reference for agentic systems.
+- `references/ai/browser-computer-use-security.md` adds a dedicated hardening guide for GUI-driving agents and authenticated browser workflows.
+- `references/ai/rag-retrieval-security.md` adds a dedicated retrieval-layer guide for vector stores, corpus trust, and cross-tenant leakage control.
 - `references/compliance/compliance-mapping.md` was downgraded to a pedagogical crosswalk and no longer reads like an audit artifact.
 - `security.yml` now includes a `skill-integrity` job that runs `scripts/lint-skill.py`.
 
 ## Metrics
 
 - Total references before refactor: `51`
-- Total references after refactor: `52`
+- Total references after refactor: `54`
 - New shared core file added: `1` (`references/_core-invariants.md`)
 - Reference categories after refactor: `8`
-- `SKILL.md` current size: `62` lines
-- `INDEX.md` current size: `105` lines
+- `SKILL.md` current size: `66` lines
+- `INDEX.md` current size: `108` lines
 
 Eval coverage:
 
-- Positive fixtures: `20`
+- Positive fixtures: `23`
 - Negative fixtures: `10`
-- Total fixtures: `30`
-- Preflight result: `30/30 PASS`
-- Fixtures with manual semantic checkpoints: `20`
+- Total fixtures: `33`
+- Preflight result: `33/33 PASS`
+- Fixtures with manual semantic checkpoints: `23`
 
 Positive fixture domain coverage from [evals/results/2026-04-18.md](D:/Users/stealthy/Documents/GitHub/security-hardening/evals/results/2026-04-18.md:1):
 
-- `ai`: `18`
+- `ai`: `28`
 - `appsec`: `7`
 - `iam`: `7`
 - `infra`: `5`
@@ -123,6 +136,7 @@ Potential breaking changes:
 - Agent navigation should now prefer [INDEX.md](D:/Users/stealthy/Documents/GitHub/security-hardening/INDEX.md:1) instead of using `README.md` as a corpus index.
 - `SKILL.md` now expects `references/_core-invariants.md` to be loaded once before domain references.
 - `references/_index.md` is generated metadata, not the primary navigation surface.
+- `references/ai/ai-bundle-presets.md` no longer exists as an active reference; consumers should use [references/ai/ai-tool-profiles.md](D:/Users/stealthy/Documents/GitHub/security-hardening/references/ai/ai-tool-profiles.md:1) and consult [archive/README.md](D:/Users/stealthy/Documents/GitHub/security-hardening/archive/README.md:1) for the archival note.
 
 Stability mitigations:
 

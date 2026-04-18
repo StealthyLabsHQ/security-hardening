@@ -221,7 +221,7 @@ And ready-made merged bundles under `templates/ai-tool-profiles/bundles/` for:
 - `codex-gdpr-sensitive`
 - `no-code-gdpr-sensitive`
 
-See `references/ai/ai-tool-profiles.md` for the right profile and copy path per tool.
+See `references/ai/ai-tool-profiles.md` for base-profile selection, bundle selection, and exact copy paths per tool.
 
 ### Trigger phrases (any tool)
 
@@ -430,10 +430,20 @@ Covers: priority account hardening (password manager + FIDO2), separate admin ac
 
 Covers: Prompt injection (direct and indirect), sensitive data disclosure via context, excessive agency, RAG poisoning, secrets in system prompts, agentic action audit logging, tool permission tiers (Level 0-3), output validation before execution, MCP server security (authentication, tool allowlists, sandboxing), plus official provider signals from **OpenAI**, **Google**, and **Anthropic** including `Claude Mythos Preview`.
 
+### `references/ai/browser-computer-use-security.md`
+**Dedicated browser / computer-use hardening guide** for GUI-driving agents and authenticated click-flow automation.
+
+Covers: sandbox/VM isolation, domain allowlists, session hygiene, uploads/downloads, credential entry boundaries, login and publish confirmations, local-OS spillover risk, screenshot/action telemetry, and release gates for browser/computer-use before widening scope.
+
 ### `references/ai/mcp-security.md`
 **Dedicated MCP (Model Context Protocol) security reference** covering the four main attack vectors when giving an AI agent "hands and eyes" via external tools.
 
 Covers: Excessive Agency (HITL confirmation patterns, least-privilege Docker/volume configs, narrow endpoint design), Indirect Prompt Injection via MCP (step-by-step attack chain, LLM-as-a-Judge sanitization, chained-action prevention), Server Spoofing and malicious manifests (allowlist enforcement, static manifest validation, supply chain audit), Path Traversal and SSRF in MCP tool parameters (Python validators for `read_file` and `fetch_url`, Pydantic schema enforcement, SSRF blocklist with private ranges and AWS IMDS).
+
+### `references/ai/rag-retrieval-security.md`
+**Dedicated RAG / retrieval security guide** for vector stores, knowledge bases, semantic search, and embedding-backed systems.
+
+Covers: corpus trust tiers, retrieval-aware authorization, attribute filtering, over-broad top-k retrieval, vector-store lifecycle and expiration, eventual-consistency deletion gaps, source attribution, document poisoning, and cross-tenant leakage in shared stores.
 
 ### `references/ai/hostile-corpus-review.md`
 **Hostile corpus review workflow** for untrusted prompts, docs, tickets, MCP output, and copied code.
@@ -448,17 +458,17 @@ Covers: default-deny permissions, tiered elevation model (read-only to high-impa
 ### `references/ai/ai-tool-profiles.md`
 **Copy-paste defensive profile map** for Claude Code, Codex, Gemini CLI, Cursor, and no-code / low-code tools.
 
-Covers: exact template paths, recommended launch posture, what each profile enforces, and links to official vendor documentation used for the field names or behavior.
-
-### `references/ai/ai-bundle-presets.md`
-**Ready-made merged bundle map** for common high-security scenarios.
-
-Covers: direct copy paths for `claude-code-prod-sensitive`, `cursor-prod-sensitive`, `gemini-cli-prod-sensitive`, `codex-gdpr-sensitive`, and `no-code-gdpr-sensitive`.
+Covers: exact template paths, posture overlays, ready-made bundle selection, direct copy paths for the repository's conservative presets, and links to official vendor documentation used for the field names or behavior.
 
 ### `references/ai/ai-ide-no-code-security.md`
 **Security guide for AI IDE assistants, browser builders, and no-code / low-code tools**.
 
 Covers: Cursor-style workspace risks, extension/plugin trust, public preview exposure, connector scope sprawl, service-account ownership, prompt/data hygiene, publish gates, exportability, and human review areas that cannot be delegated to the tool.
+
+### `references/ai/agent-evals-red-teaming.md`
+**Defensive adversarial-evaluation guide** for agentic systems before rollout or after model, tool, or permission changes.
+
+Covers: release-gate design, hostile-fixture families, excessive-agency checks, MCP/tool abuse scenarios, telemetry expectations, regression metrics, and how to turn incidents or near misses back into standing eval cases.
 
 ### `references/ai/ai-agent-incident-response.md`
 **Incident response playbook dedicated to AI agents** and MCP-enabled workflows.

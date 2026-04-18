@@ -4,22 +4,23 @@ slug: ai-tool-profiles
 category: ai
 depth: 1
 audit_level: [1, 2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-18
 sources:
   - "Anthropic Claude Code settings"
   - "OpenAI Codex CLI"
   - "Gemini CLI configuration"
   - "Cursor documentation"
-triggers_strong: ["claude code profile", "codex profile", "gemini settings", "cursor rules"]
-triggers_weak: ["tool profile", "ai tool"]
-related: ["ai-cli-hardening", "ai-bundle-presets"]
+  - "Repository template bundles"
+triggers_strong: ["claude code profile", "codex profile", "gemini settings", "cursor rules", "bundle preset", "prod-sensitive preset"]
+triggers_weak: ["tool profile", "ai tool", "bundle selection"]
+related: ["ai-cli-hardening", "ai-ide-no-code-security"]
 ---
 
 # AI Tool Profiles (Copy-Paste Defensive Pack)
 
-> Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (template sync, secret scans, and policy lint automatable; connector review and tool-choice approval manual)
+> Last reviewed: 2026-04-18 | Next review: 2026-10-18 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (template sync, secret scans, and policy lint automatable; connector review, rollout choice, and approval governance manual)
 
-This file maps the repository's new **copy-paste defensive profiles** to specific AI tools and builder categories:
+This file owns the repository's **copy-paste defensive profiles**, posture overlays, and ready-made bundle guidance for specific AI tools and builder categories:
 
 - `Claude Code`
 - `Codex`
@@ -30,6 +31,8 @@ This file maps the repository's new **copy-paste defensive profiles** to specifi
 The templates live under `templates/ai-tool-profiles/`.
 
 Posture overlays live under `templates/ai-tool-profiles/postures/`.
+
+Ready-made merged bundles live under `templates/ai-tool-profiles/bundles/`.
 
 ---
 
@@ -60,9 +63,44 @@ Each posture contains:
 - `.ai/agent-policy.yaml` - vendor-neutral policy baseline,
 - `tool-approval-matrix.csv` - explicit approval ownership.
 
+## 1.2 Ready-Made Bundles
+
+Use a bundle when you do not want to manually merge `base profile + posture overlay + root instructions`.
+
+| Bundle | Path | Best fit |
+|--------|------|----------|
+| `claude-code-prod-sensitive` | `templates/ai-tool-profiles/bundles/claude-code-prod-sensitive/` | Anthropic-based coding workflows touching prod-adjacent systems |
+| `cursor-prod-sensitive` | `templates/ai-tool-profiles/bundles/cursor-prod-sensitive/` | AI IDE workflows where workspace indexing and auto-apply are major concerns |
+| `gemini-cli-prod-sensitive` | `templates/ai-tool-profiles/bundles/gemini-cli-prod-sensitive/` | CLI agent workflows that should stay near read/review-only by default |
+| `codex-gdpr-sensitive` | `templates/ai-tool-profiles/bundles/codex-gdpr-sensitive/` | Codex usage on repos handling personal data, exports, HR, support, or legal data |
+| `no-code-gdpr-sensitive` | `templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/` | Retool/Bubble/Make/Zapier/n8n/Power Platform style environments with personal data |
+
 ---
 
-## 2. Claude Code
+## 2. Choose a Base Profile or a Bundle
+
+Start with a base profile when:
+
+- you need to understand each layer before rollout,
+- your repo already has custom instructions or policy files,
+- you want to combine a tool profile with a different posture overlay.
+
+Start with a ready-made bundle when:
+
+- you want the fastest conservative baseline,
+- the workflow already matches one of the repository's high-risk patterns,
+- you do not want to hand-merge instructions, policy, and approval ownership.
+
+Quick rule:
+
+- Pick `*-prod-sensitive` when the main risk is operational blast radius or production adjacency.
+- Pick `*-gdpr-sensitive` when the main risk is confidentiality, personal data, retention/deletion, or processor/vendor exposure.
+
+If both are true, start from the more restrictive bundle and then narrow further if the project needs additional controls.
+
+---
+
+## 3. Claude Code
 
 **Use when:** you want a project-level defensive profile with explicit `allow` / `ask` / `deny` rules and hidden secret paths.
 
@@ -85,7 +123,7 @@ What it does:
 
 ---
 
-## 3. Codex
+## 4. Codex
 
 **Use when:** you want a stable defensive baseline for Codex without hard-wiring a permissive persistent profile.
 
@@ -114,7 +152,7 @@ What it does:
 
 ---
 
-## 4. Gemini CLI
+## 5. Gemini CLI
 
 **Use when:** you want a concrete `settings.json` profile with restricted tools and no auto-accept.
 
@@ -139,7 +177,7 @@ What it does:
 
 ---
 
-## 5. Cursor
+## 6. Cursor
 
 **Use when:** you want to reduce exposure from workspace indexing and enforce project rules for the agent.
 
@@ -164,7 +202,7 @@ What it does:
 
 ---
 
-## 6. No-Code / Low-Code / Automation
+## 7. No-Code / Low-Code / Automation
 
 **Use when:** your risk comes from connectors, previews, OAuth scopes, webhooks, or hidden publish controls rather than from handwritten code.
 
@@ -186,7 +224,69 @@ This pack is vendor-neutral on purpose so it can be used with Retool, Bubble, Ma
 
 ---
 
-## 7. Recommended Rollout Order
+## 8. Bundle Copy Paths
+
+### Claude Code + Prod-Sensitive
+
+```bash
+mkdir -p .claude .ai
+cp templates/ai-tool-profiles/bundles/claude-code-prod-sensitive/.claude/settings.json .claude/settings.json
+cp templates/ai-tool-profiles/bundles/claude-code-prod-sensitive/CLAUDE.md CLAUDE.md
+cp templates/ai-tool-profiles/bundles/claude-code-prod-sensitive/.ai/agent-policy.yaml .ai/agent-policy.yaml
+cp templates/ai-tool-profiles/bundles/claude-code-prod-sensitive/.ai/tool-approval-matrix.csv .ai/tool-approval-matrix.csv
+```
+
+### Cursor + Prod-Sensitive
+
+```bash
+mkdir -p .cursor/rules .ai
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/.cursorignore .cursorignore
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/.cursorindexingignore .cursorindexingignore
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/.cursor/rules/security-hardening.mdc .cursor/rules/security-hardening.mdc
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/AGENTS.md AGENTS.md
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/.ai/agent-policy.yaml .ai/agent-policy.yaml
+cp templates/ai-tool-profiles/bundles/cursor-prod-sensitive/.ai/tool-approval-matrix.csv .ai/tool-approval-matrix.csv
+```
+
+### Gemini CLI + Prod-Sensitive
+
+```bash
+mkdir -p .gemini .ai
+cp templates/ai-tool-profiles/bundles/gemini-cli-prod-sensitive/.gemini/settings.json .gemini/settings.json
+cp templates/ai-tool-profiles/bundles/gemini-cli-prod-sensitive/GEMINI.md GEMINI.md
+cp templates/ai-tool-profiles/bundles/gemini-cli-prod-sensitive/.ai/agent-policy.yaml .ai/agent-policy.yaml
+cp templates/ai-tool-profiles/bundles/gemini-cli-prod-sensitive/.ai/tool-approval-matrix.csv .ai/tool-approval-matrix.csv
+```
+
+### Codex + GDPR-Sensitive
+
+```bash
+mkdir -p .ai
+cp templates/ai-tool-profiles/bundles/codex-gdpr-sensitive/AGENTS.md AGENTS.md
+cp templates/ai-tool-profiles/bundles/codex-gdpr-sensitive/.ai/agent-policy.yaml .ai/agent-policy.yaml
+cp templates/ai-tool-profiles/bundles/codex-gdpr-sensitive/.ai/tool-approval-matrix.csv .ai/tool-approval-matrix.csv
+```
+
+Recommended start:
+
+```bash
+codex --suggest
+```
+
+### No-Code + GDPR-Sensitive
+
+```bash
+mkdir -p security/no-code .ai
+cp templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/connector-register.csv security/no-code/connector-register.csv
+cp templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/release-gate-checklist.md security/no-code/release-gate-checklist.md
+cp templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/privacy-impact-checklist.md security/no-code/privacy-impact-checklist.md
+cp templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/.ai/agent-policy.yaml .ai/agent-policy.yaml
+cp templates/ai-tool-profiles/bundles/no-code-gdpr-sensitive/.ai/tool-approval-matrix.csv .ai/tool-approval-matrix.csv
+```
+
+---
+
+## 9. Recommended Rollout Order
 
 1. Copy the profile for the AI tool you use every day.
 2. Add a posture overlay from `templates/ai-tool-profiles/postures/`.
@@ -198,7 +298,17 @@ This pack is vendor-neutral on purpose so it can be used with Retool, Bubble, Ma
 
 ---
 
-## 8. Official References
+## 10. Operating Rule
+
+These profiles and bundles are intentionally strict. If the tool blocks work too often, widen access only after:
+
+1. identifying the exact action class that is blocked,
+2. deciding the owner for approval,
+3. documenting the policy change rather than making an ad hoc exception.
+
+---
+
+## 11. Official References
 
 - Anthropic Claude Code settings: https://docs.anthropic.com/en/docs/claude-code/settings
 - OpenAI Codex CLI: https://developers.openai.com/codex/cli
