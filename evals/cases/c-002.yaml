@@ -1,0 +1,7 @@
+id: "c-002"
+input: "Audit this GraphQL gateway for batching abuse, authz gaps, and persisted query weaknesses."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/graphql-security.md", "references/iam/authorization-rbac.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/privacy/privacy-data-minimization.md"]
+must_mention: ["GraphQL", "persisted queries", "authorization"]
+must_not_mention: []

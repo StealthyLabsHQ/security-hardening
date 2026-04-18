@@ -1,0 +1,7 @@
+id: "c-009"
+input: "Harden this Kubernetes workload against breakout and unexpected egress."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/infra/container-k8s-hardening.md", "references/infra/supply-chain-security.md"]
+must_not_load: ["references/privacy/privacy-data-minimization.md", "references/platform/desktop-app-security.md"]
+must_mention: ["network policy", "admission control", "blast radius"]
+must_not_mention: []

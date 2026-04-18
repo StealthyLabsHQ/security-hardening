@@ -1,0 +1,7 @@
+id: "c-020"
+input: "Review our package publication process for provenance, pinned dependencies, and release hygiene."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/infra/supply-chain-security.md", "references/ops/pre-push-checklist.md"]
+must_not_load: ["references/privacy/privacy-data-minimization.md", "references/platform/mobile-security.md"]
+must_mention: ["provenance", "pinning", "release"]
+must_not_mention: []

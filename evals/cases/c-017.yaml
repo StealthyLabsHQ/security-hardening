@@ -1,0 +1,7 @@
+id: "c-017"
+input: "Durcir notre workflow pre-push: on a des secrets exposés et trop de confiance dans l'IDE IA."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ops/secret-leak-prevention.md", "references/ops/pre-push-checklist.md", "references/ai/vibecoder-traps.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/platform/desktop-app-security.md"]
+must_mention: ["secrets exposés", "rotation", "scan"]
+must_not_mention: []

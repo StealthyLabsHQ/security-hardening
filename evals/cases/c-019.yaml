@@ -1,0 +1,7 @@
+id: "c-019"
+input: "Turn this audit into a security roadmap with the first controls we should prioritize."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/threat-modeling.md", "references/ops/security-improvements.md", "references/ops/detection-engineering.md"]
+must_not_load: ["references/platform/desktop-app-security.md", "references/compliance/coverage-matrix.md"]
+must_mention: ["roadmap", "blast radius", "priority"]
+must_not_mention: []

@@ -1,0 +1,7 @@
+id: "c-018"
+input: "Revue sécurité d'un assistant avec MCP: prompt injection indirecte, outils trop permissifs, confiance excessive."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/appsec/framework-examples.md", "references/platform/mobile-security.md"]
+must_mention: ["prompt injection", "séparation", "confiance"]
+must_not_mention: []

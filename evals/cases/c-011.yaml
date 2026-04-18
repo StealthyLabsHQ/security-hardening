@@ -1,0 +1,7 @@
+id: "c-011"
+input: "An AI CLI reviewed a hostile PDF and then proposed risky shell commands. Audit the workflow."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/hostile-corpus-review.md", "references/ai/ai-cli-hardening.md", "references/ai/llm-agent-security.md"]
+must_not_load: ["references/platform/desktop-app-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["untrusted content", "approval boundary", "planner-executor"]
+must_not_mention: []

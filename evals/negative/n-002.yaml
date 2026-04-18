@@ -1,0 +1,7 @@
+id: "n-002"
+input: "Explain recursion to a beginner with a simple example."
+should_trigger: false
+should_load: []
+must_not_load: ["references/_core-invariants.md"]
+must_mention: []
+must_not_mention: []

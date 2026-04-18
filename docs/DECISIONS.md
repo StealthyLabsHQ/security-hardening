@@ -110,3 +110,33 @@ All other reference files must stay in their category folders.
 - Index generation must explicitly tolerate `_core-invariants.md`.
 - Future root-level additions require a new ADR instead of quietly bypassing the taxonomy.
 
+## ADR-0005: Phase 5 evals use an offline fixture-integrity runner
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+Phase 5 requires `evals/cases/*.yaml`, `evals/negative/*.yaml`, and a simple runner that logs
+results in markdown.
+
+No model backend, agent harness, or golden-output execution contract is specified for this phase.
+That makes semantic assertions such as `must_mention` impossible to verify automatically without
+inventing a fake evaluator.
+
+### Decision
+
+Implement Phase 5 as an offline fixture-integrity harness:
+
+- validate case schema and required fields,
+- validate that referenced files resolve in the repository,
+- validate that positive cases include `references/_core-invariants.md`,
+- validate that positive routing targets appear in `SKILL.md`,
+- record semantic expectations such as `must_mention` as manual review checkpoints in the markdown report.
+
+### Consequences
+
+- The eval corpus becomes auditable and runnable without external services.
+- Routing regressions and broken paths are caught immediately.
+- Semantic quality checks remain explicit, but require a later model-backed harness if full automation is needed.
+

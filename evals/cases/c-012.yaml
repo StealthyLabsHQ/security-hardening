@@ -1,0 +1,7 @@
+id: "c-012"
+input: "Review a browser-based AI builder with third-party connectors for least-privilege failures."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/ai-ide-no-code-security.md", "references/ai/ai-tool-profiles.md", "references/ai/quick-start-ai-coding.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/infra/container-k8s-hardening.md"]
+must_mention: ["least privilege", "connector scope", "human approval"]
+must_not_mention: []

@@ -1,0 +1,7 @@
+id: "n-001"
+input: "Write me a short poem about spring rain."
+should_trigger: false
+should_load: []
+must_not_load: ["references/_core-invariants.md"]
+must_mention: []
+must_not_mention: []

@@ -1,0 +1,7 @@
+id: "c-010"
+input: "Review this MCP toolchain for prompt injection coming from untrusted docs and tool output."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/hostile-corpus-review.md", "references/ai/ai-cli-hardening.md"]
+must_not_load: ["references/appsec/framework-examples.md", "references/platform/mobile-security.md"]
+must_mention: ["prompt injection", "tool trust", "quarantine"]
+must_not_mention: []

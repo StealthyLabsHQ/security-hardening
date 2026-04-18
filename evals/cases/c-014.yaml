@@ -1,0 +1,7 @@
+id: "c-014"
+input: "Review our export pipeline for GDPR retention, access logging, and data minimization."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/privacy/privacy-data-minimization.md", "references/privacy/gdpr-security-ops.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/infra/container-k8s-hardening.md"]
+must_mention: ["retention", "minimization", "access logs"]
+must_not_mention: []
