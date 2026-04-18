@@ -34,6 +34,12 @@ The practical implication for this repository is simple: as cyber-capable models
 
 This repository is designed as a portable security knowledge base. It is primarily packaged as a **Claude Code skill**, but the same `SKILL.md` + `references/` corpus can be loaded into any AI coding assistant. Installation guides for all major tools are below.
 
+### Release channels
+
+- **Stable default:** `v1.0.0` is the last pre-refactor portable snapshot and the safest default for existing consumers.
+- **Preview / refactor line:** `v2.0.0-rc.1` is the first auditable, testable release candidate produced by phases 1-6 of the refactor.
+- **Working branch:** `main` may move ahead of both tags during ongoing refactor work.
+
 ### 0. Fast install prompt
 
 If the assistant supports `agentskill.sh`, give it this exact instruction:
@@ -48,8 +54,16 @@ The official install paths are documented below.
 ### 1. Clone the repository
 
 ```bash
+git clone --branch v1.0.0 --depth 1 https://github.com/StealthyLabsHQ/security-hardening.git
+cd security-hardening
+```
+
+If you want the refactor preview instead, use:
+
+```bash
 git clone https://github.com/StealthyLabsHQ/security-hardening.git
 cd security-hardening
+git checkout v2.0.0-rc.1
 ```
 
 ---
