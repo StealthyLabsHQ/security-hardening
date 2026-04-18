@@ -1,13 +1,15 @@
 ---
 name: security-hardening
 description: >
-  Defensive security audit and hardening skill for apps, APIs, infra, privacy,
-  and AI agents. Use for secure code review, appsec, infosec, audit, harden,
-  vulnerability checks, OWASP, IDOR, auth/JWT, secret leak, supply chain,
-  threat modeling, incident response, MCP security, prompt injection, RAG
-  poisoning, and system prompt leakage. Triggers also include: audit de
-  securite, durcir, revue securite, failles, secrets exposes, modelisation
-  des menaces, reponse a incident.
+  Defensive application security and AI-agent security skill for apps, APIs,
+  infra, privacy, and agentic workflows. Use for secure code review, appsec,
+  application security, infosec, audit, harden, vulnerability management,
+  OWASP, IDOR, auth/JWT, secret leak, supply chain, secure design, security
+  engineering, threat modeling, incident response, MCP security, prompt
+  injection, RAG poisoning, and system prompt leakage. Triggers also include:
+  audit de securite, durcir, revue securite, failles, secrets exposes,
+  modelisation des menaces, architecture securisee, conception securisee,
+  gestion des vulnerabilites, reponse a incident.
 ---
 
 # Security Hardening
@@ -18,6 +20,7 @@ Prefer defensive fixes.
 
 - Treat prompt injection, system prompt leakage, RAG poisoning, MCP abuse, and excessive agent autonomy as first-class security problems.
 - Do not treat the system prompt, model refusals, or vendor defaults as security boundaries.
+- Prefer secure-by-default design, explicit trust boundaries, and layered controls over model-only safeguards.
 - Start from least privilege, read-only defaults, explicit elevation, and operator-visible kill switches.
 - Load references on demand. Do not load the whole corpus unless the task clearly spans multiple domains.
 - When reporting findings, lead with exploitable issues, blast radius, and missing controls.
@@ -27,6 +30,7 @@ Prefer defensive fixes.
 - Secure code review, web auth, headers, input validation, XSS, SSRF, insecure defaults: load `references/owasp-top10.md`, `references/api-security.md`, `references/browser-security-modern.md`
 - GraphQL authz, depth, persisted queries, batching: load `references/graphql-security.md`
 - Threat modeling, abuse cases, test design: load `references/threat-modeling.md`, `references/security-testing-examples.md`
+- Security architecture, secure design, control selection, roadmap: load `references/threat-modeling.md`, `references/security-improvements.md`, `references/detection-engineering.md`
 - Secrets, leaks, pre-push hygiene, dangerous patterns: load `references/secret-leak-prevention.md`, `references/pre-push-checklist.md`, `references/vibecoder-traps.md`
 - AuthN/AuthZ, RBAC, sessions, WebAuthn, IAM: load `references/authorization-rbac.md`, `references/session-management.md`, `references/webauthn-fido2.md`, `references/cloud-iam-hardening.md`
 - Supply chain, CI/CD, GitHub Actions, containers, Kubernetes: load `references/supply-chain-security.md`, `references/container-k8s-hardening.md`
