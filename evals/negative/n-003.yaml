@@ -1,0 +1,7 @@
+id: "n-003"
+input: "Help me optimize this CSS animation for smoother motion."
+should_trigger: false
+should_load: []
+must_not_load: ["references/_core-invariants.md"]
+must_mention: []
+must_not_mention: []

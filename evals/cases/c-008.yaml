@@ -1,0 +1,7 @@
+id: "c-008"
+input: "Review our GitHub Actions pipelines and container builds for supply-chain weaknesses."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/infra/supply-chain-security.md", "references/infra/container-k8s-hardening.md"]
+must_not_load: ["references/privacy/gdpr-security-ops.md", "references/platform/mobile-security.md"]
+must_mention: ["pinning", "provenance", "least privilege"]
+must_not_mention: []

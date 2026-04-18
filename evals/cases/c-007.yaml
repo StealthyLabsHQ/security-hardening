@@ -1,0 +1,7 @@
+id: "c-007"
+input: "Review our WebAuthn rollout plan for admin access and cloud console protection."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/iam/webauthn-fido2.md", "references/iam/cloud-iam-hardening.md"]
+must_not_load: ["references/infra/container-k8s-hardening.md", "references/platform/mobile-security.md"]
+must_mention: ["phishing resistance", "attestation", "recovery"]
+must_not_mention: []

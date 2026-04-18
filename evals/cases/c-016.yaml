@@ -1,0 +1,7 @@
+id: "c-016"
+input: "Fais un audit de sécurité de cette API GraphQL avec focus sur l'autorisation et les requêtes trop profondes."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/graphql-security.md", "references/iam/authorization-rbac.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/privacy/gdpr-security-ops.md"]
+must_mention: ["autorisation", "profondeur", "objets"]
+must_not_mention: []

@@ -1,0 +1,7 @@
+id: "c-013"
+input: "An autonomous agent deleted production data after a bad tool call. Give me the response plan."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/ai-agent-incident-response.md", "references/ai/ai-tool-profiles.md", "references/ops/incident-playbooks.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/platform/mobile-security.md"]
+must_mention: ["containment", "kill switch", "evidence"]
+must_not_mention: []

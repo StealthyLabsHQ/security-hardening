@@ -1,0 +1,7 @@
+id: "n-009"
+input: "Solve this code golf challenge in the fewest JavaScript characters possible."
+should_trigger: false
+should_load: []
+must_not_load: ["references/_core-invariants.md"]
+must_mention: []
+must_not_mention: []

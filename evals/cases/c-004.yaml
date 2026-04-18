@@ -1,0 +1,7 @@
+id: "c-004"
+input: "Review the security architecture for a new multi-tenant SaaS and prioritize control gaps."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/threat-modeling.md", "references/ops/security-improvements.md", "references/ops/detection-engineering.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["trust boundary", "layered controls", "detection"]
+must_not_mention: []

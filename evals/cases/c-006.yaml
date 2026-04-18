@@ -1,0 +1,7 @@
+id: "c-006"
+input: "Audit our session lifecycle for fixation, stale admin cookies, and privilege escalation."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/iam/authorization-rbac.md", "references/iam/session-management.md"]
+must_not_load: ["references/infra/container-k8s-hardening.md", "references/privacy/gdpr-security-ops.md"]
+must_mention: ["session lifecycle", "least privilege", "reauthentication"]
+must_not_mention: []

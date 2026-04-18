@@ -1,0 +1,7 @@
+id: "c-001"
+input: "Review this Express route for IDOR and auth bugs in a multi-tenant API."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/api-security.md", "references/iam/authorization-rbac.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["deny-by-default", "IDOR", "object-level"]
+must_not_mention: []
