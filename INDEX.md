@@ -58,13 +58,16 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 
 ## AI
 
+- [references/ai/_index.md](references/ai/_index.md)
 - [references/ai/llm-agent-security.md](references/ai/llm-agent-security.md)
+- [references/ai/browser-computer-use-security.md](references/ai/browser-computer-use-security.md)
 - [references/ai/mcp-security.md](references/ai/mcp-security.md)
+- [references/ai/rag-retrieval-security.md](references/ai/rag-retrieval-security.md)
 - [references/ai/hostile-corpus-review.md](references/ai/hostile-corpus-review.md)
 - [references/ai/ai-cli-hardening.md](references/ai/ai-cli-hardening.md)
 - [references/ai/ai-ide-no-code-security.md](references/ai/ai-ide-no-code-security.md)
 - [references/ai/ai-tool-profiles.md](references/ai/ai-tool-profiles.md)
-- [references/ai/ai-bundle-presets.md](references/ai/ai-bundle-presets.md)
+- [references/ai/agent-evals-red-teaming.md](references/ai/agent-evals-red-teaming.md)
 - [references/ai/quick-start-ai-coding.md](references/ai/quick-start-ai-coding.md)
 - [references/ai/vibecoder-traps.md](references/ai/vibecoder-traps.md)
 - [references/ai/ai-agent-incident-response.md](references/ai/ai-agent-incident-response.md)

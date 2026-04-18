@@ -229,3 +229,77 @@ Split responsibilities explicitly:
 - Human docs can stay rich without polluting the machine entrypoint.
 - Future corpus additions should update `INDEX.md` instead of expanding `README.md` with more routing detail.
 
+## ADR-0009: Bundle presets are archived and merged into `ai-tool-profiles`
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+The AI domain had a documented overlap cluster around:
+
+- `ai-tool-profiles.md`,
+- `ai-bundle-presets.md`,
+- `ai-cli-hardening.md`,
+- `ai-ide-no-code-security.md`.
+
+Phase 1 identified `ai-bundle-presets.md` as the clearest merge candidate because it acted as a packaging layer on top of the tool-profile templates rather than a distinct security domain.
+
+### Decision
+
+Keep one active reference for:
+
+- base tool profiles,
+- posture overlays,
+- ready-made bundle selection,
+- direct copy paths.
+
+Move the original `ai-bundle-presets.md` into `archive/` for traceability, and merge its operational guidance into `references/ai/ai-tool-profiles.md`.
+
+Also add:
+
+- `references/ai/_index.md` as a narrow router inside the AI domain,
+- `references/ai/agent-evals-red-teaming.md` to cover adversarial evaluation and regression gates, which was previously missing as a first-class AI reference.
+
+### Consequences
+
+- The active AI routing surface gets smaller and easier to choose from.
+- Existing bundle guidance remains available for historical consumers via `archive/`.
+- Downstream users now have one canonical path for profiles and bundles: `references/ai/ai-tool-profiles.md`.
+
+## ADR-0010: Browser/computer-use and RAG/retrieval get dedicated AI references
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+After the first AI cleanup, two high-risk sub-surfaces were still present mostly as subsections inside broader documents:
+
+- browser/computer-use and GUI-driving agents,
+- RAG, vector stores, and retrieval-layer security.
+
+Both areas have distinct controls, distinct failure modes, and strong enough official source material to justify standalone references.
+
+### Decision
+
+Add:
+
+- `references/ai/browser-computer-use-security.md`
+- `references/ai/rag-retrieval-security.md`
+
+Route them explicitly from:
+
+- `SKILL.md`
+- `INDEX.md`
+- `references/ai/_index.md`
+- `README.md`
+- `references/compliance/coverage-matrix.md`
+- positive eval fixtures
+
+### Consequences
+
+- AI routing becomes more precise for agent workflows that are currently rising in real-world risk.
+- `llm-agent-security.md` can stay as the general threat-model document instead of absorbing every AI subdomain.
+- The repo gains stronger coverage for authenticated web agents, GUI automation, vector-store authorization, and retrieval-layer poisoning.
+

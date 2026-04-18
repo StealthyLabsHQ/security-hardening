@@ -1,0 +1,7 @@
+id: "c-023"
+input: "Review this RAG design for prompt injection, cross-tenant leakage, and stale knowledge in a shared vector store."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/rag-retrieval-security.md", "references/ai/hostile-corpus-review.md", "references/ai/llm-agent-security.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/appsec/framework-examples.md"]
+must_mention: ["vector", "filter", "citation", "poisoning"]
+must_not_mention: []

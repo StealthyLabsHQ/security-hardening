@@ -13,7 +13,7 @@ sources:
   - "Google SAIF Risk Assessment"
 triggers_strong: ["prompt injection", "rag poisoning", "agent security", "system prompt leakage"]
 triggers_weak: ["llm security", "agent review"]
-related: ["mcp-security", "hostile-corpus-review"]
+related: ["mcp-security", "hostile-corpus-review", "browser-computer-use-security", "rag-retrieval-security"]
 ---
 
 # LLM & AI Agent Security
@@ -31,6 +31,11 @@ Security considerations for applications that use Large Language Models, AI agen
 - As model capability increases, **rare failures become more damaging**. Average-case alignment is not enough for high-impact workflows.
 - The safest default is **read-only plus explicit escalation**, not "helpful auto-execute".
 - Browser/computer-use and multi-tool agent flows should be treated as **higher-risk surfaces** than plain text Q&A or static code review.
+
+For dedicated treatment of these sub-surfaces, load:
+
+- `browser-computer-use-security.md` for GUI/browser automation and authenticated session risk,
+- `rag-retrieval-security.md` for vector stores, retrieval filters, and corpus poisoning.
 
 ---
 
@@ -220,6 +225,8 @@ An attacker injects malicious content into the knowledge base to influence futur
 - Apply content moderation to indexed documents.
 - Log retrieval results and monitor for anomalous patterns in retrieved chunks.
 - Implement **source attribution**: cite which document influenced the answer so users can verify.
+
+For a dedicated retrieval-layer review, use `rag-retrieval-security.md`.
 
 ---
 

@@ -80,6 +80,5 @@ Swap `solo` for `startup`, `prod-sensitive`, or `gdpr-sensitive` depending on th
 ## Notes
 
 - These files are safe baselines, not proof that a project is secure.
-- For tool-specific caveats and official docs, see `references/ai/ai-tool-profiles.md`.
-- For ready-made merged bundles, see `references/ai/ai-bundle-presets.md`.
+- For tool-specific caveats, bundle selection, and official docs, see `references/ai/ai-tool-profiles.md`.
 

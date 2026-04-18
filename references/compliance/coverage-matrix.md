@@ -4,7 +4,7 @@ slug: coverage-matrix
 category: compliance
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-18
 sources:
   - "Repository reference inventory"
   - "references/ops/security-audit-levels.md"
@@ -15,11 +15,11 @@ related: ["security-audit-levels", "compliance-mapping"]
 
 # Coverage Matrix
 
-> Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 3 | Automation: None (meta inventory document)
+> Last reviewed: 2026-04-18 | Next review: 2026-10-18 | Priority: Recommended | Audit Level: 3 | Automation: None (meta inventory document)
 
 Overview of all reference files: depth, review frequency, priority, and automation availability.
 
-Last matrix review: **2026-04-14**
+Last matrix review: **2026-04-18**
 
 ---
 
@@ -50,10 +50,12 @@ Last matrix review: **2026-04-14**
 | `security-improvements.md` | 7-axis improvement plan | Medium | Essential | 2-3 | Annual | Partial (CI/CD axes automatable; threat modeling/pentest manual) |
 | `cwe-owasp-mapping.md` | CWE / OWASP / ASVS / SAST mapping | Medium | Recommended | 2-3 | Annual | Full (cross-reference for tool configuration) |
 | `llm-agent-security.md` | LLM/Agent/MCP security | Medium | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (output validation; prompt injection mostly manual) |
+| `browser-computer-use-security.md` | Browser and computer-use controls for GUI-driving agents | High | Recommended | 2-4 | Bi-annual (fast-moving field) | Partial (sandbox, allowlists, and confirmations automatable; task scoping and incident review manual) |
 | `mcp-security.md` | MCP attack vectors (SSRF, path traversal, injection, spoofing) | High | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (manifest static analysis; parameter validation in code; injection manual) |
+| `rag-retrieval-security.md` | RAG, vector-store, and retrieval-layer security for knowledge-backed AI systems | High | Recommended | 2-4 | Bi-annual (fast-moving field) | Partial (filtering, telemetry, and lifecycle checks automatable; trust classification and corpus approval manual) |
 | `ai-cli-hardening.md` | AI coding CLI baseline controls, policy-as-code, permission tiers | High | Essential | 2-3 | Bi-annual (fast-moving field) | Partial (policy lint and CI gates automatable; approvals/manual review needed) |
-| `ai-tool-profiles.md` | Copy-paste defensive profiles and posture overlays for AI tools/builders | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (template sync/checks automatable; approval and rollout decisions manual) |
-| `ai-bundle-presets.md` | Ready-made merged bundles for common high-security AI tool scenarios | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (template sync/checks automatable; rollout and exception handling manual) |
+| `ai-tool-profiles.md` | Copy-paste defensive profiles, posture overlays, and bundle selection guidance for AI tools/builders | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (template sync/checks automatable; approval and rollout decisions manual) |
+| `agent-evals-red-teaming.md` | Adversarial evaluation, regression gates, and red-team campaign design for agentic systems | High | Recommended | 2-4 | Bi-annual (fast-moving field) | Partial (fixture execution and scoring automatable; scenario design and failure adjudication manual) |
 | `ai-ide-no-code-security.md` | AI IDE, browser builder, and no-code / low-code security | High | Essential | 1-3 | Bi-annual (fast-moving field) | Partial (secret scans, audit exports, webhook tests; connector and publish controls manual) |
 | `hostile-corpus-review.md` | Reviewing untrusted docs, prompts, and MCP output safely | High | Recommended | 2-3 | Bi-annual (fast-moving field) | Partial (normalization/scanning automatable; semantic review manual) |
 | `ai-agent-incident-response.md` | Incident response playbook for AI agents and MCP workflows | High | Recommended | 3-4 | Bi-annual (fast-moving field) | Partial (detection/containment automatable; investigation/communications manual) |

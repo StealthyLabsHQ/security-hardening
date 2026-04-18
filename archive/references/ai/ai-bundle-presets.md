@@ -15,6 +15,8 @@ related: ["ai-tool-profiles", "ai-cli-hardening"]
 
 # AI Bundle Presets
 
+> Archived on 2026-04-18. Active replacement: `references/ai/ai-tool-profiles.md`.
+
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (template sync and policy validation automatable; rollout choice and approval governance manual)
 
 These are **ready-made merged bundles** for common high-security scenarios. Each bundle already combines:
@@ -133,4 +135,3 @@ These bundles are intentionally strict. If a tool keeps asking for approval too 
 - `ai-cli-hardening.md`
 - `gdpr-security-ops.md`
 - `defensive-security-baseline.md`
-

@@ -1,0 +1,7 @@
+id: "c-022"
+input: "Audit our browser-use agent before rollout. It logs into a vendor dashboard, downloads CSVs, and can click publish without a human in the loop."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/browser-computer-use-security.md", "references/ai/llm-agent-security.md", "references/ai/ai-cli-hardening.md"]
+must_not_load: ["references/platform/desktop-app-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["sandbox", "confirmation", "session", "upload"]
+must_not_mention: []

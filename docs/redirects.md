@@ -6,7 +6,7 @@ Flat references/*.md paths were reorganized in Phase 3. Update downstream links 
 |---|---|
 | references/active-directory-hardening.md | references/iam/active-directory-hardening.md |
 | references/ai-agent-incident-response.md | references/ai/ai-agent-incident-response.md |
-| references/ai-bundle-presets.md | references/ai/ai-bundle-presets.md |
+| references/ai-bundle-presets.md | references/ai/ai-tool-profiles.md |
 | references/ai-cli-hardening.md | references/ai/ai-cli-hardening.md |
 | references/ai-ide-no-code-security.md | references/ai/ai-ide-no-code-security.md |
 | references/ai-tool-profiles.md | references/ai/ai-tool-profiles.md |
@@ -55,3 +55,9 @@ Flat references/*.md paths were reorganized in Phase 3. Update downstream links 
 | references/vuln-management.md | references/ops/vuln-management.md |
 | references/webauthn-fido2.md | references/iam/webauthn-fido2.md |
 | references/webhooks-security.md | references/appsec/webhooks-security.md |
+
+## Post-Phase Merge Redirects
+
+| Old path | New path |
+|---|---|
+| references/ai/ai-bundle-presets.md | references/ai/ai-tool-profiles.md |
