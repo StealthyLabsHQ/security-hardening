@@ -1,3 +1,3 @@
 display_name: Security Hardening
-short_description: Portable OWASP, NIST, CIS, and AI-agent security skill for defensive reviews and hardening.
-default_prompt: Review this for security issues, load only the relevant references, and prioritize defensive fixes with clear blast radius and remediation.
+short_description: Defensive AppSec, infosec, and AI-agent security skill for audits, secure code review, and hardening.
+default_prompt: Review this for security issues, load only the relevant references, and prioritize defensive fixes, blast radius, exploitability, and remediation order.
