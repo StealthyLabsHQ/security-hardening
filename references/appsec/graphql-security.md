@@ -4,7 +4,7 @@ slug: graphql-security
 category: appsec
 depth: 3
 audit_level: [2, 3]
-last_reviewed: null
+last_reviewed: 2026-04-19
 sources:
   - "OWASP GraphQL Cheat Sheet"
   - "OWASP API Security Top 10 2023"
@@ -14,8 +14,14 @@ related: ["api-security", "authorization-rbac"]
 ---
 
 # graphql-security.md
+# graphql-security.md
+
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (depth, complexity, persisted query policy, and gateway limits partly automatable; resolver authorization, schema review, and business-flow abuse analysis manual)
+
+Use this file when a GraphQL surface needs a security review that goes beyond "disable introspection" and covers **authorization, cost, batching, uploads, subscriptions, and resolver fan-out**.
 
 GraphQL is not "less secure" than REST, but it **shifts** the control points. The real risk is not the presence of a `/graphql` endpoint; it is that a client can choose **the shape, depth, cost, and sometimes the exact properties** of the request. Controls must therefore be designed around four questions:
+
 
 1. **Who can call what?**  
    AuthN/AuthZ at the object, field, and action level.

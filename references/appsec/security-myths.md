@@ -4,166 +4,259 @@ slug: security-myths
 category: appsec
 depth: 1
 audit_level: [1, 2]
-last_reviewed: null
+last_reviewed: 2026-04-19
 sources:
   - "OWASP Cheat Sheet Series"
+  - "OWASP API Security Top 10 2023"
   - "NIST SP 800-63B"
+  - "OAuth 2.0 Security Best Current Practice"
+  - "CISA Secure by Design"
 triggers_strong: ["security myths", "jwt is security", "cors protects api", "waf is enough"]
 triggers_weak: ["security misconceptions", "myth busting"]
-related: ["quick-start-ai-coding", "vibecoder-traps"]
+related: ["quick-start-ai-coding", "vibecoder-traps", "api-security", "ai-tool-profiles"]
 ---
 
 # Security Myths & Misconceptions
 
-Common beliefs that feel secure but are not. Each myth includes why it is wrong and what to do instead.
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Audit Level: 1-2 | Automation: Low (linting and policy checks may detect some bad patterns; the misconception itself is usually human and process-driven)
 
-> Review frequency: **Annual** - these misconceptions are stable but new ones emerge with new technologies.
+Use this file when a design sounds secure because it uses a familiar buzzword, product, or acronym, but you need to test whether the underlying control actually exists.
 
----
-
-## "We have a WAF, so we're covered"
-
-**Why it's wrong:** A WAF is a detection and filtering layer, not a replacement for secure code. WAFs can be bypassed (encoding tricks, novel payloads, logic flaws). They do not protect against IDOR, broken authentication, business logic flaws, or insider threats. A WAF with insecure code behind it is a speed bump, not a wall.
-
-**What to do instead:** Fix vulnerabilities in code (SAST, code review). Use the WAF as an additional layer, not the primary control.
+A recurring security failure is not missing technology. It is **confusing a component with a guarantee**.
 
 ---
 
-## "We hash passwords with SHA-256, so they're safe"
+## 1. "We have a WAF, so we're covered"
 
-**Why it's wrong:** SHA-256 is a general-purpose hash designed to be fast. A modern GPU can compute 10+ billion SHA-256 hashes per second, making offline brute-force attacks trivial. Rainbow tables exist for common passwords.
+**Why it's wrong:**
+A WAF is a filtering and visibility layer, not a replacement for secure application design. It will not fix:
 
-**What to do instead:** Use a slow, purpose-built password hashing function: **Argon2id** (NIST recommended), **bcrypt** (cost factor >= 12), or **scrypt**.
+- IDOR / BOLA,
+- broken authorization,
+- mass assignment,
+- insecure workflow logic,
+- internal misuse,
+- over-privileged CI/CD or admin paths.
 
-```python
-# Safe
-from argon2 import PasswordHasher
-ph = PasswordHasher(time_cost=2, memory_cost=65536, parallelism=2)
-hashed = ph.hash(password)
-```
-
----
-
-## "JWT = security"
-
-**Why it's wrong:** JWT is a token format, not a security guarantee. Common JWT mistakes:
-- Using `alg: none` (signature skipped)
-- Using `jwt.decode()` instead of `jwt.verify()`
-- Not checking `exp`, `aud`, or `iss` claims
-- Symmetric keys shared across services
-- Storing JWTs in localStorage (XSS-accessible)
-
-A JWT proves the token was signed. It does not prove the user is authorized to perform the action they are attempting.
-
-**What to do instead:** Use RS256 (asymmetric), verify all claims, store in `HttpOnly` cookies, keep lifetime short (15 min).
+**What to do instead:**
+Use the WAF as a supporting control. Keep secure code review, validation, authz checks, and rate limiting in the application itself.
 
 ---
 
-## "CORS protects our API"
+## 2. "We hash passwords with SHA-256, so they're safe"
 
-**Why it's wrong:** CORS is a browser-side policy. It does not protect against:
-- Server-to-server requests (curl, Postman, backend services)
-- Mobile apps or native clients
-- Browsers with CORS disabled or bypassed
-- Any non-browser attacker
+**Why it's wrong:**
+SHA-256 is intentionally fast. Fast password hashing helps attackers, not defenders.
 
-CORS only controls which browser origins can make credentialed cross-origin requests.
+**What to do instead:**
+Use a password hashing function designed for password storage:
 
-**What to do instead:** Enforce authentication and authorization on every API endpoint regardless of origin. CORS is a usability control, not an access control.
+- `Argon2id` preferred,
+- `bcrypt` with a modern cost,
+- `scrypt` where appropriate.
 
----
-
-## "Our secrets are safe in a .env file"
-
-**Why it's wrong:** `.env` files are frequently:
-- Accidentally committed to Git (check your `.gitignore`)
-- Exposed via misconfigured web servers (`GET /.env` returns 200 on many deployments)
-- Readable by any process running on the same server
-- Included in Docker images, build artifacts, or logs
-
-**What to do instead:** Use a secrets manager (HashiCorp Vault, AWS Secrets Manager, Doppler). At minimum, verify `.env` is in `.gitignore` and scan history with Gitleaks. Never include `.env` in Docker images.
+Also salt automatically, tune cost over time, and protect password-reset flows just as carefully as password storage.
 
 ---
 
-## "HTTPS is enough - we don't need HSTS, CSP, or hardened cookies"
+## 3. "JWT = security"
 
-**Why it's wrong:** HTTPS encrypts the transport layer. It does not prevent:
-- SSL stripping attacks (without HSTS)
-- XSS injecting scripts from other origins (without CSP)
-- Session cookie theft via JavaScript (without `HttpOnly`)
-- Session cookies sent over HTTP (without `Secure` flag)
-- Clickjacking (without `X-Frame-Options` or CSP `frame-ancestors`)
+**Why it's wrong:**
+A JWT is only a token format. It does not prove:
 
-**What to do instead:** HTTPS is the baseline. Layer on HSTS, CSP, `HttpOnly`+`Secure`+`SameSite` cookies, `X-Content-Type-Options`, and `X-Frame-Options`. See `references/appsec/secure-headers.md`.
+- the user is authorized for this object,
+- the token claims were validated correctly,
+- the token is stored safely,
+- the issuer and audience are trustworthy,
+- the lifetime is appropriate.
 
----
-
-## "We don't need rate limiting - nobody would brute-force us"
-
-**Why it's wrong:** Credential stuffing attacks use automated tools with millions of leaked username/password pairs. Attackers do not target companies specifically - they scan the entire internet. An unprotected login endpoint will be attacked.
-
-**What to do instead:** Rate limit login, password reset, OTP, and account creation endpoints. Add lockout after N failures. Use CAPTCHA for high-risk flows.
+**What to do instead:**
+Treat JWT as one building block. Verify signature, `exp`, `aud`, `iss`, and relevant claims. Keep object-level authorization server-side. Prefer `HttpOnly` cookies or equally deliberate storage decisions.
 
 ---
 
-## "Security through obscurity - the endpoint isn't linked anywhere"
+## 4. "CORS protects our API"
 
-**Why it's wrong:** Unlisted endpoints are discovered by:
-- Web crawlers and search engines
-- Directory brute-forcing tools (ffuf, dirbuster)
-- JavaScript bundle analysis
-- Historical data (Wayback Machine, Certificate Transparency logs)
-- Error messages that reveal paths
+**Why it's wrong:**
+CORS is a browser behavior. Attackers using curl, mobile apps, backend code, or compromised clients are outside that model.
 
-**What to do instead:** Every endpoint must enforce authentication and authorization explicitly. There is no safe "hidden" route.
+**What to do instead:**
+Authenticate and authorize every sensitive action regardless of origin. Use CORS to control browser interaction, not as access control.
 
 ---
 
-## "We use OAuth, so authentication is secure"
+## 5. "Our secrets are safe in a .env file"
 
-**Why it's wrong:** OAuth 2.0 defines an authorization framework, not an authentication protocol. Common OAuth implementation mistakes:
-- Not validating the `state` parameter (CSRF on the OAuth flow)
-- Accepting `access_token` in URL query parameters (logged in server/proxy logs)
-- Not verifying the `aud` claim in the ID token
-- Redirect URI wildcards (`redirect_uri=https://app.com/*`)
-- Mixing up authentication (OIDC) and authorization (OAuth2)
+**Why it's wrong:**
+`.env` files routinely leak through:
 
-**What to do instead:** Use a battle-tested library. Validate `state`, `nonce`, `aud`, `iss`, and `exp`. Use PKCE for public clients. Prefer OIDC for authentication.
+- accidental commits,
+- debug endpoints,
+- container images,
+- support bundles,
+- shell history,
+- local AI tooling or editor plugins that ingest workspace files.
 
----
-
-## "Our Docker container is isolated, so RCE doesn't matter"
-
-**Why it's wrong:** Default Docker containers share the host kernel. A container breakout (kernel exploit, misconfigured mount, privileged mode) gives full host access. Common misconfigurations:
-- `--privileged` flag
-- Mounting `/` or `/etc` from the host
-- Running as root inside the container
-- Exposed Docker socket (`/var/run/docker.sock`)
-
-**What to do instead:** Run as a non-root user, use read-only mounts, avoid `--privileged`, never mount the Docker socket into containers, use seccomp and AppArmor profiles.
+**What to do instead:**
+Use a secrets manager or ephemeral identity where possible. Keep `.env` out of Git, images, and shared archives. Scan commits and history for secrets.
 
 ---
 
-## "We review code before merging, so we catch security issues"
+## 6. "HTTPS is enough; we don't need HSTS, CSP, or hardened cookies"
 
-**Why it's wrong:** Code reviewers focus on correctness and logic, not security. Security vulnerabilities are often subtle and require specific expertise to spot (second-order SQL injection, race conditions, JWT claim bypasses). Without explicit security checklists and SAST tools, most reviewers miss security issues.
+**Why it's wrong:**
+HTTPS protects transport confidentiality, not all browser abuse. Without layered controls you still risk:
 
-**What to do instead:** Use automated SAST (Semgrep, Bandit) as a first pass. Add a mandatory security checklist to PR templates. Train reviewers on the top vulnerability patterns for your stack.
+- SSL stripping without HSTS,
+- cookie theft or misuse without `Secure`, `HttpOnly`, and `SameSite`,
+- clickjacking without frame protections,
+- script-origin abuse without CSP where applicable.
+
+**What to do instead:**
+Treat HTTPS as the floor. Add browser and session controls appropriate to the application.
 
 ---
 
-## Quick Reference - "Is This Secure?" Red Flags
+## 7. "We don't need rate limiting; nobody would brute-force us"
 
-| Claim | Reality |
-|-------|---------|
-| "We have a WAF" | Not a replacement for secure code |
-| "Password is hashed" | Ask: with what? Argon2/bcrypt or MD5/SHA? |
-| "We use JWT" | Ask: RS256? Claims verified? HttpOnly cookie? |
-| "CORS is configured" | Does not protect server-to-server or non-browser clients |
-| "Secrets are in .env" | Is it in .gitignore? In the Docker image? In logs? |
-| "We use HTTPS" | Are cookies hardened? HSTS enabled? CSP deployed? |
-| "The route is not linked" | Security through obscurity is not security |
-| "We use OAuth" | state/PKCE/aud validated? OIDC for auth, not raw OAuth? |
-| "Container is isolated" | Running as root? Docker socket mounted? Privileged? |
+**Why it's wrong:**
+Most credential attacks are opportunistic and automated. They do not require a motivated, bespoke attacker.
 
+**What to do instead:**
+Rate-limit login, signup, password reset, MFA verification, search, upload, and export flows. Add monitoring for credential stuffing and abuse of business-critical actions.
 
+---
+
+## 8. "Security through obscurity works because the endpoint isn't linked anywhere"
+
+**Why it's wrong:**
+Attackers discover routes through JavaScript bundles, source maps, browser history, crawlers, archived URLs, leaked logs, or predictable naming.
+
+**What to do instead:**
+Assume every route can be found. Protect it explicitly with authentication, authorization, and abuse controls.
+
+---
+
+## 9. "We use OAuth, so authentication is secure"
+
+**Why it's wrong:**
+OAuth is an authorization framework. Authentication requires the right OIDC controls and implementation details.
+
+Common failures:
+
+- missing `state` validation,
+- weak redirect URI rules,
+- missing `nonce` where needed,
+- audience confusion,
+- confusing an access token with proof of identity.
+
+**What to do instead:**
+Use a hardened library. Validate `state`, `nonce`, `iss`, `aud`, and expiry. Prefer OIDC for authentication and PKCE for public clients.
+
+---
+
+## 10. "Our Docker container is isolated, so RCE doesn't matter"
+
+**Why it's wrong:**
+Container compromise still matters because containers may expose:
+
+- sensitive environment variables,
+- cloud credentials,
+- internal networks,
+- service-to-service trust,
+- mounted volumes,
+- orchestration APIs.
+
+**What to do instead:**
+Run as non-root where possible, reduce Linux capabilities, avoid privileged mode, protect the container runtime, and scope network and secret access tightly.
+
+---
+
+## 11. "We review code before merging, so we catch security issues"
+
+**Why it's wrong:**
+General code review often focuses on correctness and style, not exploitability or trust-boundary regressions.
+
+**What to do instead:**
+Use explicit security review heuristics, automation, and stack-specific testing. Review diffs for access-control, data-exposure, and execution-path changes first.
+
+---
+
+## 12. "MFA means phishing-resistant authentication"
+
+**Why it's wrong:**
+All MFA is not equal. OTP by SMS or app can still be phished, relayed, or fatigue-attacked.
+
+**What to do instead:**
+Prefer phishing-resistant methods such as passkeys / WebAuthn or hardware-backed FIDO2 for privileged users. Treat weaker MFA as better than password-only, not as the end state.
+
+---
+
+## 13. "Private repo means secrets are safe"
+
+**Why it's wrong:**
+A private repo can still leak through:
+
+- over-broad collaborator access,
+- CI logs and artifacts,
+- forks and mirrors,
+- local clones on unmanaged devices,
+- copied snippets into tickets or chat,
+- AI coding tools that can read the workspace.
+
+**What to do instead:**
+Assume repository contents can spread. Do not store long-lived secrets in Git. Use secret scanning, branch protections, and short-lived credentials.
+
+---
+
+## 14. "Read-only AI tools are harmless"
+
+**Why it's wrong:**
+A read-only AI assistant can still cause damage by:
+
+- exfiltrating sensitive content through prompts or outputs,
+- reading secrets from config files or logs,
+- generating unsafe remediation steps,
+- widening access if it sees privileged browser sessions or internal knowledge bases.
+
+**What to do instead:**
+Apply least privilege, approved tool profiles, prompt minimization, and separate browser/workspace trust zones. Read-only is safer than write access, not risk-free.
+
+---
+
+## 15. "If it passed the scanner, it's secure"
+
+**Why it's wrong:**
+Scanners are excellent for known patterns and hygiene gaps. They are weaker against business-logic flaws, tenant-boundary mistakes, bad rollout decisions, and unsafe exceptions.
+
+**What to do instead:**
+Use scanners as the first pass, not the only pass. Pair them with design review, threat modeling, and focused manual checks on high-risk changes.
+
+---
+
+## 16. Quick reference
+
+| Claim | Reality check |
+|---|---|
+| "We have a WAF" | Ask whether authz, validation, and object scoping still live in code |
+| "Password is hashed" | Ask with what algorithm and cost |
+| "We use JWT" | Ask whether claims are verified and authz is separate |
+| "CORS is configured" | Ask what protects non-browser callers |
+| "Secrets are in .env" | Ask where else that file can leak |
+| "We use HTTPS" | Ask about cookies, HSTS, CSP, and framing |
+| "The route is hidden" | Ask what enforces access if the route is discovered |
+| "We use OAuth" | Ask whether OIDC, PKCE, state, and audience validation are present |
+| "It's in a container" | Ask what the container can still reach |
+| "AI tool is read-only" | Ask what data it can read and where outputs go |
+
+---
+
+## 17. Design rule to remember
+
+Whenever a statement sounds like **tool = security**, translate it into:
+
+1. what threat is supposedly mitigated,
+2. what trust boundary still remains,
+3. what verification proves the control really works.
+
+If nobody can answer those three questions, the control is mostly a myth.
