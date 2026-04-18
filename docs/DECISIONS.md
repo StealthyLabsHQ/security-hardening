@@ -171,3 +171,32 @@ Also lint hidden prompt-injection patterns only when they appear in code fences 
 - Existing defensive examples remain valid instead of generating noisy false positives.
 - Future domains should be added intentionally instead of slipping into the corpus unnoticed.
 
+## ADR-0007: Phase 7 version anchors preserve the pre-refactor portable snapshot
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+Phase 7 requires tagging:
+
+- `v1.0.0` on the pre-refactor version already used by existing consumers,
+- `v2.0.0-rc.1` at the end of Phase 6.
+
+The refactor spans multiple local commits and the repository had no prior semantic tags.
+
+### Decision
+
+Anchor the tags to the last two meaningful boundaries already present in history:
+
+- `v1.0.0` -> commit `8feff18`, the last stable pre-phase-refactor portable skill snapshot on `main`
+- `v2.0.0-rc.1` -> commit `6dd535e`, the completed Phase 6 integrity baseline
+
+Phase 7 documentation updates live after those anchors and do not move either tag.
+
+### Consequences
+
+- Existing consumers get a stable tag that matches the last non-refactor layout already on `main`.
+- The v2 release candidate points to the first auditable/testable refactor milestone, not later documentation drift.
+- README install guidance can default to the stable tag while still exposing the release candidate.
+
