@@ -82,3 +82,31 @@ frontmatter. This keeps one source of truth for routing and later index generati
 - `references/_index.md` can be generated mechanically from frontmatter without custom exception logic.
 - If a file changes domain later, its frontmatter category is the change control point.
 
+## ADR-0004: `_core-invariants.md` is a root-level exception under `references/`
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+Phase 4 requires a single shared file at `references/_core-invariants.md` so the skill can load
+the baseline invariants once, independently of domain routing.
+
+This conflicts with ADR-0003, which moved all references into domain directories based on
+frontmatter `category`.
+
+### Decision
+
+Allow exactly two root-level machine-facing files under `references/`:
+
+- `_index.md`
+- `_core-invariants.md`
+
+All other reference files must stay in their category folders.
+
+### Consequences
+
+- The skill can load one shared baseline file without overloading a domain bucket.
+- Index generation must explicitly tolerate `_core-invariants.md`.
+- Future root-level additions require a new ADR instead of quietly bypassing the taxonomy.
+
