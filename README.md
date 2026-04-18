@@ -538,18 +538,6 @@ Covers: **Express**, **NestJS**, **FastAPI**, **Django**, **Laravel**, **Spring 
 
 ## Automation
 
-### `.github/workflows/content-lint.yml`
-**Content policy guardrail** for this repository. Fails if `SKILL.md` exceeds the 1024-byte portability budget or if a reference file loses its review metadata header.
-
-### `.github/workflows/lint.yml`
-**Workflow and documentation linting**: validates GitHub Actions with `actionlint` and checks Markdown links with `lychee`.
-
-### `.github/workflows/scorecard.yml`
-**OpenSSF Scorecard** analysis on schedule and on push to `main`, with SARIF upload to GitHub code scanning.
-
-### `.github/workflows/script-lint.yml`
-**Lint pipeline for small ops/installer scripts** that often skip review: shellcheck for `.sh`/`.bash` (warning-as-error, all checks enabled) and PSScriptAnalyzer for `.ps1`/`.psm1`/`.psd1` (security-focused rule set: `PSAvoidUsingInvokeExpression`, `PSAvoidUsingConvertToSecureStringWithPlainText`, `PSAvoidUsingPlainTextForPassword`, etc.). Triggered only on script paths so it stays fast.
-
 ### `.github/workflows/security.yml`
 **GitHub Actions security pipeline** running on every push and PR - copy this into any project.
 
@@ -560,8 +548,11 @@ Jobs: Gitleaks (secret scanning), Semgrep (SAST), Trivy filesystem scan (depende
 
 Sections: input/output validation, authentication & authorization, privacy / GDPR, secrets & sensitive data, AI / automation, dependencies, network & API, code quality.
 
-### `CHANGELOG.md`
-Tracks all additions, updates, and deprecations with dates. Includes a backlog of planned improvements.
+### `.github/dependabot.yml`
+Keeps pinned GitHub Actions dependencies fresh with controlled update PRs.
+
+### `.github/CODEOWNERS`
+Provides a review boundary for sensitive repository paths.
 
 ---
 
