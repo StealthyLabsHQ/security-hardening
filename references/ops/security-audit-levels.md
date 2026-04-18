@@ -233,7 +233,7 @@ When the app has multiple user roles, handles sensitive data (financial, medical
 | Tool | What it checks |
 |------|---------------|
 | Trivy | Container and dependency CVEs |
-| Semgrep (custom rules) | App-specific patterns from `references/language-patterns.md` |
+| Semgrep (custom rules) | App-specific patterns from `references/appsec/language-patterns.md` |
 | BloodHound | AD attack paths (if applicable) |
 | OWASP ZAP (full scan) | Dynamic application scan |
 | Nuclei | Known vulnerability templates |
@@ -346,4 +346,5 @@ Legend: **Core** = primary reference for this level. **Partial** = partially rel
 | 2 | Live app with users | Half-day to 1 day | IDOR, input validation, CORS, rate limiting | Multiple roles, sensitive data, team of 3+ |
 | 3 | Production SaaS / team | 1-3 days | AuthZ model, supply chain, infra hardening, detection | Regulated data, high-value target |
 | 4 | Regulated / critical | Days to weeks | Threat model, pentest, fuzzing, red team | Ongoing, after major changes |
+
 

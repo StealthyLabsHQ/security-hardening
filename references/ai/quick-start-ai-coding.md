@@ -48,7 +48,7 @@ These patterns appear because they work in isolation. They are not safe in produ
 git diff --cached | grep -iE "^\+.*(api.?key|secret|password|token|sk-|ghp_|AKIA|sk_live)"
 ```
 
-If you find one: see `references/secret-leak-prevention.md`.
+If you find one: see `references/ops/secret-leak-prevention.md`.
 
 ### 2. `.env` is not tracked
 
@@ -192,7 +192,7 @@ If you are using an AI IDE assistant, a browser coding tool, or a no-code / low-
 
 - If there is no versioned export or Git sync, recovery and peer review are weak.
 
-Full guide: `references/ai-ide-no-code-security.md`
+Full guide: `references/ai/ai-ide-no-code-security.md`
 
 ---
 
@@ -218,17 +218,17 @@ Full guide: `references/ai-ide-no-code-security.md`
 2. Check usage logs for unauthorized calls.
 3. Clean history with `git filter-repo`.
 4. Force push.
-5. Full guide: `references/secret-leak-prevention.md`
+5. Full guide: `references/ops/secret-leak-prevention.md`
 
 ### "My app is returning stack traces to users"
-- Add a generic error handler. See `references/production-error-handling.md`.
+- Add a generic error handler. See `references/appsec/production-error-handling.md`.
 
 ### "I think there's an injection vulnerability"
-- Check `references/language-patterns.md` for your language.
+- Check `references/appsec/language-patterns.md` for your language.
 - Replace with parameterized queries or safe equivalents.
 
 ### "I'm not sure if my auth is correct"
-- Check `references/authorization-rbac.md` for IDOR patterns.
+- Check `references/iam/authorization-rbac.md` for IDOR patterns.
 - Test manually: log in as user A, try to access user B's resources by changing IDs.
 
 ### "I used a weak password hash"
@@ -286,4 +286,5 @@ BEFORE EVERY PUSH:
 [ ] npm audit / pip-audit clean
 [ ] .env not in git status
 ```
+
 

@@ -312,10 +312,11 @@ Recommended tools:
 
 ## References
 
-- `references/llm-agent-security.md`
-- `references/mcp-security.md`
-- `references/ai-ide-no-code-security.md`
-- `references/secret-leak-prevention.md`
-- `references/pre-push-checklist.md`
-- `references/supply-chain-security.md`
+- `references/ai/llm-agent-security.md`
+- `references/ai/mcp-security.md`
+- `references/ai/ai-ide-no-code-security.md`
+- `references/ops/secret-leak-prevention.md`
+- `references/ops/pre-push-checklist.md`
+- `references/infra/supply-chain-security.md`
+
 

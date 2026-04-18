@@ -18,4 +18,5 @@ These bundles already combine:
 - `codex-gdpr-sensitive`
 - `no-code-gdpr-sensitive`
 
-For selection guidance and copy commands, see `references/ai-bundle-presets.md`.
+For selection guidance and copy commands, see `references/ai/ai-bundle-presets.md`.
+
