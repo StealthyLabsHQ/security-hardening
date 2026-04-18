@@ -4,168 +4,239 @@ slug: framework-examples
 category: appsec
 depth: 2
 audit_level: [1, 2]
-last_reviewed: null
+last_reviewed: 2026-04-19
 sources:
-  - "Express documentation"
-  - "FastAPI documentation"
+  - "Express security best practices"
+  - "NestJS security documentation"
+  - "FastAPI security documentation"
   - "Django security documentation"
+  - "Laravel security documentation"
   - "Spring Security reference"
-  - "Ruby on Rails Security Guide"
+  - "Gin framework examples"
 triggers_strong: ["express security", "fastapi security", "django security", "framework examples"]
 triggers_weak: ["framework hardening", "copy paste security"]
-related: ["language-patterns", "frontend-frameworks-security"]
+related: ["language-patterns", "frontend-frameworks-security", "api-security", "production-error-handling"]
 ---
 
 # Framework Security Examples
 
-Ready-to-use, copy-paste security configurations per framework. Each section covers: security headers, authentication middleware, input validation, rate limiting, and error handling.
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Audit Level: 1-2 | Automation: Partial (linting, dependency scanning, and baseline middleware checks automatable; object-level authorization, business logic, and environment-specific hardening manual)
 
-> Review frequency: **Bi-annual** - framework APIs and best practices evolve frequently.
+Use this file when you want **copy-paste starter patterns** for common frameworks without importing insecure tutorial defaults into production.
+
+The goal is not to memorize framework syntax. The goal is to keep the same defensive rules across stacks:
+
+- validate input before business logic,
+- keep privileged fields out of caller-controlled schemas,
+- scope queries by tenant or owner,
+- harden cookies and headers,
+- return safe errors,
+- rate-limit abuse paths,
+- separate authentication from authorization.
 
 ---
 
-## Express / Node.js
+## 1. How to use this file safely
 
-### Security Headers (Helmet)
+Treat these snippets as **secure starting points**, not drop-in proof that your app is secure.
+
+Before copying a snippet into production, answer:
+
+1. Does this route also need **object-level authorization**?
+2. Are any request fields able to change role, tenant, status, or ownership?
+3. Is the app using **cookies** or **bearer tokens**? The CSRF answer changes.
+4. Are error messages and logs safe for production?
+5. Are uploads, outbound fetches, and webhooks handled elsewhere?
+
+If a snippet makes the app run but widens trust or skips validation, it is the wrong snippet.
+
+---
+
+## 2. Cross-framework minimum baseline
+
+| Control area | Minimum expectation |
+|---|---|
+| Transport and headers | HTTPS, HSTS where appropriate, `nosniff`, frame protection, safe referrer policy |
+| Request validation | Allowlist schemas, type checks, bounded lengths, no mass assignment |
+| Authentication | Verified issuer/audience/expiry or hardened server sessions |
+| Authorization | Object-level and function-level checks server-side |
+| Abuse controls | Rate limits on login, reset, OTP, search, upload, and export paths |
+| Error handling | Generic client errors, detailed internal logs with correlation ID |
+| Secrets | No secrets in code, templates, or client-visible config |
+| Logging | Stable identifiers only; avoid passwords, tokens, full bodies, and raw exports |
+
+---
+
+## 3. Express / Node.js
+
+### 3.1 Baseline middleware
 
 ```javascript
-const helmet = require('helmet');
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const cookieParser = require("cookie-parser");
 
+app.disable("x-powered-by");
+app.use(cookieParser());
+app.use(express.json({ limit: "1mb" }));
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'"],        // add nonce for inline scripts
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https:"],
       frameAncestors: ["'none'"],
+      objectSrc: ["'none'"],
+      baseUri: ["'self'"],
     },
   },
   hsts: { maxAge: 63072000, includeSubDomains: true, preload: true },
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
 }));
-app.disable('x-powered-by');
-```
-
-### JWT Authentication Middleware
-
-```javascript
-const jwt = require('jsonwebtoken');
-
-function requireAuth(req, res, next) {
-  const token = req.cookies?.session_token; // HttpOnly cookie, not Authorization header
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  try {
-    req.user = jwt.verify(token, process.env.JWT_PUBLIC_KEY, {
-      algorithms: ['RS256'],
-      audience: 'my-api',
-      issuer: 'https://auth.myapp.com',
-    });
-    next();
-  } catch {
-    res.status(401).json({ error: 'Invalid token' });
-  }
-}
-```
-
-### Rate Limiting
-
-```javascript
-const rateLimit = require('express-rate-limit');
 
 const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
-const apiLimiter  = rateLimit({ windowMs: 60 * 1000, max: 100 });
-
-app.post('/auth/login', loginLimiter, loginHandler);
-app.use('/api/', apiLimiter);
+app.post("/auth/login", loginLimiter, loginHandler);
 ```
 
-### Input Validation (Zod)
+### 3.2 Request validation and mass-assignment prevention
 
 ```javascript
-const { z } = require('zod');
+const { z } = require("zod");
 
-const UserSchema = z.object({
-  name:  z.string().min(1).max(100),
-  email: z.string().email(),
-  age:   z.number().int().min(1).max(149),
+const UserUpdateSchema = z.object({
+  displayName: z.string().min(1).max(100),
+  bio: z.string().max(500).optional(),
+  locale: z.string().regex(/^[a-z]{2}-[A-Z]{2}$/).optional(),
 });
 
-app.post('/users', (req, res) => {
-  const result = UserSchema.safeParse(req.body);
-  if (!result.success) return res.status(400).json(result.error.flatten());
-  // use result.data - validated and typed
+app.patch("/api/me", requireAuth, async (req, res) => {
+  const parsed = UserUpdateSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: "invalid request" });
+  }
+
+  await users.updateProfile(req.user.id, parsed.data);
+  return res.status(204).end();
 });
 ```
 
-### Safe Error Handler
+Do not pass `req.body` directly into ORM update helpers.
+
+### 3.3 Object-level authorization pattern
 
 ```javascript
+app.get("/api/invoices/:id", requireAuth, async (req, res) => {
+  const invoice = await db.invoice.findFirst({
+    where: {
+      id: req.params.id,
+      ownerId: req.user.sub,
+      tenantId: req.user.tenant_id,
+    },
+  });
+
+  if (!invoice) {
+    return res.status(404).json({ error: "not found" });
+  }
+
+  res.json(invoice);
+});
+```
+
+### 3.4 Safe error handler
+
+```javascript
+const crypto = require("crypto");
+
 app.use((err, req, res, next) => {
-  const id = crypto.randomUUID();
-  console.error(`[${id}]`, err);
-  res.status(500).json({ error: 'Internal server error', id });
+  const errorId = crypto.randomUUID();
+  logger.error({ errorId, err }, "unhandled request error");
+  res.status(500).json({ error: "internal server error", id: errorId });
 });
 ```
 
 ---
 
-## NestJS
+## 4. NestJS
 
-### Global Security Setup
+### 4.1 App bootstrap hardening
 
 ```typescript
-// main.ts
-import helmet from 'helmet';
-import { rateLimit } from 'express-rate-limit';
+import helmet from "helmet";
+import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.use(helmet());
-  app.use(rateLimit({ windowMs: 60_000, max: 100 }));
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,       // strips unknown properties (prevents mass assignment)
+    whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
-  app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(3000);
 }
 ```
 
-```typescript
-// DTO with validation
-import { IsEmail, IsString, Length } from 'class-validator';
+### 4.2 DTO that avoids privilege drift
 
-export class CreateUserDto {
-  @IsString() @Length(1, 100) name: string;
-  @IsEmail() email: string;
-  // role is NOT in the DTO - cannot be set by the user
+```typescript
+import { IsEmail, IsOptional, IsString, Length } from "class-validator";
+
+export class UpdateProfileDto {
+  @IsString()
+  @Length(1, 100)
+  displayName!: string;
+
+  @IsOptional()
+  @IsEmail()
+  backupEmail?: string;
 }
 ```
 
+Do not include `role`, `tenantId`, `isAdmin`, or internal workflow status fields in user-controlled DTOs.
+
+### 4.3 Guard plus ownership check
+
+```typescript
+@Get(":invoiceId")
+async getInvoice(
+  @Param("invoiceId") invoiceId: string,
+  @Req() req: RequestWithUser,
+) {
+  const invoice = await this.invoiceRepo.findOne({
+    where: {
+      id: invoiceId,
+      ownerId: req.user.sub,
+      tenantId: req.user.tenantId,
+    },
+  });
+
+  if (!invoice) throw new NotFoundException();
+  return invoice;
+}
+```
+
+`@UseGuards(AuthGuard)` is not enough by itself if the resolver or handler can still fetch another tenant's object.
+
 ---
 
-## FastAPI / Python
+## 5. FastAPI / Python
 
-### Security Headers Middleware
+### 5.1 Security headers middleware
 
 ```python
 from fastapi import FastAPI, Request
-from fastapi.responses import Response
-import time, uuid
 
 app = FastAPI()
 
 SECURITY_HEADERS = {
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-    'X-Content-Type-Options': 'nosniff',
-    'X-Frame-Options': 'DENY',
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    'Content-Security-Policy': "default-src 'self'; frame-ancestors 'none'",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Content-Security-Policy": "default-src 'self'; frame-ancestors 'none'",
 }
 
-@app.middleware('http')
+@app.middleware("http")
 async def add_security_headers(request: Request, call_next):
     response = await call_next(request)
     for key, value in SECURITY_HEADERS.items():
@@ -173,110 +244,106 @@ async def add_security_headers(request: Request, call_next):
     return response
 ```
 
-### JWT Authentication
-
-```python
-from fastapi import Depends, HTTPException, Cookie
-from jose import JWTError, jwt
-
-def get_current_user(session_token: str = Cookie(default=None)):
-    if not session_token:
-        raise HTTPException(status_code=401)
-    try:
-        payload = jwt.decode(
-            session_token,
-            PUBLIC_KEY,
-            algorithms=['RS256'],
-            audience='my-api',
-            issuer='https://auth.myapp.com',
-        )
-        return payload
-    except JWTError:
-        raise HTTPException(status_code=401)
-```
-
-### Input Validation (Pydantic)
+### 5.2 Pydantic request model
 
 ```python
 from pydantic import BaseModel, EmailStr, Field
 
 class UserCreate(BaseModel):
-    name:  str = Field(min_length=1, max_length=100)
+    name: str = Field(min_length=1, max_length=100)
     email: EmailStr
-    age:   int = Field(gt=0, lt=150)
-    # role excluded - cannot be set by the caller
-
-@app.post('/users')
-def create_user(body: UserCreate, user=Depends(get_current_user)):
-    ...
+    age: int = Field(gt=0, lt=150)
 ```
 
-### Rate Limiting (slowapi)
+### 5.3 Authenticated and scoped query
 
 ```python
-from slowapi import Limiter
-from slowapi.util import get_remote_address
+@app.get("/invoices/{invoice_id}")
+def get_invoice(invoice_id: int, current_user=Depends(get_current_user)):
+    invoice = (
+        db.query(Invoice)
+        .filter(
+            Invoice.id == invoice_id,
+            Invoice.owner_id == current_user["sub"],
+            Invoice.tenant_id == current_user["tenant_id"],
+        )
+        .first()
+    )
+    if not invoice:
+        raise HTTPException(status_code=404)
+    return invoice
+```
 
-limiter = Limiter(key_func=get_remote_address)
-app.state.limiter = limiter
+### 5.4 Safe exception handler
 
-@app.post('/auth/login')
-@limiter.limit('10/minute')
-async def login(request: Request, credentials: LoginCredentials):
-    ...
+```python
+import uuid
+from fastapi.responses import JSONResponse
+
+@app.exception_handler(Exception)
+async def generic_error_handler(request: Request, exc: Exception):
+    error_id = uuid.uuid4().hex
+    logger.exception("Unhandled request error", extra={"error_id": error_id})
+    return JSONResponse(status_code=500, content={"error": "internal server error", "id": error_id})
 ```
 
 ---
 
-## Django
+## 6. Django
 
-### settings.py Security Baseline
+### 6.1 `settings.py` production baseline
 
 ```python
-# HTTPS / Transport
+DEBUG = False
+ALLOWED_HOSTS = ["app.example.com"]
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
+
 SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 63072000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 
-# Cookies
-SESSION_COOKIE_SECURE   = True
+SESSION_COOKIE_SECURE = True
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Strict'
-CSRF_COOKIE_SECURE      = True
-CSRF_COOKIE_HTTPONLY    = True
-
-# Content
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-
-# Never expose in production
-DEBUG = False
-SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
-ALLOWED_HOSTS = ['app.mycompany.com']
+X_FRAME_OPTIONS = "DENY"
 ```
 
-### IDOR-Safe QuerySet Pattern
+### 6.2 Queryset scoping for IDOR prevention
 
 ```python
-# views.py
 from django.shortcuts import get_object_or_404
 
 class InvoiceDetailView(LoginRequiredMixin, View):
     def get(self, request, invoice_id):
-        # Always filter by owner - prevents IDOR
-        invoice = get_object_or_404(Invoice, pk=invoice_id, owner=request.user)
+        invoice = get_object_or_404(
+            Invoice,
+            pk=invoice_id,
+            owner=request.user,
+            tenant=request.user.tenant,
+        )
         return JsonResponse(invoice.to_dict())
 ```
 
+### 6.3 Form / serializer allowlisting
+
+```python
+class ProfileUpdateForm(forms.Form):
+    display_name = forms.CharField(max_length=100)
+    locale = forms.RegexField(regex=r"^[a-z]{2}-[A-Z]{2}$", required=False)
+```
+
+Do not reuse model forms blindly for user self-service flows if the model also contains admin or billing-only fields.
+
 ---
 
-## Laravel / PHP
+## 7. Laravel / PHP
 
-### Security Headers Middleware
+### 7.1 Security headers middleware
 
 ```php
-// app/Http/Middleware/SecurityHeaders.php
 public function handle(Request $request, Closure $next): Response
 {
     $response = $next($request);
@@ -284,79 +351,70 @@ public function handle(Request $request, Closure $next): Response
     $response->headers->set('X-Frame-Options', 'DENY');
     $response->headers->set('Referrer-Policy', 'strict-origin-when-cross-origin');
     $response->headers->set('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
-    $response->headers->remove('X-Powered-By');
-    $response->headers->remove('Server');
     return $response;
 }
 ```
 
-### Input Validation (Form Request)
+### 7.2 Form request allowlist
 
 ```php
-// Never use $request->all() directly
 class StoreUserRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'name'  => 'required|string|max:100',
+            'name' => 'required|string|max:100',
             'email' => 'required|email|max:255',
-            // 'role' intentionally absent - cannot be set by user
         ];
     }
 }
 
 public function store(StoreUserRequest $request): JsonResponse
 {
-    // $request->validated() contains only declared fields
     User::create($request->validated());
+    return response()->json([], 201);
 }
 ```
 
-### IDOR Prevention
+### 7.3 Policy-based object authorization
 
 ```php
-// Scope queries to the authenticated user
-$invoice = Invoice::where('id', $id)
-    ->where('user_id', auth()->id())  // ownership check
-    ->firstOrFail();                  // 404 if not found or not owned
+public function show(string $id): JsonResponse
+{
+    $invoice = Invoice::where('id', $id)
+        ->where('user_id', auth()->id())
+        ->where('tenant_id', auth()->user()->tenant_id)
+        ->firstOrFail();
+
+    return response()->json($invoice);
+}
 ```
 
 ---
 
-## Spring Boot / Java
+## 8. Spring Boot / Java
 
-### Security Configuration
+### 8.1 HTTP security baseline
 
 ```java
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
-            .headers(headers -> headers
-                .frameOptions(FrameOptionsConfig::deny)
-                .contentTypeOptions(Customizer.withDefaults())
-                .httpStrictTransportSecurity(hsts -> hsts
-                    .maxAgeInSeconds(63072000)
-                    .includeSubDomains(true)
-                    .preload(true))
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .csrf(csrf -> csrf.disable())  // stateless JWT API - CSRF not needed
-            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-            .build();
-    }
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http
+        .headers(headers -> headers
+            .frameOptions(frame -> frame.deny())
+            .contentTypeOptions(Customizer.withDefaults())
+            .httpStrictTransportSecurity(hsts -> hsts
+                .maxAgeInSeconds(63072000)
+                .includeSubDomains(true)
+                .preload(true)))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/auth/**").permitAll()
+            .anyRequest().authenticated())
+        .build();
 }
 ```
 
-### Input Validation (Bean Validation)
+### 8.2 Request DTO and method-level authorization
 
 ```java
 public class UserCreateRequest {
@@ -365,23 +423,22 @@ public class UserCreateRequest {
 
     @NotBlank @Email
     private String email;
-
-    @Min(1) @Max(149)
-    private int age;
-    // role field absent - cannot be set by caller
 }
 
-@PostMapping("/users")
-public ResponseEntity<?> createUser(@Valid @RequestBody UserCreateRequest req) {
-    // req is validated - only declared fields accepted
+@PreAuthorize("hasAuthority('invoice:read')")
+@GetMapping("/invoices/{id}")
+public InvoiceDto getInvoice(@PathVariable UUID id, Authentication auth) {
+    return invoiceService.getForPrincipal(id, auth.getName());
 }
 ```
 
+Keep ownership or tenant scoping inside the service or repository layer too; controller annotations alone are not enough.
+
 ---
 
-## Go (Gin)
+## 9. Go (Gin)
 
-### Security Headers Middleware
+### 9.1 Security headers middleware
 
 ```go
 func SecurityHeaders() gin.HandlerFunc {
@@ -390,57 +447,73 @@ func SecurityHeaders() gin.HandlerFunc {
         c.Header("X-Content-Type-Options", "nosniff")
         c.Header("X-Frame-Options", "DENY")
         c.Header("Referrer-Policy", "strict-origin-when-cross-origin")
-        c.Header("Content-Security-Policy", "default-src 'self'; frame-ancestors 'none'")
         c.Next()
     }
 }
-
-func main() {
-    r := gin.New()
-    r.Use(SecurityHeaders())
-    ...
-}
 ```
 
-### JWT Authentication Middleware
+### 9.2 Bound request struct
 
 ```go
-func JWTMiddleware(publicKey *rsa.PublicKey) gin.HandlerFunc {
-    return func(c *gin.Context) {
-        cookie, err := c.Cookie("session_token")
-        if err != nil { c.AbortWithStatus(401); return }
-
-        token, err := jwt.Parse(cookie, func(t *jwt.Token) (interface{}, error) {
-            if _, ok := t.Method.(*jwt.SigningMethodRSA); !ok {
-                return nil, fmt.Errorf("unexpected signing method")
-            }
-            return publicKey, nil
-        })
-        if err != nil || !token.Valid { c.AbortWithStatus(401); return }
-
-        claims := token.Claims.(jwt.MapClaims)
-        if claims["aud"] != "my-api" { c.AbortWithStatus(401); return }
-        c.Set("user", claims)
-        c.Next()
-    }
+type UpdateProfileRequest struct {
+    DisplayName string `json:"displayName" binding:"required,min=1,max=100"`
+    Locale      string `json:"locale" binding:"omitempty,startswith=en"`
 }
 ```
 
-### IDOR-Safe DB Query
+### 9.3 Safe object lookup
 
 ```go
 func GetInvoice(c *gin.Context) {
     invoiceID := c.Param("id")
-    userID := c.MustGet("user").(jwt.MapClaims)["sub"].(string)
+    user := c.MustGet("user").(Claims)
 
     var invoice Invoice
-    // Always scope by owner_id to prevent IDOR
-    result := db.Where("id = ? AND owner_id = ?", invoiceID, userID).First(&invoice)
+    result := db.Where("id = ? AND owner_id = ? AND tenant_id = ?", invoiceID, user.Subject, user.TenantID).First(&invoice)
     if result.Error != nil {
         c.JSON(404, gin.H{"error": "not found"})
         return
     }
+
     c.JSON(200, invoice)
 }
 ```
 
+---
+
+## 10. Cross-framework traps to review aggressively
+
+Look harder when a snippet introduces:
+
+- `role`, `isAdmin`, `tenantId`, `status`, or pricing fields in request models,
+- disabled CSRF without confirming the auth model,
+- raw ORM update helpers using the whole request body,
+- auth checks in controllers without repository/service scoping,
+- verbose exception dumps in API responses,
+- tutorial defaults left enabled in production,
+- outbound fetch or file upload examples without destination validation.
+
+If the example solves functionality but not trust boundaries, it is not production-ready.
+
+---
+
+## 11. Fast review checklist
+
+| Check | Expected |
+|---|---|
+| Request schemas allowlist fields only | Yes |
+| Authenticated routes also enforce object-level authorization where needed | Yes |
+| Error responses are generic and correlated | Yes |
+| Sensitive flows are rate-limited | Yes |
+| Cookies and transport settings are hardened | Yes |
+| Secrets are loaded from environment or manager, not code | Yes |
+| Logging avoids full bodies, tokens, and raw exports | Yes |
+
+---
+
+## 12. Related references
+
+- `api-security.md`
+- `language-patterns.md`
+- `production-error-handling.md`
+- `security-diff-review.md`

@@ -4,21 +4,25 @@ slug: detection-engineering
 category: ops
 depth: 3
 audit_level: [3, 4]
-last_reviewed: null
+last_reviewed: 2026-04-19
 sources:
   - "Sigma specification"
   - "MITRE ATT&CK"
   - "OWASP API Security Top 10 2023"
 triggers_strong: ["sigma rules", "detection engineering", "siem correlation", "attack detection"]
 triggers_weak: ["detections", "alerting"]
-related: ["incident-playbooks", "threat-modeling"]
+related: ["incident-playbooks", "threat-modeling", "detection-translations"]
 ---
 
 # detection-engineering.md
 
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Audit Level: 3-4 | Automation: Partial (rule conversion, replay tests, field mapping checks, and threshold regression tests partly automatable; environment tuning, suppression design, and response integration manual)
+
+Use this file when you need **portable, high-signal detections** for application abuse, GraphQL abuse, AI/agent misuse, cloud-native misuse, and supply-chain abuse patterns.
+
 > **Scope and Assumptions**
 >
-> - The source file `references/appsec/threat-modeling.md` is not visible in this session. The rules below therefore cover an **inferred reusable threat library** derived from explicitly requested threats and the most probable attack patterns.
+> - The rules below are a **reusable starting library** meant to be adapted to your application, tenant model, and telemetry stack.
 > - The format is **Sigma YAML + operational metadata**. The `threshold`, `required_log_sources` and `falsepositives` blocks are **deployment extensions** to be translated into your SIEM/XDR backend (Elastic, Sentinel, Splunk, Panther, etc.).
 > - Fields assume normalization close to ECS/OCSF: `source.ip`, `user.id`, `event.action`, `http.request.body.content`, `graphql.*`, etc.
 > - The thresholds below are **starting values**, not universal truths. Tune them per application, per route, per client and per tenant.
