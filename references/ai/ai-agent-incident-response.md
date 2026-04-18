@@ -178,8 +178,9 @@ Recovery is complete only if all are true:
 
 ## References
 
-- `references/llm-agent-security.md` (audit logging, prompt injection, tool permission tiers)
-- `references/mcp-security.md` (MCP spoofing/injection/path traversal/SSRF)
-- `references/secret-leak-prevention.md` (revoke-first credential incidents)
-- `references/incident-playbooks.md` (broader IR process patterns)
+- `references/ai/llm-agent-security.md` (audit logging, prompt injection, tool permission tiers)
+- `references/ai/mcp-security.md` (MCP spoofing/injection/path traversal/SSRF)
+- `references/ops/secret-leak-prevention.md` (revoke-first credential incidents)
+- `references/ops/incident-playbooks.md` (broader IR process patterns)
+
 

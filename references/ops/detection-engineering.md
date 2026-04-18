@@ -18,7 +18,7 @@ related: ["incident-playbooks", "threat-modeling"]
 
 > **Scope and Assumptions**
 >
-> - The source file `references/threat-modeling.md` is not visible in this session. The rules below therefore cover an **inferred reusable threat library** derived from explicitly requested threats and the most probable attack patterns.
+> - The source file `references/appsec/threat-modeling.md` is not visible in this session. The rules below therefore cover an **inferred reusable threat library** derived from explicitly requested threats and the most probable attack patterns.
 > - The format is **Sigma YAML + operational metadata**. The `threshold`, `required_log_sources` and `falsepositives` blocks are **deployment extensions** to be translated into your SIEM/XDR backend (Elastic, Sentinel, Splunk, Panther, etc.).
 > - Fields assume normalization close to ECS/OCSF: `source.ip`, `user.id`, `event.action`, `http.request.body.content`, `graphql.*`, etc.
 > - The thresholds below are **starting values**, not universal truths. Tune them per application, per route, per client and per tenant.
@@ -45,7 +45,7 @@ status: experimental
 description: Detects a burst of authentication failures from a single source IP against many accounts, the classic
   signature of non-distributed credential stuffing.
 references:
-- references/threat-modeling.md#credential-stuffing
+- references/appsec/threat-modeling.md#credential-stuffing
 logsource:
   product: webapp
   category: authentication
@@ -103,7 +103,7 @@ status: experimental
 description: Detects authentication failures against the same account or small group of accounts from multiple IPs/ASNs
   over a longer window, typical of a botnet or low-and-slow attack.
 references:
-- references/threat-modeling.md#credential-stuffing
+- references/appsec/threat-modeling.md#credential-stuffing
 logsource:
   product: webapp
   category: authentication
@@ -155,8 +155,8 @@ status: experimental
 description: Detects reuse of the same refresh token, session ID or cookie from multiple IPs, ASNs or user-agents
   incompatible with normal usage, a signal of session theft or token replay.
 references:
-- references/threat-modeling.md#session-hijack
-- references/threat-modeling.md#token-replay
+- references/appsec/threat-modeling.md#session-hijack
+- references/appsec/threat-modeling.md#token-replay
 logsource:
   product: webapp
   category: authentication
@@ -210,8 +210,8 @@ status: experimental
 description: Detects an authenticated client rapidly iterating over many sequential or near-sequential identifiers on the
   same resource type, an indicator of IDOR/BOLA enumeration.
 references:
-- references/threat-modeling.md#idor
-- references/threat-modeling.md#bola
+- references/appsec/threat-modeling.md#idor
+- references/appsec/threat-modeling.md#bola
 logsource:
   product: webserver
   category: webserver
@@ -273,8 +273,8 @@ status: experimental
 description: Detects GraphQL requests massively targeting `node(id:)` or equivalent fields with many distinct global IDs,
   an indicator of IDOR/BOLA on Relay objects.
 references:
-- references/threat-modeling.md#idor
-- references/threat-modeling.md#graphql-id-enumeration
+- references/appsec/threat-modeling.md#idor
+- references/appsec/threat-modeling.md#graphql-id-enumeration
 logsource:
   product: graphql
   category: application
@@ -330,8 +330,8 @@ status: experimental
 description: Detects GraphQL or REST requests asking for sensitive properties normally absent from the current user's
   journey, an indicator of BOPLA / excessive data exposure.
 references:
-- references/threat-modeling.md#bopla
-- references/threat-modeling.md#excessive-data-exposure
+- references/appsec/threat-modeling.md#bopla
+- references/appsec/threat-modeling.md#excessive-data-exposure
 logsource:
   product: graphql
   category: application
@@ -391,7 +391,7 @@ status: experimental
 description: Detects a create or update request attempting to set fields normally protected server-side (`role`,
   `isAdmin`, `tenantId`, `createdBy`, etc.).
 references:
-- references/threat-modeling.md#mass-assignment
+- references/appsec/threat-modeling.md#mass-assignment
 logsource:
   product: webapp
   category: application
@@ -455,7 +455,7 @@ status: experimental
 description: Detects a JWT bearing `alg=none` or an application response indicating such a token was accepted, a signal
   of critically broken JWT validation.
 references:
-- references/threat-modeling.md#jwt-none-alg
+- references/appsec/threat-modeling.md#jwt-none-alg
 logsource:
   product: webapp
   category: application
@@ -510,8 +510,8 @@ status: experimental
 description: Detects tokens with `iss`, `aud`, `kid` or role claims inconsistent with the target application, as well as
   sudden privilege escalations tied to unexpected claims.
 references:
-- references/threat-modeling.md#jwt-confusion
-- references/threat-modeling.md#claim-tampering
+- references/appsec/threat-modeling.md#jwt-confusion
+- references/appsec/threat-modeling.md#claim-tampering
 logsource:
   product: webapp
   category: application
@@ -576,7 +576,7 @@ status: experimental
 description: Detects introspection queries (`__schema`, `__type`) in a production environment where introspection
   should be disabled or restricted to admins.
 references:
-- references/threat-modeling.md#graphql-introspection
+- references/appsec/threat-modeling.md#graphql-introspection
 logsource:
   product: graphql
   category: application
@@ -629,7 +629,7 @@ status: experimental
 description: Detects a GraphQL request with an excessive number of aliases, typical of an attempt to bypass naive rate
   limits or to cause a logic-level DoS.
 references:
-- references/threat-modeling.md#graphql-alias-dos
+- references/appsec/threat-modeling.md#graphql-alias-dos
 logsource:
   product: graphql
   category: application
@@ -681,7 +681,7 @@ status: experimental
 description: Detects HTTP requests containing an array of GraphQL operations or an abnormal number of operations per
   batch, a common technique to bypass per-request rate limiting.
 references:
-- references/threat-modeling.md#graphql-batching
+- references/appsec/threat-modeling.md#graphql-batching
 logsource:
   product: graphql
   category: application
@@ -730,8 +730,8 @@ status: experimental
 description: Detects a burst of `PersistedQueryNotFound` errors or unknown APQ hashes, a signal of probing or an attempt
   to bypass a persisted-query allowlist.
 references:
-- references/threat-modeling.md#apq-abuse
-- references/threat-modeling.md#allowlist-bypass
+- references/appsec/threat-modeling.md#apq-abuse
+- references/appsec/threat-modeling.md#allowlist-bypass
 logsource:
   product: graphql
   category: application
@@ -783,8 +783,8 @@ status: experimental
 description: Detects a single request triggering an abnormal number of backend / SQL / resolver invocations, the signature
   of N+1 abuse or unbounded logical complexity.
 references:
-- references/threat-modeling.md#graphql-n-plus-one
-- references/threat-modeling.md#resource-exhaustion
+- references/appsec/threat-modeling.md#graphql-n-plus-one
+- references/appsec/threat-modeling.md#resource-exhaustion
 logsource:
   product: graphql
   category: application
@@ -840,7 +840,7 @@ status: experimental
 description: Detects outbound or application requests explicitly targeting IMDS endpoints (AWS/Azure/GCP) or the address
   169.254.169.254, a strong indicator of SSRF for cloud credential theft.
 references:
-- references/threat-modeling.md#ssrf-imds
+- references/appsec/threat-modeling.md#ssrf-imds
 logsource:
   product: proxy
   category: network_connection
@@ -896,7 +896,7 @@ status: experimental
 description: Detects requests to `127.0.0.1`, `localhost`, RFC1918 ranges or internal DNS names from a user-exposed
   fetch / webhook / URL import feature.
 references:
-- references/threat-modeling.md#ssrf-internal-network
+- references/appsec/threat-modeling.md#ssrf-internal-network
 logsource:
   product: proxy
   category: network_connection
@@ -958,7 +958,7 @@ status: experimental
 description: Detects textual prompt injection markers in user input passed to an LLM or agent, for example
   `ignore previous instructions` or `BEGIN SYSTEM PROMPT`.
 references:
-- references/threat-modeling.md#prompt-injection
+- references/appsec/threat-modeling.md#prompt-injection
 logsource:
   product: ai_gateway
   category: application
@@ -1016,8 +1016,8 @@ status: experimental
 description: Detects an explicit attempt to make the LLM reveal the system prompt, secrets, developer instructions
   or the list of available tools.
 references:
-- references/threat-modeling.md#prompt-exfiltration
-- references/threat-modeling.md#agent-pivot
+- references/appsec/threat-modeling.md#prompt-exfiltration
+- references/appsec/threat-modeling.md#agent-pivot
 logsource:
   product: ai_gateway
   category: application
@@ -1074,8 +1074,8 @@ status: experimental
 description: Detects an ordered sequence of agent actions where external content is browsed, then a local or connected
   file/secret is read, then an outbound action (email, webhook, upload) is performed within the same session.
 references:
-- references/threat-modeling.md#agent-tool-pivot
-- references/threat-modeling.md#prompt-injection
+- references/appsec/threat-modeling.md#agent-tool-pivot
+- references/appsec/threat-modeling.md#prompt-injection
 logsource:
   product: agent_platform
   category: application
@@ -1142,8 +1142,8 @@ status: experimental
 description: Detects a sequence where a user message attempts to override safeguards, followed by access to a sensitive
   connector and a bulk export within the same conversation.
 references:
-- references/threat-modeling.md#agent-override
-- references/threat-modeling.md#prompt-exfiltration
+- references/appsec/threat-modeling.md#agent-override
+- references/appsec/threat-modeling.md#prompt-exfiltration
 logsource:
   product: agent_platform
   category: application
@@ -1213,7 +1213,7 @@ status: experimental
 description: Detects Kubernetes `list/get/watch` calls on the `secrets` resource by a service account, user or job
   that is not normally expected to access it.
 references:
-- references/threat-modeling.md#k8s-secret-access
+- references/appsec/threat-modeling.md#k8s-secret-access
 logsource:
   product: kubernetes
   service: audit
@@ -1268,7 +1268,7 @@ status: experimental
 description: Detects `create` calls on `pods/exec` or `pods/attach` from a CI/CD principal, bot or service account,
   an indicator of interactive pivot into the cluster.
 references:
-- references/threat-modeling.md#k8s-exec-abuse
+- references/appsec/threat-modeling.md#k8s-exec-abuse
 logsource:
   product: kubernetes
   service: audit
@@ -1321,8 +1321,8 @@ status: experimental
 description: Detects installation of an npm package flagged as a typosquat, dependency confusion candidate, or a freshly
   published / low-reputation package by your proxy or pipeline.
 references:
-- references/threat-modeling.md#npm-typosquatting
-- references/threat-modeling.md#dependency-confusion
+- references/appsec/threat-modeling.md#npm-typosquatting
+- references/appsec/threat-modeling.md#dependency-confusion
 logsource:
   product: ci
   category: process_creation
@@ -1382,8 +1382,8 @@ status: experimental
 description: Detects execution of an npm `postinstall` / `prepare` script that spawns a shell, `curl`, `wget`, `powershell`
   or unexpected network connections during the build.
 references:
-- references/threat-modeling.md#npm-postinstall
-- references/threat-modeling.md#build-pipeline-execution
+- references/appsec/threat-modeling.md#npm-postinstall
+- references/appsec/threat-modeling.md#build-pipeline-execution
 logsource:
   product: ci
   category: process_creation
@@ -1447,8 +1447,8 @@ status: experimental
 description: Detects a GitHub Actions workflow change that replaces a full-length commit SHA with a tag / short SHA,
   or introduces an unpinned third-party action.
 references:
-- references/threat-modeling.md#github-actions-sha-replacement
-- references/threat-modeling.md#ci-cd-supply-chain
+- references/appsec/threat-modeling.md#github-actions-sha-replacement
+- references/appsec/threat-modeling.md#ci-cd-supply-chain
 logsource:
   product: scm
   category: configuration_change
@@ -1550,8 +1550,8 @@ description: >
   returning user, patient, order, or financial records. Relevant to GDPR Art. 32 monitoring
   obligations and provides the earliest signal for Art. 33 breach awareness.
 references:
-  - references/detection-engineering.md#det-004
-  - references/graphql-security.md#idor
+  - references/ops/detection-engineering.md#det-004
+  - references/appsec/graphql-security.md#idor
 logsource:
   product: webapp
   category: webserver
@@ -1610,3 +1610,4 @@ When a rule fires and the incident scope includes personal data:
 6. **If 72h cannot be met** — notify anyway with available information and supplement later (Art. 33(4) allows phased notification).
 
 > **Note**: Art. 33 applies to **personal data breaches** — unauthorised access, disclosure, alteration, or destruction of personal data. Not every security incident is a personal data breach. The detection team's role is to provide timely awareness; the DPO makes the Art. 33(1) determination.
+

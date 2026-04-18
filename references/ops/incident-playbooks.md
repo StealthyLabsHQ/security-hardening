@@ -19,7 +19,7 @@ related: ["ai-agent-incident-response", "secret-leak-prevention"]
 
 Structured response procedures for the most common security incidents. Each playbook follows the same format: Detect, Contain, Investigate, Remediate, Review.
 
-For secret leaks specifically, see `references/secret-leak-prevention.md`.
+For secret leaks specifically, see `references/ops/secret-leak-prevention.md`.
 
 ---
 
@@ -119,7 +119,7 @@ db.session.commit()
 ### Remediate
 
 - Rotate the webhook secret.
-- Verify all incoming webhooks validate the HMAC signature. See `references/api-security.md`.
+- Verify all incoming webhooks validate the HMAC signature. See `references/appsec/api-security.md`.
 - Audit any actions taken in the window between compromise and detection.
 - If forged events triggered state changes: review and revert if necessary.
 
@@ -233,7 +233,7 @@ async def generic_error(request, exc):
 ### Remediate
 
 - Add startup check: fail if `DEBUG=True` in a production environment.
-- Add integration test that verifies 500 responses do not contain stack traces (see `references/security-testing-examples.md`).
+- Add integration test that verifies 500 responses do not contain stack traces (see `references/appsec/security-testing-examples.md`).
 - Review and patch any vulnerabilities revealed by the leaked information.
 
 ---
@@ -312,4 +312,5 @@ Duration: [detection time] to [resolution time]
 |--------|-------|-----|
 | [specific change] | [name] | [date] |
 ```
+
 

@@ -94,7 +94,7 @@ CORS only controls which browser origins can make credentialed cross-origin requ
 - Session cookies sent over HTTP (without `Secure` flag)
 - Clickjacking (without `X-Frame-Options` or CSP `frame-ancestors`)
 
-**What to do instead:** HTTPS is the baseline. Layer on HSTS, CSP, `HttpOnly`+`Secure`+`SameSite` cookies, `X-Content-Type-Options`, and `X-Frame-Options`. See `references/secure-headers.md`.
+**What to do instead:** HTTPS is the baseline. Layer on HSTS, CSP, `HttpOnly`+`Secure`+`SameSite` cookies, `X-Content-Type-Options`, and `X-Frame-Options`. See `references/appsec/secure-headers.md`.
 
 ---
 
@@ -165,4 +165,5 @@ CORS only controls which browser origins can make credentialed cross-origin requ
 | "The route is not linked" | Security through obscurity is not security |
 | "We use OAuth" | state/PKCE/aud validated? OIDC for auth, not raw OAuth? |
 | "Container is isolated" | Running as root? Docker socket mounted? Privileged? |
+
 
