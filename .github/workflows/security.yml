@@ -16,6 +16,21 @@ concurrency:
 
 jobs:
   # ---------------------------------------------------------------
+  # 0. Skill integrity - corpus structure and routing safety
+  # ---------------------------------------------------------------
+  skill-integrity:
+    name: Skill Integrity
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Lint skill corpus
+        run: python3 scripts/lint-skill.py
+
+  # ---------------------------------------------------------------
   # 1. Secret scanning - blocks hardcoded credentials
   # ---------------------------------------------------------------
   gitleaks:

@@ -140,3 +140,34 @@ Implement Phase 5 as an offline fixture-integrity harness:
 - Routing regressions and broken paths are caught immediately.
 - Semantic quality checks remain explicit, but require a later model-backed harness if full automation is needed.
 
+## ADR-0006: Skill lint uses an allowlist plus example-domain heuristics
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+Phase 6 requires linting for non-allowlisted links and suspicious hidden instructions.
+
+This corpus intentionally contains:
+
+- official vendor and standards links,
+- placeholder hosts such as `example.com`,
+- private/internal sample hosts such as `*.internal` and `*.corp`,
+- adversary simulation hosts such as `attacker.com` inside defensive examples.
+
+### Decision
+
+Lint external links with two buckets:
+
+- explicit allowlist for official documentation and standards domains already used by the repo,
+- heuristic allowlist for placeholders, private sample hosts, local addresses, and explicit attacker-simulation hosts used in defensive examples.
+
+Also lint hidden prompt-injection patterns only when they appear in code fences or HTML comments without nearby defensive framing.
+
+### Consequences
+
+- The linter blocks accidental drift to random external domains.
+- Existing defensive examples remain valid instead of generating noisy false positives.
+- Future domains should be added intentionally instead of slipping into the corpus unnoticed.
+
