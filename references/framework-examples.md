@@ -1,3 +1,21 @@
+---
+title: "Framework Security Examples"
+slug: framework-examples
+category: appsec
+depth: 2
+audit_level: [1, 2]
+last_reviewed: null
+sources:
+  - "Express documentation"
+  - "FastAPI documentation"
+  - "Django security documentation"
+  - "Spring Security reference"
+  - "Ruby on Rails Security Guide"
+triggers_strong: ["express security", "fastapi security", "django security", "framework examples"]
+triggers_weak: ["framework hardening", "copy paste security"]
+related: ["language-patterns", "frontend-frameworks-security"]
+---
+
 # Framework Security Examples
 
 Ready-to-use, copy-paste security configurations per framework. Each section covers: security headers, authentication middleware, input validation, rate limiting, and error handling.
@@ -425,3 +443,4 @@ func GetInvoice(c *gin.Context) {
     c.JSON(200, invoice)
 }
 ```
+

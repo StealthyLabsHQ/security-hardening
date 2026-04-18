@@ -1,3 +1,19 @@
+---
+title: "Secret Leak Prevention"
+slug: secret-leak-prevention
+category: ops
+depth: 2
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "GitHub push protection"
+  - "Gitleaks"
+  - "TruffleHog"
+triggers_strong: ["secret leak", "pushed api key", "gitleaks", "git filter repo"]
+triggers_weak: ["credential leak", "secret scanning"]
+related: ["pre-push-checklist", "incident-playbooks"]
+---
+
 # Secret Leak Prevention
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Essential | Automation: Full (Gitleaks, TruffleHog, GitHub push protection)
@@ -375,3 +391,4 @@ client = openai.OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 | All | SOPS (Mozilla) | Encrypted secrets file committed to Git |
 | GitHub | Actions Secrets | `${{ secrets.MY_SECRET }}` |
 | Doppler | Doppler CLI | `doppler run -- node server.js` |
+

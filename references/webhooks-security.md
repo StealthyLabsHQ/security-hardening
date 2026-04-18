@@ -1,3 +1,19 @@
+---
+title: "Webhook Security"
+slug: webhooks-security
+category: appsec
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "Stripe webhook signatures"
+  - "GitHub webhooks documentation"
+  - "OWASP Webhook Security guidance"
+triggers_strong: ["webhook signature", "replay protection", "stripe signature", "timing safe compare"]
+triggers_weak: ["webhooks", "callback security"]
+related: ["api-security", "applied-cryptography"]
+---
+
 # Webhook Security
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: High | Audit Level: 2-3 | Automation: Partial
@@ -282,3 +298,4 @@ Add these to your security test suite (see `security-testing-examples.md`):
 - CWE-345: Insufficient Verification of Data Authenticity
 - CWE-918: SSRF (for outbound webhooks)
 - CWE-942: Permissive Cross-domain Policy with Untrusted Domains
+

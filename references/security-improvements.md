@@ -1,3 +1,20 @@
+---
+title: "Security Improvement Plan"
+slug: security-improvements
+category: ops
+depth: 2
+audit_level: [2, 3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP"
+  - "NIST SP 800-53"
+  - "NIST SP 800-63B"
+  - "CIS Benchmarks"
+triggers_strong: ["security improvement plan", "defense in depth", "hardening roadmap", "security backlog"]
+triggers_weak: ["security roadmap", "prioritization"]
+related: ["defensive-security-baseline", "vuln-management"]
+---
+
 # Security Improvement Plan (Defense in Depth)
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial (CI/CD axes; threat modeling and pentest manual)
@@ -181,3 +198,4 @@ Validate the effectiveness of defenses in place.
 1. Install **Gitleaks** as a pre-commit hook to stop secret leaks.
 2. Run your site through **Mozilla Observatory** and fix the HTTP headers.
 3. Configure **Trivy** in CI to block dependencies with critical CVEs.
+

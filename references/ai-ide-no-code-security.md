@@ -1,3 +1,19 @@
+---
+title: "AI IDE and No-Code Security"
+slug: ai-ide-no-code-security
+category: ai
+depth: 2
+audit_level: [1, 2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "Cursor documentation"
+  - "Anthropic Claude Code settings"
+  - "OpenAI Codex CLI"
+triggers_strong: ["cursor security", "no-code security", "browser builder security", "connector abuse"]
+triggers_weak: ["ai ide", "low-code"]
+related: ["ai-cli-hardening", "ai-tool-profiles"]
+---
+
 # AI IDE and No-Code Security
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (policy checks, secret scanning, webhook tests, and audit-log export automatable; connector review and privilege design manual)
@@ -252,3 +268,4 @@ If the tool generated one of these areas and nobody reviewed it manually, treat 
 - `privacy-data-minimization.md`
 - `gdpr-security-ops.md`
 - `incident-playbooks.md`
+

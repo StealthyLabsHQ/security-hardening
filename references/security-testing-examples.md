@@ -1,3 +1,18 @@
+---
+title: "Security Testing Examples"
+slug: security-testing-examples
+category: appsec
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP Web Security Testing Guide"
+  - "OWASP ZAP"
+triggers_strong: ["security tests", "idor test", "zap baseline", "upload test"]
+triggers_weak: ["security testing", "verification"]
+related: ["threat-modeling", "framework-examples"]
+---
+
 # Security Testing Examples
 
 > Last reviewed: 2026-04-14 | Next review: 2027-04-14 | Priority: Recommended | Audit Level: 2-3 | Automation: Full (all examples runnable in CI)
@@ -415,3 +430,4 @@ func TestStackTraceNotExposed(t *testing.T) {
     }
 }
 ```
+

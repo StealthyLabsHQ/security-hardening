@@ -1,3 +1,19 @@
+---
+title: "Security Audit Levels"
+slug: security-audit-levels
+category: ops
+depth: 2
+audit_level: [1, 2, 3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Web Security Testing Guide"
+  - "NIST SP 800-115"
+  - "PTES"
+triggers_strong: ["audit level 1", "audit level 2", "audit level 3", "audit level 4"]
+triggers_weak: ["audit process", "maturity"]
+related: ["coverage-matrix", "security-testing-examples"]
+---
+
 # Security Audit Levels
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial
@@ -330,3 +346,4 @@ Legend: **Core** = primary reference for this level. **Partial** = partially rel
 | 2 | Live app with users | Half-day to 1 day | IDOR, input validation, CORS, rate limiting | Multiple roles, sensitive data, team of 3+ |
 | 3 | Production SaaS / team | 1-3 days | AuthZ model, supply chain, infra hardening, detection | Regulated data, high-value target |
 | 4 | Regulated / critical | Days to weeks | Threat model, pentest, fuzzing, red team | Ongoing, after major changes |
+

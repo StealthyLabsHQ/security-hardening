@@ -1,3 +1,19 @@
+---
+title: "Privacy and Data Minimization"
+slug: privacy-data-minimization
+category: privacy
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "NIST Privacy Framework"
+  - "GDPR Article 5"
+  - "OWASP Top 10 Privacy Risks"
+triggers_strong: ["data minimization", "pii in logs", "privacy by default", "masking"]
+triggers_weak: ["privacy review", "data handling"]
+related: ["gdpr-security-ops", "production-error-handling"]
+---
+
 # Privacy and Data Minimization
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (log scanning for PII patterns; retention and masking policy manual)
@@ -410,3 +426,4 @@ LogRocket.init('app/id', {
 - NIST Privacy Framework
 - ICO - Guide to data minimisation
 - CNIL - GDPR developer guide (English version available)
+

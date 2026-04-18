@@ -1,3 +1,18 @@
+---
+title: "Active Directory & Entra ID Hardening"
+slug: active-directory-hardening
+category: iam
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "Microsoft Windows LAPS"
+  - "Microsoft Entra ID documentation"
+triggers_strong: ["active directory", "entra id", "kerberos", "laps"]
+triggers_weak: ["identity hardening", "directory security"]
+related: ["cloud-iam-hardening", "authorization-rbac"]
+---
+
 # Active Directory & Entra ID Hardening
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (BloodHound, PingCastle; PIM and Conditional Access manual)
@@ -93,3 +108,4 @@ Set-SmbServerConfiguration -EnableSMB1Protocol $false -Force
 | PingCastle | AD risk assessment and scoring |
 | Microsoft Entra ID Protection | Risky sign-in detection |
 | Purple Knight | AD security posture assessment |
+

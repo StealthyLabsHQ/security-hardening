@@ -1,3 +1,19 @@
+---
+title: "Cloud & IAM Hardening"
+slug: cloud-iam-hardening
+category: iam
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "AWS IAM best practices"
+  - "Google Cloud IAM best practices"
+  - "Azure identity security documentation"
+triggers_strong: ["aws iam", "gcp iam", "azure security", "metadata service"]
+triggers_weak: ["cloud hardening", "identity review"]
+related: ["active-directory-hardening", "container-k8s-hardening"]
+---
+
 # Cloud & IAM Hardening
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Audit Level: 3-4 | Automation: Partial (Trivy, Checkov, AWS Config; IAM reviews manual)
@@ -299,3 +315,4 @@ tfsec .
 | Metadata service requires token (IMDSv2 / equivalent) | IMDSv2 required | Metadata-Flavor header | Instance Metadata Service |
 | Audit logging enabled | CloudTrail | Cloud Audit Logs | Azure Monitor / Defender |
 | IaC scanned for misconfigs in CI | Checkov / tfsec | Checkov | Checkov |
+

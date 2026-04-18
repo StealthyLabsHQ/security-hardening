@@ -1,3 +1,18 @@
+---
+title: "Authorization: RBAC, ABAC, ReBAC & IDOR Prevention"
+slug: authorization-rbac
+category: iam
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Authorization Cheat Sheet"
+  - "OWASP API Security Top 10 2023"
+triggers_strong: ["idor", "rbac", "abac", "rebac"]
+triggers_weak: ["authorization review", "access control"]
+related: ["api-security", "session-management"]
+---
+
 # Authorization: RBAC, ABAC, ReBAC & IDOR Prevention
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial (SAST catches some patterns; ownership checks manual)
@@ -212,3 +227,4 @@ def admin_dashboard():
 | Casbin | RBAC/ABAC/ACL library (Go, Node, Python, Java) |
 | OpenFGA | Google Zanzibar-inspired ReBAC |
 | py-RBAC / casl | Lightweight RBAC for Python / JavaScript |
+

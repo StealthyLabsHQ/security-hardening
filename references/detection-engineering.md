@@ -1,3 +1,19 @@
+---
+title: "Detection Engineering"
+slug: detection-engineering
+category: ops
+depth: 3
+audit_level: [3, 4]
+last_reviewed: null
+sources:
+  - "Sigma specification"
+  - "MITRE ATT&CK"
+  - "OWASP API Security Top 10 2023"
+triggers_strong: ["sigma rules", "detection engineering", "siem correlation", "attack detection"]
+triggers_weak: ["detections", "alerting"]
+related: ["incident-playbooks", "threat-modeling"]
+---
+
 # detection-engineering.md
 
 > **Scope and Assumptions**

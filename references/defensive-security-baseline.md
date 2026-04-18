@@ -1,3 +1,19 @@
+---
+title: "Defensive Security Baseline"
+slug: defensive-security-baseline
+category: ops
+depth: 2
+audit_level: [1, 2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "CISA Cyber Essentials"
+  - "NIST Cybersecurity Framework 2.0"
+  - "CIS Critical Security Controls"
+triggers_strong: ["security baseline", "founder security", "workstation hardening", "small team security"]
+triggers_weak: ["baseline hardening", "security checklist"]
+related: ["security-improvements", "social-engineering-physical"]
+---
+
 # Defensive Security Baseline (Developers, Founders, and Small Teams)
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (device compliance, secret scanning, backup verification, and SaaS audit logs automatable; travel/opsec drills manual)
@@ -219,3 +235,4 @@ Operational expectations:
 - `incident-playbooks.md`
 - `ai-cli-hardening.md`
 - `ai-agent-incident-response.md`
+

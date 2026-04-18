@@ -1,3 +1,19 @@
+---
+title: "IoT & OT Security"
+slug: iot-ot-security
+category: infra
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "NIST SP 800-82 Rev. 3"
+  - "CISA ICS advisories"
+  - "MITRE ATT&CK for ICS"
+triggers_strong: ["ot security", "industrial network", "purdue model", "ics"]
+triggers_weak: ["iot security", "operational technology"]
+related: ["detection-engineering", "incident-playbooks"]
+---
+
 # IoT & OT / Industrial Network Security
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Context-Dependent | Automation: Partial (Zeek/Nozomi passive monitoring; OT IR manual)
@@ -128,3 +144,4 @@ OT IR differs from IT because **safety takes priority over containment**.
 - IEC 62443 - Industrial Automation and Control Systems Security
 - CISA ICS advisories - https://www.cisa.gov/news-events/ics-advisories
 - MITRE ATT&CK for ICS - https://attack.mitre.org/matrices/ics/
+

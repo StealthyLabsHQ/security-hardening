@@ -1,3 +1,19 @@
+---
+title: "Pre Push Security Checklist"
+slug: pre-push-checklist
+category: ops
+depth: 1
+audit_level: [1, 2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "Gitleaks"
+  - "OWASP ASVS"
+  - "OWASP Secure Code Review Cheat Sheet"
+triggers_strong: ["pre-push checklist", "before git push", "secret scan", "dangerous patterns"]
+triggers_weak: ["checklist", "push gate"]
+related: ["quick-start-ai-coding", "secret-leak-prevention"]
+---
+
 # Pre-Push Security Checklist
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial (Gitleaks covers secrets; logic checks are manual)
@@ -126,3 +142,4 @@ repos:
 ```bash
 pre-commit install
 ```
+

@@ -1,3 +1,20 @@
+---
+title: "Software Supply Chain Security"
+slug: supply-chain-security
+category: infra
+depth: 3
+audit_level: [3]
+last_reviewed: 2026-04-03
+sources:
+  - "SLSA Framework"
+  - "Sigstore Cosign"
+  - "CISA SBOM guidance"
+  - "OpenSSF Scorecard"
+triggers_strong: ["sbom", "slsa", "cosign", "dependency confusion"]
+triggers_weak: ["supply chain", "artifact integrity"]
+related: ["container-k8s-hardening", "vuln-management"]
+---
+
 # Software Supply Chain Security
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 3 | Automation: Partial (Syft/Trivy SBOM, Cosign signing, Gitleaks; SLSA provenance and dependency confusion manual)
@@ -393,3 +410,4 @@ docker run -e GITHUB_AUTH_TOKEN=$TOKEN gcr.io/openssf/scorecard:stable \
 - OpenSSF Scorecard - https://securityscorecards.dev
 - Alex Birsan - Dependency Confusion research paper
 - OWASP Software Component Verification Standard (SCVS)
+

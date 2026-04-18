@@ -1,3 +1,19 @@
+---
+title: "Applied Cryptography for Developers"
+slug: applied-cryptography
+category: appsec
+depth: 3
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Cryptographic Storage Cheat Sheet"
+  - "OWASP Password Storage Cheat Sheet"
+  - "NIST SP 800-57"
+triggers_strong: ["argon2id", "aes-gcm", "cryptography", "jwt signing key"]
+triggers_weak: ["crypto review", "key management"]
+related: ["webauthn-fido2", "secret-leak-prevention"]
+---
+
 # Applied Cryptography for Developers
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (Semgrep/Bandit detect deprecated algorithms; key length and mode checks manual)
@@ -477,3 +493,4 @@ func verifySignature(secret, message []byte, signature string) bool {
 - Password Hashing Competition - Argon2 specification
 - Trail of Bits - Cryptographic audit guidelines
 - RFC 8439 - ChaCha20 and Poly1305
+

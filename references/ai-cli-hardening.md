@@ -1,3 +1,19 @@
+---
+title: "AI Coding CLI Hardening"
+slug: ai-cli-hardening
+category: ai
+depth: 2
+audit_level: [2, 3, 4]
+last_reviewed: 2026-04-06
+sources:
+  - "Anthropic Claude Code settings"
+  - "OpenAI Codex CLI"
+  - "Gemini CLI configuration"
+triggers_strong: ["claude code hardening", "codex cli security", "gemini cli security", "agent policy"]
+triggers_weak: ["ai cli", "agent hardening"]
+related: ["ai-tool-profiles", "llm-agent-security"]
+---
+
 # AI Coding CLI Hardening (Claude Code / Codex / Gemini CLI / Similar Tools)
 
 > Last reviewed: 2026-04-06 | Next review: 2026-10-06 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (policy lint + CI guardrails automatable; threat model/manual approvals required)
@@ -302,3 +318,4 @@ Recommended tools:
 - `references/secret-leak-prevention.md`
 - `references/pre-push-checklist.md`
 - `references/supply-chain-security.md`
+

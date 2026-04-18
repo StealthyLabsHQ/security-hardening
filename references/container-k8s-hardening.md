@@ -1,3 +1,19 @@
+---
+title: "Container & Kubernetes Hardening"
+slug: container-k8s-hardening
+category: infra
+depth: 2
+audit_level: [3]
+last_reviewed: 2026-04-03
+sources:
+  - "CIS Kubernetes Benchmark"
+  - "NSA and CISA Kubernetes Hardening Guidance"
+  - "OWASP Docker Security Cheat Sheet"
+triggers_strong: ["kubernetes hardening", "docker security", "pod security", "network policy"]
+triggers_weak: ["container security", "k8s review"]
+related: ["supply-chain-security", "cloud-iam-hardening"]
+---
+
 # Container & Kubernetes Hardening
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Audit Level: 3 | Automation: Partial (Trivy, Checkov, kube-bench; network policies manual)
@@ -411,3 +427,4 @@ kubescape scan framework nsa
 | Images pinned to digest, not mutable tag | Yes |
 | Images signed and signature verified on admission | Yes |
 | kube-bench CIS findings addressed | Level 1 minimum |
+

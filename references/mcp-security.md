@@ -1,3 +1,18 @@
+---
+title: "MCP Security"
+slug: mcp-security
+category: ai
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "Model Context Protocol specification"
+  - "OWASP Top 10 for LLM Applications"
+triggers_strong: ["mcp security", "tool abuse", "indirect prompt injection", "tool allowlist"]
+triggers_weak: ["mcp", "tool trust"]
+related: ["llm-agent-security", "ai-cli-hardening"]
+---
+
 # MCP (Model Context Protocol) Security
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (static manifest analysis, tool allowlist enforcement; prompt injection manual)
@@ -299,3 +314,4 @@ class FetchUrlParams(BaseModel):
 - MCP Specification - https://modelcontextprotocol.io/specification
 - MITRE ATLAS - adversarial threat landscape for AI systems
 - Simon Willison - Prompt Injection attacks against LLM-integrated applications
+

@@ -1,3 +1,18 @@
+---
+title: "Vibecoder Security Traps"
+slug: vibecoder-traps
+category: ai
+depth: 1
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Top 10 2021"
+  - "NIST SP 800-63B"
+triggers_strong: ["vibecoding traps", "unsafe generated code", "ai code mistakes", "llm code review"]
+triggers_weak: ["vibecoding", "ai coding"]
+related: ["quick-start-ai-coding", "language-patterns"]
+---
+
 # Vibecoder Security Traps
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Essential | Automation: Full (Semgrep, Bandit, Gitleaks cover most patterns)
@@ -305,3 +320,4 @@ grep -rn "password\s*=" --include="*.py" --include="*.js" .
 grep -rn "secret\s*=" --include="*.py" --include="*.js" .
 grep -rn "api_key\s*=" --include="*.py" --include="*.js" .
 ```
+

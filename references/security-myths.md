@@ -1,3 +1,18 @@
+---
+title: "Security Myths & Misconceptions"
+slug: security-myths
+category: appsec
+depth: 1
+audit_level: [1, 2]
+last_reviewed: null
+sources:
+  - "OWASP Cheat Sheet Series"
+  - "NIST SP 800-63B"
+triggers_strong: ["security myths", "jwt is security", "cors protects api", "waf is enough"]
+triggers_weak: ["security misconceptions", "myth busting"]
+related: ["quick-start-ai-coding", "vibecoder-traps"]
+---
+
 # Security Myths & Misconceptions
 
 Common beliefs that feel secure but are not. Each myth includes why it is wrong and what to do instead.
@@ -150,3 +165,4 @@ CORS only controls which browser origins can make credentialed cross-origin requ
 | "The route is not linked" | Security through obscurity is not security |
 | "We use OAuth" | state/PKCE/aud validated? OIDC for auth, not raw OAuth? |
 | "Container is isolated" | Running as root? Docker socket mounted? Privileged? |
+

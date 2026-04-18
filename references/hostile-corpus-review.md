@@ -1,3 +1,18 @@
+---
+title: "Hostile Corpus Review"
+slug: hostile-corpus-review
+category: ai
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP Top 10 for LLM Applications"
+  - "NIST AI Risk Management Framework"
+triggers_strong: ["hostile corpus", "prompt injection review", "untrusted tickets", "content quarantine"]
+triggers_weak: ["corpus review", "input safety"]
+related: ["llm-agent-security", "mcp-security"]
+---
+
 # Hostile Corpus Review
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (normalization, static scanning, and quarantine workflows automatable; semantic review and allow/deny decisions manual)
@@ -183,3 +198,4 @@ When you do find a problem, record it in a concrete, reviewable format:
 - `language-patterns.md`
 - `supply-chain-security.md`
 - `security-testing-examples.md`
+

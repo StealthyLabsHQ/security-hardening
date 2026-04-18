@@ -1,3 +1,19 @@
+---
+title: "Quick Start: Security for AI Assisted Coding"
+slug: quick-start-ai-coding
+category: ai
+depth: 1
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Top 10 2021"
+  - "OWASP Top 10 for LLM Applications"
+  - "Gitleaks"
+triggers_strong: ["ai assisted coding security", "ship ai code safely", "before you push ai code", "quick start security"]
+triggers_weak: ["ai coding", "security quick start"]
+related: ["vibecoder-traps", "pre-push-checklist"]
+---
+
 # Quick Start: Security for AI-Assisted Coding
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Essential | Automation: Partial (Gitleaks + Semgrep cover most patterns; logic review manual)
@@ -270,3 +286,4 @@ BEFORE EVERY PUSH:
 [ ] npm audit / pip-audit clean
 [ ] .env not in git status
 ```
+

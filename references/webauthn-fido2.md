@@ -1,3 +1,18 @@
+---
+title: "WebAuthn / FIDO2 Implementation Guide"
+slug: webauthn-fido2
+category: iam
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "W3C Web Authentication Level 3"
+  - "FIDO Alliance Passkeys guidance"
+triggers_strong: ["webauthn", "fido2", "passkeys", "phishing resistant mfa"]
+triggers_weak: ["strong authentication", "passkey rollout"]
+related: ["session-management", "authorization-rbac"]
+---
+
 # WebAuthn / FIDO2 Implementation Guide
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (registration/login tests and RP/origin checks automatable; recovery design and rollout policy manual)
@@ -177,3 +192,4 @@ Recommended rollout:
 - `authorization-rbac.md`
 - `session-management.md`
 - `social-engineering-physical.md`
+

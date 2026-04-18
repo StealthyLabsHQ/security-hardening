@@ -1,3 +1,19 @@
+---
+title: "Modern Browser Security"
+slug: browser-security-modern
+category: appsec
+depth: 3
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "MDN Content-Security-Policy"
+  - "MDN Permissions-Policy"
+  - "MDN Subresource Integrity"
+triggers_strong: ["trusted types", "permissions policy", "coop coep", "sri"]
+triggers_weak: ["browser security", "client-side hardening"]
+related: ["secure-headers", "frontend-frameworks-security"]
+---
+
 # browser-security-modern.md
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (CSP/COOP/COEP headers automatable via helmet or CF Workers; Trusted Types and SRI review manual)
@@ -537,3 +553,4 @@ The Permissions Policy must be reviewed alongside the Consent Management Platfor
 - [ ] COOP/COEP assessed for surfaces processing special-category data (Art. 9).
 - [ ] Trusted Types enforced (or report-only with a tracked remediation plan) on forms collecting personal data.
 - [ ] Attribution Reporting not enabled without a documented legal basis and DPIA review.
+
