@@ -1,3 +1,18 @@
+---
+title: "Secure HTTP Headers Reference"
+slug: secure-headers
+category: appsec
+depth: 1
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "MDN HTTP headers"
+  - "Mozilla Observatory"
+triggers_strong: ["csp", "hsts", "secure headers", "permissions policy"]
+triggers_weak: ["headers", "browser hardening"]
+related: ["browser-security-modern", "frontend-frameworks-security"]
+---
+
 # Secure HTTP Headers Reference
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Full (Observatory, securityheaders.com)
@@ -173,3 +188,4 @@ Object.entries(securityHeaders).forEach(([key, value]) => {
   response.headers.set(key, value);
 });
 ```
+

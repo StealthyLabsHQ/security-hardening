@@ -1,3 +1,19 @@
+---
+title: "Rate Limiting Infrastructure Patterns"
+slug: rate-limiting-infrastructure
+category: infra
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP API Security Top 10 2023"
+  - "NGINX rate limiting documentation"
+  - "Cloudflare rate limiting documentation"
+triggers_strong: ["rate limiting", "429", "nginx rate limit", "edge throttling"]
+triggers_weak: ["abuse prevention", "throttling"]
+related: ["api-security", "security-testing-examples"]
+---
+
 # Rate Limiting Infrastructure Patterns
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (edge rules, proxy config tests, and 429 telemetry automatable; quota design and exception handling manual)
@@ -207,3 +223,4 @@ Related guide: `detection-engineering.md`.
 - `graphql-security.md`
 - `security-testing-examples.md`
 - `detection-engineering.md`
+

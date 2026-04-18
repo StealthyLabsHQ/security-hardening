@@ -1,3 +1,18 @@
+---
+title: "Social Engineering & Physical Security"
+slug: social-engineering-physical
+category: ops
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "CISA phishing guidance"
+  - "NIST security awareness guidance"
+triggers_strong: ["social engineering", "business email compromise", "tailgating", "physical security"]
+triggers_weak: ["security awareness", "human layer"]
+related: ["defensive-security-baseline", "incident-playbooks"]
+---
+
 # Social Engineering & Physical Security
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (DMARC/SPF/DKIM automatable; phishing simulation manual)
@@ -126,3 +141,4 @@ Attackers call employees impersonating IT support or executives, requesting pass
 | Social Engineer Toolkit (SET) | Phishing and vishing simulation framework |
 | Have I Been Pwned (HIBP) | Check if employee emails appear in breach data |
 | MXToolbox | SPF / DKIM / DMARC diagnostic |
+

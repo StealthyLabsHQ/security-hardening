@@ -1,3 +1,18 @@
+---
+title: "AI Agent Incident Response Playbook"
+slug: ai-agent-incident-response
+category: ai
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-06
+sources:
+  - "NIST SP 800-61 Rev. 2"
+  - "OWASP Top 10 for LLM Applications"
+triggers_strong: ["ai agent incident", "prompt injection incident", "mcp compromise", "agent exfiltration"]
+triggers_weak: ["incident response", "agent security"]
+related: ["llm-agent-security", "mcp-security"]
+---
+
 # AI Agent Incident Response Playbook
 
 > Last reviewed: 2026-04-06 | Next review: 2026-10-06 | Priority: Recommended | Audit Level: 3-4 | Automation: Partial (detection and containment scripts automatable; investigation/communication manual)
@@ -167,3 +182,4 @@ Recovery is complete only if all are true:
 - `references/mcp-security.md` (MCP spoofing/injection/path traversal/SSRF)
 - `references/secret-leak-prevention.md` (revoke-first credential incidents)
 - `references/incident-playbooks.md` (broader IR process patterns)
+

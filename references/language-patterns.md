@@ -1,3 +1,18 @@
+---
+title: "Language Specific Dangerous Patterns"
+slug: language-patterns
+category: appsec
+depth: 3
+audit_level: [1, 2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Cheat Sheet Series"
+  - "MITRE CWE"
+triggers_strong: ["shell=True", "pickle.loads", "yaml.load", "dangerous patterns"]
+triggers_weak: ["code patterns", "secure review"]
+related: ["framework-examples", "database-security"]
+---
+
 # Language-Specific Dangerous Patterns
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Full (Semgrep, Bandit, Gosec)
@@ -698,3 +713,4 @@ Object obj = ois.readObject();    // RCE via gadget chains (Apache Commons, Spri
 // - Implement a serialization filter (ObjectInputFilter, Java 9+)
 // - Use SerialKiller or NotSoSerial as a last resort
 ```
+

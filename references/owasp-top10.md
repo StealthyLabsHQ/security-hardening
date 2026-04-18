@@ -1,3 +1,17 @@
+---
+title: "OWASP Top 10"
+slug: owasp-top10
+category: appsec
+depth: 1
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Top 10 2021"
+triggers_strong: ["owasp top 10", "xss", "sql injection", "security misconfiguration"]
+triggers_weak: ["security review", "appsec basics"]
+related: ["cwe-owasp-mapping", "api-security"]
+---
+
 # OWASP Top 10 - 2021 Reference
 
 > Last reviewed: 2026-04-03 | Next review: 2029-01-01 (next OWASP release) | Priority: Essential | Automation: Partial
@@ -173,3 +187,4 @@ url=http://169.254.169.254/latest/meta-data/iam/security-credentials/
 - Block private/loopback/link-local ranges
 - Disable HTTP redirects or validate redirect destinations
 - Use a dedicated egress proxy with filtering
+

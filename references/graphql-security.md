@@ -1,3 +1,18 @@
+---
+title: "GraphQL Security"
+slug: graphql-security
+category: appsec
+depth: 3
+audit_level: [2, 3]
+last_reviewed: null
+sources:
+  - "OWASP GraphQL Cheat Sheet"
+  - "OWASP API Security Top 10 2023"
+triggers_strong: ["graphql depth limit", "persisted queries", "introspection", "resolver authz"]
+triggers_weak: ["graphql review", "api graph"]
+related: ["api-security", "authorization-rbac"]
+---
+
 # graphql-security.md
 
 GraphQL is not "less secure" than REST, but it **shifts** the control points. The real risk is not the presence of a `/graphql` endpoint; it is that a client can choose **the shape, depth, cost, and sometimes the exact properties** of the request. Controls must therefore be designed around four questions:
@@ -817,3 +832,4 @@ If the GraphQL API exposes personal data (user profiles, health data, financial 
 5. Are logs structured to detect abnormal access patterns (volume, field selection, principal/tenant mismatch)?
 
 These five questions map directly to Art. 35(7)(d) — technical and organisational measures adopted to address identified risks.
+

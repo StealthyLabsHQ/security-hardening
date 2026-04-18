@@ -1,3 +1,19 @@
+---
+title: "Frontend Framework Security"
+slug: frontend-frameworks-security
+category: appsec
+depth: 3
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "Next.js Content Security Policy documentation"
+  - "Vue.js security guide"
+  - "OWASP DOM based XSS Prevention Cheat Sheet"
+triggers_strong: ["nextjs security", "react xss", "nuxt ssr leak", "dangerouslysetinnerhtml"]
+triggers_weak: ["frontend security", "framework review"]
+related: ["browser-security-modern", "secure-headers"]
+---
+
 # Frontend Framework Security (React, Next.js, Vue, Nuxt)
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (ESLint security rules, Semgrep; SSR data leaks and prototype pollution manual)
@@ -446,3 +462,4 @@ Content-Security-Policy:
 - DOMPurify - https://github.com/cure53/DOMPurify
 - Prototype Pollution - Snyk research
 - Mozilla Observatory - https://observatory.mozilla.org
+

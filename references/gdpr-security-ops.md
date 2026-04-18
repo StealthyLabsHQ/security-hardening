@@ -1,3 +1,19 @@
+---
+title: "GDPR Security Operations"
+slug: gdpr-security-ops
+category: privacy
+depth: 2
+audit_level: [2, 3, 4]
+last_reviewed: 2026-04-14
+sources:
+  - "Regulation (EU) 2016/679 (GDPR)"
+  - "EDPB guidance"
+  - "CNIL security guidance"
+triggers_strong: ["gdpr security", "72 hour breach", "dsar", "retention"]
+triggers_weak: ["privacy ops", "gdpr review"]
+related: ["privacy-data-minimization", "compliance-mapping"]
+---
+
 # GDPR Security Operations
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 2-4 | Automation: Partial (asset inventory, retention jobs, DSAR workflow tickets, and breach logging automatable; legal assessment and regulator communications manual)
@@ -213,3 +229,4 @@ If in doubt, document why a DPIA was or was not required.
 - CNIL - Security of personal data and developer guidance
 - EDPB guidelines on breach notification, controllers/processors, and international transfers
 - ENISA recommendations on technical and organizational measures
+

@@ -1,3 +1,19 @@
+---
+title: "Threat Modeling"
+slug: threat-modeling
+category: appsec
+depth: 2
+audit_level: [2, 3, 4]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP Threat Dragon"
+  - "Microsoft Threat Modeling Tool"
+  - "NIST SP 800-154"
+triggers_strong: ["threat modeling", "stride", "trust boundary", "abuse case"]
+triggers_weak: ["architecture review", "design review"]
+related: ["security-testing-examples", "security-improvements"]
+---
+
 # Threat Modeling
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 2-4 | Automation: None
@@ -309,3 +325,4 @@ Output (commit this in the repo):
 | LLM / agent | `llm-agent-security.md`, `mcp-security.md` |
 | Privacy (LINDDUN) | `privacy-data-minimization.md` |
 | Detection / response | `incident-playbooks.md`, `vuln-management.md` |
+

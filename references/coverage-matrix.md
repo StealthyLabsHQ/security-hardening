@@ -1,3 +1,18 @@
+---
+title: "Coverage Matrix"
+slug: coverage-matrix
+category: compliance
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-14
+sources:
+  - "Repository reference inventory"
+  - "references/security-audit-levels.md"
+triggers_strong: ["coverage matrix", "review schedule", "reference coverage"]
+triggers_weak: ["corpus coverage", "meta inventory"]
+related: ["security-audit-levels", "compliance-mapping"]
+---
+
 # Coverage Matrix
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Recommended | Audit Level: 3 | Automation: None (meta inventory document)
@@ -119,3 +134,4 @@ Last matrix review: **2026-04-14**
 | Detection translations by SIEM/XDR | Recommended | Translate reusable detections to Elastic/Sentinel/Splunk and add triage playbooks |
 | NIS2 / DORA operational evidence mapping | Context-Dependent | Extend `compliance-mapping.md` from a high-level crosswalk to owner/evidence/task checklists |
 | Cloud / container runnable hardening tests | Recommended | Add executable IAM, OIDC trust, admission-policy, and network-policy verification examples |
+

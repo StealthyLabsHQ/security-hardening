@@ -1,3 +1,20 @@
+---
+title: "AI Tool Profiles"
+slug: ai-tool-profiles
+category: ai
+depth: 1
+audit_level: [1, 2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "Anthropic Claude Code settings"
+  - "OpenAI Codex CLI"
+  - "Gemini CLI configuration"
+  - "Cursor documentation"
+triggers_strong: ["claude code profile", "codex profile", "gemini settings", "cursor rules"]
+triggers_weak: ["tool profile", "ai tool"]
+related: ["ai-cli-hardening", "ai-bundle-presets"]
+---
+
 # AI Tool Profiles (Copy-Paste Defensive Pack)
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 1-3 | Automation: Partial (template sync, secret scans, and policy lint automatable; connector review and tool-choice approval manual)
@@ -189,3 +206,4 @@ This pack is vendor-neutral on purpose so it can be used with Retool, Bubble, Ma
 - Gemini CLI configuration: https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/cli/configuration.md
 - Cursor ignore files: https://docs.cursor.com/en/context/ignore-files
 - Cursor rules and `AGENTS.md`: https://docs.cursor.com/context/rules
+

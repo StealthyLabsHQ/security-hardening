@@ -1,3 +1,19 @@
+---
+title: "Endpoint & Office Macro Security"
+slug: endpoint-vba-security
+category: platform
+depth: 2
+audit_level: [3]
+last_reviewed: 2026-04-03
+sources:
+  - "Microsoft Office macro security"
+  - "CIS Microsoft 365 Benchmarks"
+  - "Microsoft Attack Surface Analyzer"
+triggers_strong: ["office macros", "vba security", "macro hardening", "endpoint hardening"]
+triggers_weak: ["office security", "endpoint review"]
+related: ["desktop-app-security", "active-directory-hardening"]
+---
+
 # Endpoint & Office Macro Security
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (CIS-CAT, OSQuery; macro signing policy manual)
@@ -70,3 +86,4 @@ Application.AutomationSecurity = msoAutomationSecurityLow
 | Sysinternals Autoruns | Detect persistence mechanisms |
 | CIS-CAT Lite | Benchmark compliance scan |
 | OSQuery | Endpoint visibility and audit |
+

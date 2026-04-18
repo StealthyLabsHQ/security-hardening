@@ -1,3 +1,18 @@
+---
+title: "Desktop Application Security"
+slug: desktop-app-security
+category: platform
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "Electron Security Checklist"
+  - "Microsoft Secure Development Lifecycle"
+triggers_strong: ["electron security", "desktop app security", "dll hijacking", "csharp security"]
+triggers_weak: ["desktop security", "native app review"]
+related: ["endpoint-vba-security", "mobile-security"]
+---
+
 # Desktop Application Security (C#, C++, Electron)
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (compiler flags, Electronegativity; DLL hijacking manual)
@@ -199,3 +214,4 @@ contextBridge.exposeInMainWorld('api', {
 | dotnet-retire | Scan .NET dependencies for CVEs |
 | Electronegativity | Static analysis for Electron misconfigurations |
 | AddressSanitizer / Valgrind | Memory error detection in C/C++ |
+

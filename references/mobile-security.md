@@ -1,3 +1,18 @@
+---
+title: "Mobile Application Security"
+slug: mobile-security
+category: platform
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Mobile Top 10 2024"
+  - "OWASP MASVS"
+triggers_strong: ["mobile security", "ios security", "android security", "masvs"]
+triggers_weak: ["mobile app review", "client security"]
+related: ["desktop-app-security", "session-management"]
+---
+
 # Mobile Application Security (iOS & Android)
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (MobSF, static analysis; cert pinning manual)
@@ -158,3 +173,4 @@ val isRooted = paths.any { File(it).exists() }
 | apktool | APK decompilation |
 | objection | Runtime mobile exploration (no jailbreak needed) |
 | Drozer | Android attack surface analysis |
+

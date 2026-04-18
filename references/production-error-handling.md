@@ -1,3 +1,18 @@
+---
+title: "Production Error Handling & Logging Security"
+slug: production-error-handling
+category: appsec
+depth: 2
+audit_level: [1, 2]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP Error Handling Cheat Sheet"
+  - "OWASP Logging Cheat Sheet"
+triggers_strong: ["stack trace leak", "error handling", "debug mode", "log redaction"]
+triggers_weak: ["logging security", "error responses"]
+related: ["privacy-data-minimization", "api-security"]
+---
+
 # Production Error Handling & Logging Security
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial (SAST detects stack trace in response; log PII requires manual review)
@@ -293,3 +308,4 @@ raise HTTPException(status_code=403, detail="Forbidden")
 | Startup fails if required secrets are missing | Yes |
 | PII fields redacted or hashed in logs | Yes |
 | Custom error pages configured | Yes |
+

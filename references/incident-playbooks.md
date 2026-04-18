@@ -1,3 +1,18 @@
+---
+title: "Incident Playbooks"
+slug: incident-playbooks
+category: ops
+depth: 2
+audit_level: [3, 4]
+last_reviewed: 2026-04-03
+sources:
+  - "NIST SP 800-61 Rev. 2"
+  - "CISA incident response guidance"
+triggers_strong: ["incident playbook", "compromised account", "jwt secret leak", "bucket exposure"]
+triggers_weak: ["incident response", "recovery"]
+related: ["ai-agent-incident-response", "secret-leak-prevention"]
+---
+
 # Incident Playbooks
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Audit Level: 3-4 | Automation: None (these are human-executed response procedures)
@@ -297,3 +312,4 @@ Duration: [detection time] to [resolution time]
 |--------|-------|-----|
 | [specific change] | [name] | [date] |
 ```
+

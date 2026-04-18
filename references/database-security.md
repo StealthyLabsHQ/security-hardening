@@ -1,3 +1,19 @@
+---
+title: "Database Security"
+slug: database-security
+category: appsec
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP SQL Injection Prevention Cheat Sheet"
+  - "PostgreSQL documentation"
+  - "SQLAlchemy documentation"
+triggers_strong: ["sql injection", "parameterized queries", "row-level security", "database security"]
+triggers_weak: ["db review", "storage security"]
+related: ["api-security", "language-patterns"]
+---
+
 # Database Security
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: High | Audit Level: 2-3 | Automation: Partial
@@ -265,3 +281,4 @@ For row-level audit, use the `pgaudit` extension (`pgaudit.log = 'write, ddl'`).
 - CWE-312: Cleartext Storage of Sensitive Information
 - CWE-732: Incorrect Permission Assignment for Critical Resource
 - CWE-798: Use of Hard-coded Credentials
+

@@ -1,3 +1,18 @@
+---
+title: "API Security Reference"
+slug: api-security
+category: appsec
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "OWASP API Security Top 10 2023"
+  - "OWASP Application Security Verification Standard"
+triggers_strong: ["api security", "bola", "bfla", "api authz"]
+triggers_weak: ["rest api review", "api hardening"]
+related: ["authorization-rbac", "graphql-security"]
+---
+
 # API Security Reference
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Partial (rate limiting, input validation; BOLA manual)
@@ -327,3 +342,4 @@ Forgotten old API versions are a major attack surface.
 | GraphQL: depth + complexity limits enabled | Yes |
 | Introspection disabled in production | Yes |
 | API inventory maintained, old versions decommissioned | Yes |
+

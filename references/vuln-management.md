@@ -1,3 +1,20 @@
+---
+title: "Vulnerability Management Process"
+slug: vuln-management
+category: ops
+depth: 2
+audit_level: [3]
+last_reviewed: 2026-04-03
+sources:
+  - "NIST SP 800-40"
+  - "CVSS v3.1 Specification"
+  - "OWASP Vulnerability Disclosure Cheat Sheet"
+  - "NVD"
+triggers_strong: ["vulnerability management", "remediation sla", "triage", "risk acceptance"]
+triggers_weak: ["vulnerability process", "finding lifecycle"]
+related: ["security-improvements", "detection-engineering"]
+---
+
 # Vulnerability Management Process
 
 > Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 3 | Automation: Partial (SAST/SCA/DAST generate findings; triage, risk acceptance, and exceptions require human judgment)
@@ -327,3 +344,4 @@ trivy image --ignore-unfixed myapp:latest
 - CVSS v3.1 Specification - https://www.first.org/cvss/v3.1/specification-document
 - OWASP Vulnerability Disclosure Cheat Sheet
 - CVE Numbering Authority (NVD) - https://nvd.nist.gov
+

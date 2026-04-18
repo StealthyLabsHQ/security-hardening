@@ -1,3 +1,18 @@
+---
+title: "Session Management"
+slug: session-management
+category: iam
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-14
+sources:
+  - "OWASP Session Management Cheat Sheet"
+  - "NIST SP 800-63B"
+triggers_strong: ["session management", "refresh token", "session fixation", "cookie security"]
+triggers_weak: ["session review", "authn"]
+related: ["authorization-rbac", "webauthn-fido2"]
+---
+
 # Session Management
 
 > Last reviewed: 2026-04-14 | Next review: 2026-10-14 | Priority: Essential | Audit Level: 2-3 | Automation: Partial (cookie checks, timeout tests, and revocation flows automatable; risk-based re-auth and recovery design manual)
@@ -184,3 +199,4 @@ Related tests belong in `security-testing-examples.md`.
 - `production-error-handling.md`
 - `security-testing-examples.md`
 - `incident-playbooks.md`
+

@@ -1,3 +1,21 @@
+---
+title: "LLM & AI Agent Security"
+slug: llm-agent-security
+category: ai
+depth: 3
+audit_level: [2, 3, 4]
+last_reviewed: 2026-04-18
+sources:
+  - "OWASP Top 10 for LLM Applications"
+  - "NIST AI Risk Management Framework"
+  - "OpenAI Trusted Access for Cyber"
+  - "Anthropic Project Glasswing"
+  - "Google SAIF Risk Assessment"
+triggers_strong: ["prompt injection", "rag poisoning", "agent security", "system prompt leakage"]
+triggers_weak: ["llm security", "agent review"]
+related: ["mcp-security", "hostile-corpus-review"]
+---
+
 # LLM & AI Agent Security
 
 > Last reviewed: 2026-04-18 | Next review: 2026-10-18 | Priority: Recommended | Automation: Partial (output validation; prompt injection mostly manual)
@@ -342,3 +360,4 @@ MCP (Model Context Protocol) servers expose tools and resources to LLM agents.
 - OWASP LLM Top 10 - https://owasp.org/www-project-top-10-for-large-language-model-applications/
 - MITRE ATLAS - adversarial threat landscape for AI systems
 - NIST AI RMF - AI Risk Management Framework
+

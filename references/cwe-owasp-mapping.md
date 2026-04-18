@@ -1,3 +1,19 @@
+---
+title: "CWE / OWASP / ASVS Mapping"
+slug: cwe-owasp-mapping
+category: compliance
+depth: 2
+audit_level: [2, 3]
+last_reviewed: 2026-04-03
+sources:
+  - "MITRE CWE"
+  - "OWASP Top 10 2021"
+  - "OWASP ASVS"
+triggers_strong: ["cwe mapping", "asvs mapping", "owasp mapping"]
+triggers_weak: ["taxonomy", "standards mapping"]
+related: ["owasp-top10", "compliance-mapping"]
+---
+
 # CWE / OWASP / ASVS Mapping
 
 > Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Full (cross-reference for tool configuration)
@@ -121,3 +137,4 @@ trivy fs --severity CRITICAL,HIGH .
 # OWASP ZAP - baseline DAST (against running app)
 docker run -t owasp/zap2docker-stable zap-baseline.py -t https://your-app.example.com
 ```
+

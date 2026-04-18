@@ -1,3 +1,23 @@
+---
+title: "Compliance Mapping"
+slug: compliance-mapping
+category: compliance
+depth: 3
+audit_level: [3, 4]
+last_reviewed: null
+sources:
+  - "SOC 2 Trust Services Criteria"
+  - "ISO/IEC 27001:2022"
+  - "PCI DSS v4.0"
+  - "HIPAA Security Rule"
+  - "NIS2"
+  - "DORA"
+  - "GDPR"
+triggers_strong: ["soc 2 mapping", "iso 27001 mapping", "gdpr crosswalk", "pci mapping"]
+triggers_weak: ["compliance mapping", "audit evidence"]
+related: ["coverage-matrix", "security-audit-levels"]
+---
+
 # compliance-mapping.md
 
 > **Scope and session limitation**
@@ -130,3 +150,4 @@ The GDPR column in the matrix above covers only the articles directly supported 
 4. Add links from each row to exact evidence locations (ticket ID, dashboard, runbook, sample log path).
 5. Review the GDPR column against the actual personal data inventory — articles are only meaningful once data categories and processing purposes are known.
 6. Flag rows where Scope is `both` but no privacy-governance artefact (RoPA entry, DPIA, DPA) is linked — these are the first GDPR audit findings.
+
