@@ -200,3 +200,32 @@ Phase 7 documentation updates live after those anchors and do not move either ta
 - The v2 release candidate points to the first auditable/testable refactor milestone, not later documentation drift.
 - README install guidance can default to the stable tag while still exposing the release candidate.
 
+## ADR-0008: `INDEX.md` is the machine-facing corpus index and `README.md` stays human-facing
+
+- Date: 2026-04-18
+- Status: accepted
+
+### Context
+
+Phase 9 requires a clean separation between:
+
+- `README.md` for humans,
+- `INDEX.md` for agents and machine-oriented navigation,
+- `SKILL.md` as the routing layer.
+
+Before this phase, `README.md` also acted as a de facto corpus inventory, which mixed installation and human guidance with machine navigation.
+
+### Decision
+
+Split responsibilities explicitly:
+
+- `README.md` keeps install, release-channel, and human onboarding material,
+- `INDEX.md` becomes the compact machine-facing navigation surface with direct corpus links,
+- `SKILL.md` points to `INDEX.md` as the primary navigation hub and keeps `references/_index.md` for generated metadata only.
+
+### Consequences
+
+- Agents get a smaller, more stable navigation surface.
+- Human docs can stay rich without polluting the machine entrypoint.
+- Future corpus additions should update `INDEX.md` instead of expanding `README.md` with more routing detail.
+

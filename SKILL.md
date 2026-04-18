@@ -23,7 +23,8 @@ Prefer defensive fixes.
 - Prefer secure-by-default design, explicit trust boundaries, and layered controls over model-only safeguards.
 - Start from least privilege, read-only defaults, explicit elevation, and operator-visible kill switches.
 - Load references on demand. Do not load the whole corpus unless the task clearly spans multiple domains.
-- Use `references/_index.md` as the category map if the right domain is unclear.
+- Use `INDEX.md` as the primary navigation hub for direct corpus selection.
+- Use `references/_index.md` only when the right domain is unclear or when review metadata matters.
 - When reporting findings, lead with exploitable issues, blast radius, and missing controls.
 
 ## Decision Tree
