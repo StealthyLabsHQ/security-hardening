@@ -58,4 +58,4 @@ We will not pursue legal action against researchers who:
 
 ## Hall of Fame
 
-We are happy to credit reporters in `CHANGELOG.md` and in the published advisory. Let us know your preferred handle when you report.
+We are happy to credit reporters in the published advisory. Let us know your preferred handle when you report.
