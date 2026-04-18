@@ -6,6 +6,13 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ---
 
+## Entry points
+
+- Humans: use this `README.md` for install, release channels, and onboarding.
+- Agents: use [INDEX.md](INDEX.md) for compact corpus navigation and [SKILL.md](SKILL.md) for routing rules.
+
+---
+
 ## Core stance
 
 - Treat prompt injection, system prompt leakage, RAG poisoning, MCP abuse, and excessive agent autonomy as first-class security problems.
