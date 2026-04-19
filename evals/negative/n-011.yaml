@@ -1,0 +1,7 @@
+id: "n-011"
+input: "Write a poem about my cat."
+should_trigger: false
+should_load: []
+must_not_load: ["references/_core-invariants.md"]
+must_mention: []
+must_not_mention: []

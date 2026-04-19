@@ -1,0 +1,7 @@
+id: "c-024"
+input: "Is this authentication code secure? It uses SHA-256 to hash passwords before storing them."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/applied-cryptography.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["SHA-256", "Argon2id", "m=65536", "OWASP"]
+must_not_mention: []

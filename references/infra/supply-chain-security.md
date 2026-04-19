@@ -4,12 +4,13 @@ slug: supply-chain-security
 category: infra
 depth: 3
 audit_level: [3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-19
 sources:
   - "SLSA Framework"
   - "Sigstore Cosign"
   - "CISA SBOM guidance"
   - "OpenSSF Scorecard"
+  - "Ladisa et al. - A Taxonomy of Attacks on Open-Source Package Registries"
 triggers_strong: ["sbom", "slsa", "cosign", "dependency confusion"]
 triggers_weak: ["supply chain", "artifact integrity"]
 related: ["container-k8s-hardening", "vuln-management"]
@@ -17,7 +18,7 @@ related: ["container-k8s-hardening", "vuln-management"]
 
 # Software Supply Chain Security
 
-> Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 3 | Automation: Partial (Syft/Trivy SBOM, Cosign signing, Gitleaks; SLSA provenance and dependency confusion manual)
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Audit Level: 3 | Automation: Partial (Syft/Trivy SBOM, Cosign signing, Gitleaks; SLSA provenance and dependency confusion manual)
 
 Software supply chain attacks (SolarWinds, Log4Shell, XZ Utils backdoor) have made securing the build and dependency pipeline as important as securing the application itself.
 
@@ -410,4 +411,30 @@ docker run -e GITHUB_AUTH_TOKEN=$TOKEN gcr.io/openssf/scorecard:stable \
 - OpenSSF Scorecard - https://securityscorecards.dev
 - Alex Birsan - Dependency Confusion research paper
 - OWASP Software Component Verification Standard (SCVS)
+
+---
+
+## Academic grounding
+
+### Open-source package attacks mostly exploit trust and automation
+
+Ladisa et al. (2023) mapped 107 attack vectors across open-source supply chains to dozens of confirmed incidents and showed that many high-impact compromises do not require a novel exploit. They succeed because automation trusts registries, maintainer identities, release scripts, and transitive resolution too broadly.
+
+Use that finding to tighten practical controls:
+
+- prefer exact version and hash pinning over loose semver ranges,
+- block public fallback for internal package names and scopes,
+- treat install-time scripts, obfuscated packages, and network activity during dependency install as high-signal review events,
+- separate maintainer identity hardening from artifact integrity hardening because both are needed.
+
+### Additional review questions
+
+When reviewing a package or release pipeline, explicitly ask:
+
+- can a public registry artifact outrank or impersonate an internal package,
+- can a compromised maintainer or CI job publish without a second integrity signal,
+- can an install hook run code before the package is reviewed or built,
+- can the build consume unpinned remote content or mutable tags.
+
+These checks align well with the incident patterns Ladisa et al. cataloged and help keep the review focused on the real sources of supply-chain risk rather than only CVE counts.
 

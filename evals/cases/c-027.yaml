@@ -1,0 +1,7 @@
+id: "c-027"
+input: "My LLM agent retrieves emails and can send replies. How do I protect it against prompt injection?"
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/appsec/framework-examples.md"]
+must_mention: ["spotlighting", "least privilege", "human-in-the-loop", "system prompt"]
+must_not_mention: []

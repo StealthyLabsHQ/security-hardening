@@ -1,0 +1,7 @@
+id: "c-030"
+input: "Threat-model this feature: users can upload profile images that are stored on S3 and served publicly."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/threat-modeling.md", "references/appsec/security-testing-examples.md", "references/appsec/api-security.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/platform/mobile-security.md"]
+must_mention: ["magic bytes", "MIME", "SVG", "path traversal", "public bucket"]
+must_not_mention: []

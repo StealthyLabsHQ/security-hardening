@@ -1,0 +1,7 @@
+id: "c-031"
+input: "My npm package uses ^1.2.0 for all dependencies. Is that a problem?"
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/infra/supply-chain-security.md"]
+must_not_load: ["references/privacy/privacy-data-minimization.md", "references/platform/mobile-security.md"]
+must_mention: ["semver", "pinning", "lock file", "hash", "Socket.dev"]
+must_not_mention: []

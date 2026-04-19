@@ -1,0 +1,7 @@
+id: "c-026"
+input: "Audit this API endpoint for OWASP issues: it takes a user ID from the request and returns their profile data without checking if the caller owns that ID."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/api-security.md", "references/iam/authorization-rbac.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["IDOR", "BOLA", "OWASP API", "deny-by-default"]
+must_not_mention: []

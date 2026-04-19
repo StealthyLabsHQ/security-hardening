@@ -1,0 +1,7 @@
+id: "c-029"
+input: "Check for secret leaks in this file before I push to GitHub."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ops/secret-leak-prevention.md", "references/ops/pre-push-checklist.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/platform/mobile-security.md"]
+must_mention: ["Gitleaks", ".env", "revoke", "pre-commit"]
+must_not_mention: []
