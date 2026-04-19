@@ -1,0 +1,7 @@
+id: "c-025"
+input: "Review my authentication logic for security issues."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/applied-cryptography.md", "references/iam/session-management.md", "references/appsec/secure-headers.md", "references/appsec/api-security.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["password hashing", "session", "CSRF", "rate limiting", "error message leakage"]
+must_not_mention: []

@@ -1,0 +1,7 @@
+id: "c-028"
+input: "Harden my nginx configuration."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/secure-headers.md", "references/appsec/applied-cryptography.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["HSTS", "CSP", "server_tokens", "TLS 1.2", "TLS 1.3"]
+must_not_mention: []

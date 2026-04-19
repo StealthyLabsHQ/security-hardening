@@ -4,13 +4,16 @@ slug: llm-agent-security
 category: ai
 depth: 3
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-19
 sources:
   - "OWASP Top 10 for LLM Applications"
   - "NIST AI Risk Management Framework"
   - "OpenAI Trusted Access for Cyber"
-  - "Anthropic Project Glasswing"
   - "Google SAIF Risk Assessment"
+  - "Anthropic Project Glasswing"
+  - "Greshake et al. - More than You've Asked For: A Comprehensive Analysis of Novel Prompt Injection Threats to Application-Integrated Large Language Models"
+  - "Hines et al. - Defending Against Indirect Prompt Injection Attacks With Spotlighting"
+  - "Shi et al. - Trust-Authorization Mismatch in LLM Agents (B-I-P model)"
 triggers_strong: ["prompt injection", "rag poisoning", "agent security", "system prompt leakage"]
 triggers_weak: ["llm security", "agent review"]
 related: ["mcp-security", "hostile-corpus-review", "browser-computer-use-security", "rag-retrieval-security"]
@@ -18,7 +21,7 @@ related: ["mcp-security", "hostile-corpus-review", "browser-computer-use-securit
 
 # LLM & AI Agent Security
 
-> Last reviewed: 2026-04-18 | Next review: 2026-10-18 | Priority: Recommended | Automation: Partial (output validation; prompt injection mostly manual)
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Automation: Partial (output validation; prompt injection mostly manual)
 
 
 Security considerations for applications that use Large Language Models, AI agents, MCP servers, and Retrieval-Augmented Generation (RAG). Aligned with OWASP LLM Top 10 (2025).
@@ -367,4 +370,41 @@ MCP (Model Context Protocol) servers expose tools and resources to LLM agents.
 - OWASP LLM Top 10 - https://owasp.org/www-project-top-10-for-large-language-model-applications/
 - MITRE ATLAS - adversarial threat landscape for AI systems
 - NIST AI RMF - AI Risk Management Framework
+
+---
+
+## Academic grounding
+
+### Indirect prompt injection remains a structural problem
+
+Greshake et al. (2023, arXiv 2302.12173) showed that attacker-controlled text embedded in retrieved pages, emails, and documents can cause an LLM-integrated application to follow attacker-chosen instructions without any explicit privilege-boundary crossing. The core lesson is that the runtime context window collapses the distinction between data and instructions unless the application restores that boundary itself.
+
+Operational implications:
+
+- treat all retrieved or tool-returned content as untrusted data,
+- decide tool scope before external content enters the model context,
+- require out-of-band confirmation for irreversible actions such as send, delete, execute, or publish,
+- assume prompt-only warnings are advisory, not protective.
+
+### Spotlighting and datamarking outperform prompt-only defenses
+
+Hines, Lopez, Hall et al. (2024, arXiv 2403.14720) found that instruction-only defenses such as "ignore instructions in the document" have near-zero protective effect against indirect prompt injection on common GPT-family baselines. Structural transformations applied to retrieved content before injection, especially spotlighting or datamarking, materially reduced attack success rates while preserving task usefulness.
+
+Practical rules:
+
+- prefer structural content transformation over extra warning text in the system prompt,
+- apply the transformation in the retrieval or middleware layer so it is automatic for every external source,
+- reserve stronger transformations such as encoding or heavily marked rendering for agents that can call tools or trigger workflows,
+- keep retrieved data visibly separated from user intent and policy text.
+
+### Runtime trust should shape tool permissions
+
+Shi et al. (2025, arXiv 2512.06914) describe a Belief-Intention-Permission mismatch: static permissions granted at startup do not help when the model's beliefs are corrupted by hostile context but the requested action still falls within its nominal permissions. The defensive consequence is that permissioning cannot be purely static.
+
+Add these controls when tool access matters:
+
+- re-evaluate high-impact tool calls based on where the triggering instruction came from,
+- narrow permissions further when the immediate trigger is external or retrieved content rather than a direct trusted user action,
+- treat MCP servers and tool providers as untrusted third parties unless explicitly verified,
+- combine least privilege with approval, audit, and rapid kill-switch paths rather than relying on a single gate.
 

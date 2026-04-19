@@ -4,25 +4,22 @@ slug: desktop-app-security
 category: platform
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-19
 sources:
   - "Electron Security Checklist"
   - "Microsoft Secure Development Lifecycle"
 triggers_strong: ["electron security", "desktop app security", "dll hijacking", "csharp security"]
-triggers_weak: ["desktop security", "native app review"]
-related: ["endpoint-vba-security", "mobile-security"]
+triggers_weak: ["desktop security", "native app review", "memory corruption review"]
+related: ["endpoint-vba-security", "mobile-security", "memory-safety-hardening"]
 ---
 
 # Desktop Application Security (C#, C++, Electron)
 
-> Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Recommended | Automation: Partial (compiler flags, Electronegativity; DLL hijacking manual)
-
+> Last reviewed: 2026-04-19 | Next review: 2027-04-19 | Priority: Recommended | Automation: Partial (compiler flags, Electronegativity; DLL hijacking manual)
 
 ---
 
-## C / C++ - Memory Safety
-
-The root cause of most C/C++ vulnerabilities is unsafe memory operations on untrusted input.
+Use `memory-safety-hardening.md` when you need a deeper review of compiler flags, sanitizers, heap hardening, allocator choices, and language-selection strategy for native code.
 
 **Dangerous patterns**
 
@@ -214,4 +211,3 @@ contextBridge.exposeInMainWorld('api', {
 | dotnet-retire | Scan .NET dependencies for CVEs |
 | Electronegativity | Static analysis for Electron misconfigurations |
 | AddressSanitizer / Valgrind | Memory error detection in C/C++ |
-

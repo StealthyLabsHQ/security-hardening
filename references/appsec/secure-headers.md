@@ -4,10 +4,11 @@ slug: secure-headers
 category: appsec
 depth: 1
 audit_level: [1, 2]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-19
 sources:
   - "MDN HTTP headers"
   - "Mozilla Observatory"
+  - "Khodayari and Pellegrino - The State of the SameSite"
 triggers_strong: ["csp", "hsts", "secure headers", "permissions policy"]
 triggers_weak: ["headers", "browser hardening"]
 related: ["browser-security-modern", "frontend-frameworks-security"]
@@ -15,7 +16,7 @@ related: ["browser-security-modern", "frontend-frameworks-security"]
 
 # Secure HTTP Headers Reference
 
-> Last reviewed: 2026-04-03 | Next review: 2027-04-03 | Priority: Essential | Automation: Full (Observatory, securityheaders.com)
+> Last reviewed: 2026-04-19 | Next review: 2027-04-19 | Priority: Essential | Automation: Full (Observatory, securityheaders.com)
 
 
 ## Recommended Headers (Production)
@@ -188,4 +189,24 @@ Object.entries(securityHeaders).forEach(([key, value]) => {
   response.headers.set(key, value);
 });
 ```
+
+---
+
+## Academic grounding
+
+### SameSite helps, but it does not replace CSRF design
+
+Khodayari and Pellegrino (IEEE S&P 2022) showed that `SameSite=Lax` meaningfully changes browser behavior but still leaves exploitable edges around top-level navigations and federated login flows. They also observed that real deployments often responded to breakage by switching to `SameSite=None`, which restores compatibility but removes CSRF value.
+
+Use these findings to guide cookie policy:
+
+- prefer `SameSite=Strict` for primary session and auth cookies unless a well-understood flow requires something weaker,
+- treat `SameSite` as defense in depth rather than a substitute for synchronizer tokens or equivalent CSRF protections,
+- do not use `SameSite=None` as the default fix for broken cross-site behavior,
+- avoid state-changing `GET` endpoints because Lax cookies still flow on top-level navigations,
+- bind SSO completion flows to validated `state` and `nonce` values on the server side.
+
+### Review implication
+
+When a team claims CSRF is handled "because cookies are SameSite," verify the request methods, SSO redirect behavior, token validation, and whether any compatibility exception silently downgraded protections.
 

@@ -4,11 +4,12 @@ slug: applied-cryptography
 category: appsec
 depth: 3
 audit_level: [2, 3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-19
 sources:
   - "OWASP Cryptographic Storage Cheat Sheet"
   - "OWASP Password Storage Cheat Sheet"
   - "NIST SP 800-57"
+  - "Tippe and Berner - Argon2 Adoption and Effectiveness in Real-World Software"
 triggers_strong: ["argon2id", "aes-gcm", "cryptography", "jwt signing key"]
 triggers_weak: ["crypto review", "key management"]
 related: ["webauthn-fido2", "secret-leak-prevention"]
@@ -16,7 +17,7 @@ related: ["webauthn-fido2", "secret-leak-prevention"]
 
 # Applied Cryptography for Developers
 
-> Last reviewed: 2026-04-03 | Next review: 2026-10-03 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (Semgrep/Bandit detect deprecated algorithms; key length and mode checks manual)
+> Last reviewed: 2026-04-19 | Next review: 2026-10-19 | Priority: Recommended | Audit Level: 2-3 | Automation: Partial (Semgrep/Bandit detect deprecated algorithms; key length and mode checks manual)
 
 Practical algorithm selection and code examples for developers. Cryptography mistakes are among the most common vulnerabilities (CWE-326, CWE-327, CWE-916, CWE-338).
 
@@ -493,4 +494,23 @@ func verifySignature(secret, message []byte, signature string) bool {
 - Password Hashing Competition - Argon2 specification
 - Trail of Bits - Cryptographic audit guidelines
 - RFC 8439 - ChaCha20 and Poly1305
+
+---
+
+## Academic grounding
+
+### Argon2 choice alone does not save weak deployments
+
+Tippe and Berner (2025, arXiv 2504.17121) found that many real-world Argon2 deployments still undershoot recommended memory and iteration settings. They also showed that even correctly configured Argon2 offers limited protection against predictable, dictionary-grade passwords. The failure mode is not only choosing the wrong algorithm, but choosing the right one with weak parameters and weak user passwords.
+
+Practical additions:
+
+- standardize on Argon2id rather than Argon2i or Argon2d for password storage,
+- enforce a minimum baseline of `m=65536`, `t=3`, and `p=4` unless hardware benchmarking justifies a stronger profile,
+- review library defaults rather than trusting them, because under-parameterized defaults are a recurring cause of weak deployments,
+- pair password hashing guidance with password quality controls such as blocklists, breach screening, and strength estimation.
+
+### Review implication
+
+When a code review says "we use Argon2," do not stop there. Verify variant, memory cost, time cost, parallelism, upgrade path, and how legacy hashes are rehashed over time. Treat password quality enforcement as part of the same control family.
 
