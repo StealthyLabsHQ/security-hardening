@@ -13,7 +13,7 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ## License
 
-Unless otherwise noted, Markdown documentation files (`*.md`) in this repository are licensed under the Apache License, Version 2.0. See [LICENSE-docs.md](LICENSE-docs.md).
+This repository is licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) and [NOTICE](NOTICE). If a file includes a different attribution or third-party restriction, that notice controls for that material.
 
 ---
 
