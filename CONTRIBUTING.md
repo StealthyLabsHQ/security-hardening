@@ -30,3 +30,8 @@ Use this checklist for any pull request that touches `references/`, `SKILL.md`, 
 - Describe the scope of the corpus change and any routing impact.
 - Call out any new external domains introduced in sources or examples.
 - Mention stale files, null review dates, or manual follow-up left for a later iteration.
+
+## Documentation License
+
+- Unless otherwise noted, Markdown documentation files (`*.md`) are licensed under the Apache License, Version 2.0 via `LICENSE-docs.md`.
+- If a Markdown file should use a different license or include third-party restrictions, state that explicitly in the file.

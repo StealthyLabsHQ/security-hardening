@@ -8,8 +8,12 @@ Built on: **OWASP**, **NIST 800-53 / 800-63B**, **CIS Benchmarks**, **OWASP ASVS
 
 ## Entry points
 
-- Humans: use this `README.md` for install, release channels, and onboarding.
+- Humans: use this `README.md` for install, release channels, onboarding, and documentation licensing.
 - Agents: use [INDEX.md](INDEX.md) for compact corpus navigation and [SKILL.md](SKILL.md) for routing rules.
+
+## License
+
+Unless otherwise noted, Markdown documentation files (`*.md`) in this repository are licensed under the Apache License, Version 2.0. See [LICENSE-docs.md](LICENSE-docs.md).
 
 ---
 
