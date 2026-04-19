@@ -28,8 +28,8 @@ Created during the phased refactor:
 - `evals/README.md`
 - `evals/run.py`
 - `evals/results/.gitignore`
-- `evals/cases/*.yaml` (`23` positive fixtures)
-- `evals/negative/*.yaml` (`10` negative fixtures)
+- `evals/cases/*.yaml` (`31` positive fixtures)
+- `evals/negative/*.yaml` (`12` negative fixtures)
 - `CONTRIBUTING.md`
 - `CHANGELOG.md`
 - `INDEX.md`
@@ -50,14 +50,14 @@ Moved from flat paths like:
 
 To categorized paths:
 
-- `references/appsec/` (`15` files)
-- `references/infra/` (`4` files)
-- `references/iam/` (`5` files)
-- `references/platform/` (`3` files)
-- `references/ai/` (`10` files)
-- `references/privacy/` (`2` files)
-- `references/ops/` (`9` files)
-- `references/compliance/` (`3` files)
+- `references/appsec/` (`17` files)
+- `references/infra/` (`10` files)
+- `references/iam/` (`12` files)
+- `references/platform/` (`11` files)
+- `references/ai/` (`18` files)
+- `references/privacy/` (`12` files)
+- `references/ops/` (`13` files)
+- `references/compliance/` (`10` files)
 
 Compatibility support:
 
@@ -89,27 +89,27 @@ Archived during the AI-domain cleanup:
 ## Metrics
 
 - Total references before refactor: `51`
-- Total references after refactor: `54`
+- Total references after current corpus expansion: `104`
 - New shared core file added: `1` (`references/_core-invariants.md`)
 - Reference categories after refactor: `8`
-- `SKILL.md` current size: `66` lines
-- `INDEX.md` current size: `108` lines
+- `SKILL.md` current size: `85` lines
+- `INDEX.md` current size: `144` lines
 
 Eval coverage:
 
-- Positive fixtures: `23`
-- Negative fixtures: `10`
-- Total fixtures: `33`
-- Preflight result: `33/33 PASS`
-- Fixtures with manual semantic checkpoints: `23`
+- Positive fixtures: `31`
+- Negative fixtures: `12`
+- Total fixtures: `43`
+- Preflight result: `43/43 PASS`
+- Fixtures with manual semantic checkpoints: `31`
 
-Positive fixture domain coverage from [evals/results/2026-04-18.md](D:/Users/stealthy/Documents/GitHub/security-hardening/evals/results/2026-04-18.md:1):
+Positive fixture domain coverage from [evals/results/2026-04-19.md](D:/Users/stealthy/Documents/GitHub/security-hardening/evals/results/2026-04-19.md:1):
 
-- `ai`: `28`
-- `appsec`: `7`
-- `iam`: `7`
-- `infra`: `5`
-- `ops`: `13`
+- `ai`: `31`
+- `appsec`: `17`
+- `iam`: `9`
+- `infra`: `6`
+- `ops`: `15`
 - `privacy`: `2`
 
 ## Validation Added
@@ -146,19 +146,15 @@ Stability mitigations:
 
 ## Remaining TODO
 
-Still stale (`last_reviewed: null`) in [docs/stale.md](D:/Users/stealthy/Documents/GitHub/security-hardening/docs/stale.md:1):
+Resolved stale-review queue:
 
-- `references/ops/detection-engineering.md`
-- `references/appsec/framework-examples.md`
-- `references/appsec/graphql-security.md`
-- `references/appsec/security-myths.md`
+- `docs/stale.md` now reflects that the previously stale references were refreshed.
 
 Still manual / deferred for the next iteration:
 
 - Build a model-backed semantic eval runner if `must_mention` and `must_not_mention` need automated grading instead of manual checkpoints.
-- Add dedicated governance templates for RoPA, DPIA, DSAR, DPA, SCC, and TIA if compliance support needs to go beyond the current pedagogical crosswalk.
+- Continue compacting non-reference documentation snapshots when corpus metrics materially change again.
 - Add regulator-facing reporting packs for NIS2 and DORA if the repo needs operational compliance evidence rather than technical preparation guidance.
-- Revalidate framework-specific snippets against current upstream versions before clearing the remaining stale queue.
 
 ## Commit Trail
 
