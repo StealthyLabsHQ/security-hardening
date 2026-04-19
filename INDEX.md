@@ -9,6 +9,8 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 3. Load only the domain files needed for the current task.
 4. Use [references/_index.md](references/_index.md) only when category, review date, or audit-level metadata is needed.
 
+Category sections below are intentionally compact, representative entrypoints. For the exhaustive live corpus, use [references/_index.md](references/_index.md).
+
 ## Core Files
 
 - [SKILL.md](SKILL.md)
@@ -24,6 +26,8 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 - [references/appsec/graphql-security.md](references/appsec/graphql-security.md)
 - [references/appsec/threat-modeling.md](references/appsec/threat-modeling.md)
 - [references/appsec/security-testing-examples.md](references/appsec/security-testing-examples.md)
+- [references/appsec/security-diff-review.md](references/appsec/security-diff-review.md)
+- [references/appsec/ssrf-deserialization-command-injection.md](references/appsec/ssrf-deserialization-command-injection.md)
 - [references/appsec/secure-headers.md](references/appsec/secure-headers.md)
 - [references/appsec/browser-security-modern.md](references/appsec/browser-security-modern.md)
 - [references/appsec/frontend-frameworks-security.md](references/appsec/frontend-frameworks-security.md)
@@ -38,6 +42,11 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 ## Infra
 
 - [references/infra/supply-chain-security.md](references/infra/supply-chain-security.md)
+- [references/infra/github-actions-hardening.md](references/infra/github-actions-hardening.md)
+- [references/infra/terraform-iac-hardening.md](references/infra/terraform-iac-hardening.md)
+- [references/infra/terraform-policy-as-code-recipes.md](references/infra/terraform-policy-as-code-recipes.md)
+- [references/infra/cloud-container-runnable-hardening-tests.md](references/infra/cloud-container-runnable-hardening-tests.md)
+- [references/infra/secrets-manager-boundaries-and-injection-patterns.md](references/infra/secrets-manager-boundaries-and-injection-patterns.md)
 - [references/infra/container-k8s-hardening.md](references/infra/container-k8s-hardening.md)
 - [references/infra/rate-limiting-infrastructure.md](references/infra/rate-limiting-infrastructure.md)
 - [references/infra/iot-ot-security.md](references/infra/iot-ot-security.md)
@@ -45,15 +54,24 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 ## IAM
 
 - [references/iam/authorization-rbac.md](references/iam/authorization-rbac.md)
+- [references/iam/authorization-regression-testing.md](references/iam/authorization-regression-testing.md)
 - [references/iam/session-management.md](references/iam/session-management.md)
 - [references/iam/webauthn-fido2.md](references/iam/webauthn-fido2.md)
 - [references/iam/cloud-iam-hardening.md](references/iam/cloud-iam-hardening.md)
 - [references/iam/active-directory-hardening.md](references/iam/active-directory-hardening.md)
+- [references/iam/sso-saml-oidc-hardening.md](references/iam/sso-saml-oidc-hardening.md)
+- [references/iam/workload-identity-federation.md](references/iam/workload-identity-federation.md)
+- [references/iam/machine-identity-and-service-accounts.md](references/iam/machine-identity-and-service-accounts.md)
+- [references/iam/service-account-inventory-and-ownership.md](references/iam/service-account-inventory-and-ownership.md)
+- [references/iam/temporary-access-and-break-glass-governance.md](references/iam/temporary-access-and-break-glass-governance.md)
 
 ## Platform
 
 - [references/platform/mobile-security.md](references/platform/mobile-security.md)
 - [references/platform/desktop-app-security.md](references/platform/desktop-app-security.md)
+- [references/platform/memory-safety-hardening.md](references/platform/memory-safety-hardening.md)
+- [references/platform/browser-isolation-and-profile-segmentation.md](references/platform/browser-isolation-and-profile-segmentation.md)
+- [references/platform/high-trust-admin-workstations.md](references/platform/high-trust-admin-workstations.md)
 - [references/platform/endpoint-vba-security.md](references/platform/endpoint-vba-security.md)
 
 ## AI
@@ -68,6 +86,11 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 - [references/ai/ai-ide-no-code-security.md](references/ai/ai-ide-no-code-security.md)
 - [references/ai/ai-tool-profiles.md](references/ai/ai-tool-profiles.md)
 - [references/ai/agent-evals-red-teaming.md](references/ai/agent-evals-red-teaming.md)
+- [references/ai/agent-approval-patterns.md](references/ai/agent-approval-patterns.md)
+- [references/ai/prompt-and-tool-evidence-handling.md](references/ai/prompt-and-tool-evidence-handling.md)
+- [references/ai/multi-agent-boundaries-and-delegation.md](references/ai/multi-agent-boundaries-and-delegation.md)
+- [references/ai/connector-and-integration-governance.md](references/ai/connector-and-integration-governance.md)
+- [references/ai/ai-system-release-gates.md](references/ai/ai-system-release-gates.md)
 - [references/ai/quick-start-ai-coding.md](references/ai/quick-start-ai-coding.md)
 - [references/ai/vibecoder-traps.md](references/ai/vibecoder-traps.md)
 - [references/ai/ai-agent-incident-response.md](references/ai/ai-agent-incident-response.md)
@@ -76,6 +99,11 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 
 - [references/privacy/privacy-data-minimization.md](references/privacy/privacy-data-minimization.md)
 - [references/privacy/gdpr-security-ops.md](references/privacy/gdpr-security-ops.md)
+- [references/privacy/data-classification-and-handling.md](references/privacy/data-classification-and-handling.md)
+- [references/privacy/ai-prompt-data-handling.md](references/privacy/ai-prompt-data-handling.md)
+- [references/privacy/privacy-review-for-ai-vendors.md](references/privacy/privacy-review-for-ai-vendors.md)
+- [references/privacy/retention-enforcement-and-deletion-evidence.md](references/privacy/retention-enforcement-and-deletion-evidence.md)
+- [references/privacy/screenshot-and-support-artifact-handling.md](references/privacy/screenshot-and-support-artifact-handling.md)
 
 ## Ops
 
@@ -84,8 +112,12 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 - [references/ops/pre-push-checklist.md](references/ops/pre-push-checklist.md)
 - [references/ops/security-audit-levels.md](references/ops/security-audit-levels.md)
 - [references/ops/security-improvements.md](references/ops/security-improvements.md)
+- [references/ops/security-metrics-kpis.md](references/ops/security-metrics-kpis.md)
 - [references/ops/detection-engineering.md](references/ops/detection-engineering.md)
+- [references/ops/detection-translations.md](references/ops/detection-translations.md)
 - [references/ops/incident-playbooks.md](references/ops/incident-playbooks.md)
+- [references/ops/secure-workstation-builds.md](references/ops/secure-workstation-builds.md)
+- [references/ops/security-backlog-triage-and-prioritization.md](references/ops/security-backlog-triage-and-prioritization.md)
 - [references/ops/vuln-management.md](references/ops/vuln-management.md)
 - [references/ops/social-engineering-physical.md](references/ops/social-engineering-physical.md)
 
@@ -94,6 +126,10 @@ Machine-facing entrypoint for this repository. Use this file for direct corpus n
 - [references/compliance/cwe-owasp-mapping.md](references/compliance/cwe-owasp-mapping.md)
 - [references/compliance/compliance-mapping.md](references/compliance/compliance-mapping.md)
 - [references/compliance/coverage-matrix.md](references/compliance/coverage-matrix.md)
+- [references/compliance/audit-sample-request-response.md](references/compliance/audit-sample-request-response.md)
+- [references/compliance/customer-security-questionnaire-response-pack.md](references/compliance/customer-security-questionnaire-response-pack.md)
+- [references/compliance/evidence-redaction-and-sharing-rules.md](references/compliance/evidence-redaction-and-sharing-rules.md)
+- [references/compliance/regulator-notification-decision-matrix.md](references/compliance/regulator-notification-decision-matrix.md)
 
 ## Templates
 

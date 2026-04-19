@@ -1,13 +1,12 @@
-# Stale Review Queue
+# Stale Review Status
 
-These files received frontmatter in Phase 2, but `last_reviewed` remains `null` because the
-underlying source set or current-version validation was not strong enough to mark them as
-freshly reviewed.
+Resolved on 2026-04-19.
 
-| File | Reason |
-|---|---|
-| `references/ops/detection-engineering.md` | The file explicitly states it was generated from an inferred threat library because the source threat model was unavailable in that session. |
-| `references/appsec/framework-examples.md` | Framework snippets need version-aware revalidation against current upstream framework guidance before they can be marked freshly reviewed. |
-| `references/appsec/graphql-security.md` | The document lacks normalized source metadata and needs a dedicated pass against current GraphQL security guidance before review can be asserted. |
-| `references/appsec/security-myths.md` | Narrative guidance lacks a normalized source set and explicit review metadata, so freshness is intentionally left unresolved. |
+The previously stale references were refreshed and now have current `last_reviewed` metadata in the generated index:
 
+- `references/appsec/framework-examples.md`
+- `references/appsec/graphql-security.md`
+- `references/appsec/security-myths.md`
+- `references/ops/detection-engineering.md`
+
+Use `references/_index.md` as the source of truth for live review status and metadata.
