@@ -10,7 +10,7 @@ sources:
   - "MDN Permissions-Policy"
   - "MDN Subresource Integrity"
   - "W3C CSP Level 3 — https://www.w3.org/TR/CSP3/"
-  - "W3C Trusted Types — https://w3c.github.io/webappsec-trusted-types/dist/spec/"
+  - "W3C Trusted Types — https://www.w3.org/TR/trusted-types/"
   - "IETF RFC 6265bis (HTTP cookies) — https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/"
 triggers_strong: ["trusted types", "permissions policy", "coop coep", "sri"]
 triggers_weak: ["browser security", "client-side hardening"]

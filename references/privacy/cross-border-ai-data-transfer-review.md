@@ -10,7 +10,7 @@ sources:
   - "EDPB Recommendations 01/2020 on supplementary measures — https://www.edpb.europa.eu/our-work-tools/our-documents/recommendations/recommendations-012020-measures-supplement-transfer_en"
   - "SCCs Decision 2021/914 — https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj"
   - "EU-US Data Privacy Framework — https://www.dataprivacyframework.gov (2023-07)"
-  - "CNIL AI how-to sheets — https://www.cnil.fr/en/ai-how-sheets"
+  - "CNIL AI how-to sheets — https://www.cnil.fr/en/what-scope-ai-how-sheets"
   - "ISO/IEC 27701:2019 — https://www.iso.org/standard/71670.html"
   - "NIST Privacy Framework 1.0 — https://www.nist.gov/privacy-framework"
   - "Enterprise third-party AI review practices"
