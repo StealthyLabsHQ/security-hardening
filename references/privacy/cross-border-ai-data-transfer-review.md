@@ -4,12 +4,15 @@ slug: cross-border-ai-data-transfer-review
 category: privacy
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "GDPR Articles 44-49"
-  - "EDPB recommendations on supplementary measures"
-  - "European Commission SCC guidance"
-  - "CNIL guidance on international transfers and AI systems"
+  - "GDPR Articles 44-49 — https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+  - "EDPB Recommendations 01/2020 on supplementary measures — https://www.edpb.europa.eu/our-work-tools/our-documents/recommendations/recommendations-012020-measures-supplement-transfer_en"
+  - "SCCs Decision 2021/914 — https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj"
+  - "EU-US Data Privacy Framework — https://www.dataprivacyframework.gov (2023-07)"
+  - "CNIL AI how-to sheets — https://www.cnil.fr/en/ai-how-sheets"
+  - "ISO/IEC 27701:2019 — https://www.iso.org/standard/71670.html"
+  - "NIST Privacy Framework 1.0 — https://www.nist.gov/privacy-framework"
   - "Enterprise third-party AI review practices"
 triggers_strong: ["cross border ai transfer", "ai data transfer review", "international transfer review", "scc ai vendor", "ai residency review"]
 triggers_weak: ["data transfer review", "cross border review", "ai transfer"]

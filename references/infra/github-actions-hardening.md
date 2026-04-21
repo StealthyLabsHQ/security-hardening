@@ -4,11 +4,13 @@ slug: github-actions-hardening
 category: infra
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "GitHub Actions security hardening guidance"
-  - "OpenSSF Scorecard"
-  - "SLSA framework"
+  - "GitHub Actions security hardening — https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions"
+  - "OpenSSF Scorecard — https://scorecard.dev"
+  - "SLSA v1.0 — https://slsa.dev/spec/v1.0/"
+  - "Sigstore / cosign — https://docs.sigstore.dev"
+  - "StepSecurity research — https://www.stepsecurity.io/blog"
 triggers_strong: ["github actions hardening", "workflow security", "pull_request_target", "oidc federation", "self hosted runner"]
 triggers_weak: ["actions security", "ci trust", "workflow review"]
 related: ["supply-chain-security", "cloud-iam-hardening", "secret-leak-prevention"]

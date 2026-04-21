@@ -4,11 +4,13 @@ slug: gdpr-security-ops
 category: privacy
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "Regulation (EU) 2016/679 (GDPR)"
-  - "EDPB guidance"
-  - "CNIL security guidance"
+  - "GDPR (EU 2016/679) — https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+  - "EDPB guidelines — https://www.edpb.europa.eu/our-work-tools/general-guidance/guidelines-recommendations-best-practices_en"
+  - "CNIL security guidance — https://www.cnil.fr/en"
+  - "SCCs Decision 2021/914 — https://eur-lex.europa.eu/eli/dec_impl/2021/914/oj"
+  - "EU-US Data Privacy Framework — https://www.dataprivacyframework.gov (2023-07)"
 triggers_strong: ["gdpr security", "72 hour breach", "dsar", "retention"]
 triggers_weak: ["privacy ops", "gdpr review"]
 related: ["privacy-data-minimization", "compliance-mapping"]

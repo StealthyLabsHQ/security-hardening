@@ -4,9 +4,11 @@ slug: owasp-top10
 category: appsec
 depth: 1
 audit_level: [1, 2]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 2021"
+  - "OWASP Top 10 2021 — https://owasp.org/Top10/"
+  - "OWASP ASVS 5.0 — https://owasp.org/www-project-application-security-verification-standard/"
+  - "CWE Top 25 — https://cwe.mitre.org/top25/"
 triggers_strong: ["owasp top 10", "xss", "sql injection", "security misconfiguration"]
 triggers_weak: ["security review", "appsec basics"]
 related: ["cwe-owasp-mapping", "api-security"]

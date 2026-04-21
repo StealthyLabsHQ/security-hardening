@@ -4,11 +4,14 @@ slug: cwe-owasp-mapping
 category: compliance
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "MITRE CWE"
-  - "OWASP Top 10 2021"
-  - "OWASP ASVS"
+  - "MITRE CWE — https://cwe.mitre.org"
+  - "CWE Top 25 — https://cwe.mitre.org/top25/"
+  - "OWASP Top 10 2021 — https://owasp.org/Top10/"
+  - "OWASP ASVS 5.0 — https://owasp.org/www-project-application-security-verification-standard/"
+  - "NIST SP 800-53 Rev.5 — https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+  - "NIST Cybersecurity Framework 2.0 — https://www.nist.gov/cyberframework"
 triggers_strong: ["cwe mapping", "asvs mapping", "owasp mapping"]
 triggers_weak: ["taxonomy", "standards mapping"]
 related: ["owasp-top10", "compliance-mapping"]

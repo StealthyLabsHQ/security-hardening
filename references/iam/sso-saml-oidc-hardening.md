@@ -4,12 +4,14 @@ slug: sso-saml-oidc-hardening
 category: iam
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP SAML Security Cheat Sheet"
-  - "OpenID Connect Core"
-  - "OAuth 2.0 for Browser-Based Apps"
-  - "NIST SP 800-63 federation guidance"
+  - "OWASP SAML Security Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/SAML_Security_Cheat_Sheet.html"
+  - "OpenID Connect Core 1.0 — https://openid.net/specs/openid-connect-core-1_0.html"
+  - "OAuth 2.0 for Browser-Based Apps (draft-ietf-oauth-browser-based-apps) — https://datatracker.ietf.org/doc/draft-ietf-oauth-browser-based-apps/"
+  - "OAuth 2.1 draft — https://datatracker.ietf.org/doc/draft-ietf-oauth-v2-1/"
+  - "OpenID FAPI 2.0 Security Profile — https://openid.net/specs/fapi-2_0-security-profile.html"
+  - "NIST SP 800-63 federation guidance — https://pages.nist.gov/800-63-4/"
 triggers_strong: ["sso security", "saml hardening", "oidc hardening", "identity federation", "sso review"]
 triggers_weak: ["saml", "oidc", "federation review"]
 related: ["session-management", "webauthn-fido2", "workload-identity-federation", "authorization-rbac"]

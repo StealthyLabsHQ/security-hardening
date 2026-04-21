@@ -4,12 +4,12 @@ slug: workload-identity-federation
 category: iam
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "AWS IAM OIDC federation guidance"
-  - "Google Cloud Workload Identity Federation"
-  - "Microsoft Entra workload identity federation"
-  - "SPIFFE / SPIRE workload identity concepts"
+  - "AWS IAM OIDC federation guidance — https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc.html"
+  - "Google Cloud Workload Identity Federation — https://cloud.google.com/iam/docs/workload-identity-federation"
+  - "Microsoft Entra workload identity federation — https://learn.microsoft.com/entra/workload-id/workload-identity-federation"
+  - "SPIFFE / SPIRE — https://spiffe.io/docs/latest/spiffe-about/spiffe-concepts/"
 triggers_strong: ["workload identity", "oidc federation", "github actions oidc", "machine identity", "service account federation"]
 triggers_weak: ["machine identity", "federation review", "ci identity"]
 related: ["cloud-iam-hardening", "github-actions-hardening", "terraform-iac-hardening", "active-directory-hardening"]

@@ -4,12 +4,15 @@ slug: applied-cryptography
 category: appsec
 depth: 3
 audit_level: [2, 3]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Cryptographic Storage Cheat Sheet"
-  - "OWASP Password Storage Cheat Sheet"
-  - "NIST SP 800-57"
-  - "Tippe and Berner - Argon2 Adoption and Effectiveness in Real-World Software"
+  - "OWASP Cryptographic Storage Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html"
+  - "OWASP Password Storage Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+  - "NIST SP 800-57 Part 1 Rev.5 — https://csrc.nist.gov/publications/detail/sp/800-57-part-1/rev-5/final"
+  - "NIST SP 800-175B Rev.1 — https://csrc.nist.gov/pubs/sp/800/175/b/r1/final"
+  - "RFC 8446 TLS 1.3 — https://datatracker.ietf.org/doc/rfc8446/ (2018-08)"
+  - "RFC 9106 Argon2 — https://datatracker.ietf.org/doc/rfc9106/ (2021-09)"
+  - "RFC 8725 JWT BCP — https://datatracker.ietf.org/doc/rfc8725/ (2020-02)"
 triggers_strong: ["argon2id", "aes-gcm", "cryptography", "jwt signing key"]
 triggers_weak: ["crypto review", "key management"]
 related: ["webauthn-fido2", "secret-leak-prevention"]

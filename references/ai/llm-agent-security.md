@@ -4,16 +4,21 @@ slug: llm-agent-security
 category: ai
 depth: 3
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 for LLM Applications"
-  - "NIST AI Risk Management Framework"
-  - "OpenAI Trusted Access for Cyber"
-  - "Google SAIF Risk Assessment"
-  - "Anthropic Project Glasswing"
-  - "Greshake et al. - More than You've Asked For: A Comprehensive Analysis of Novel Prompt Injection Threats to Application-Integrated Large Language Models"
-  - "Hines et al. - Defending Against Indirect Prompt Injection Attacks With Spotlighting"
-  - "Shi et al. - Trust-Authorization Mismatch in LLM Agents (B-I-P model)"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
+  - "CISA Deploying AI Systems Securely — https://www.cisa.gov/resources-tools/resources/deploying-ai-systems-securely (2024-04)"
+  - "MITRE ATLAS — https://atlas.mitre.org"
+  - "Anthropic Project Glasswing / Claude Mythos Preview — https://www.anthropic.com/glasswing (2026)"
+  - "OpenAI Trusted Access for Cyber — https://openai.com/index/trusted-access-for-cyber"
+  - "Greshake et al. — Indirect prompt injection — https://arxiv.org/abs/2302.12173 (2023-02)"
+  - "Hines et al. — Spotlighting defense — https://arxiv.org/abs/2403.14720 (2024-03)"
+  - "Shi et al. — Trust-Authorization Mismatch in LLM Agents (B-I-P model)"
+  - "CVE-2024-8309 LangChain GraphCypherQAChain SQL injection via PI — https://nvd.nist.gov/vuln/detail/CVE-2024-8309 (2024-10, CVSS 9.8)"
+  - "CVE-2024-14021 LlamaIndex BGEM3Index pickle RCE — https://nvd.nist.gov/vuln/detail/CVE-2024-14021 (CWE-502, CVSS 7.8)"
+  - "EU AI Act Reg 2024/1689 — https://artificialintelligenceact.eu"
 triggers_strong: ["prompt injection", "rag poisoning", "agent security", "system prompt leakage"]
 triggers_weak: ["llm security", "agent review"]
 related: ["mcp-security", "hostile-corpus-review", "browser-computer-use-security", "rag-retrieval-security"]

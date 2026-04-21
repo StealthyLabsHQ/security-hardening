@@ -4,13 +4,14 @@ slug: browser-computer-use-security
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "OpenAI Operator System Card"
-  - "OpenAI Computer-Using Agent"
-  - "Anthropic Computer use tool"
-  - "Google Gemini 2.0 for the agentic era"
+  - "OpenAI Operator System Card — https://openai.com/safety"
+  - "OpenAI Computer-Using Agent / Preparedness Framework — https://openai.com/safety"
+  - "Anthropic Computer use tool — https://docs.anthropic.com/en/docs/agents-and-tools/computer-use"
+  - "Anthropic Claude 4 System Cards + Responsible Scaling Policy — https://www.anthropic.com/research (2025-2026)"
   - "Google AI security frontier strategy"
+  - "USENIX Security / IEEE S&P agent misalignment & tool poisoning papers (2024-2026)"
 triggers_strong: ["browser use", "computer use", "web agent", "operator", "GUI agent", "desktop agent"]
 triggers_weak: ["web automation", "agent browser", "screen control"]
 related: ["llm-agent-security", "ai-cli-hardening", "ai-agent-incident-response", "agent-evals-red-teaming"]

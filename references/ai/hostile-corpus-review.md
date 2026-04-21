@@ -4,10 +4,13 @@ slug: hostile-corpus-review
 category: ai
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 for LLM Applications"
-  - "NIST AI Risk Management Framework"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "Greshake et al. — Indirect prompt injection — https://arxiv.org/abs/2302.12173 (2023-02)"
+  - "Perez & Ribeiro — Ignore previous prompt: attack techniques — https://arxiv.org/abs/2211.09527 (2022-11)"
+  - "Slack AI data exfiltration via indirect PI (PromptArmor) — https://www.promptarmor.com/resources/data-exfiltration-from-slack-ai-via-indirect-prompt-injection (2024-08)"
 triggers_strong: ["hostile corpus", "prompt injection review", "untrusted tickets", "content quarantine"]
 triggers_weak: ["corpus review", "input safety"]
 related: ["llm-agent-security", "mcp-security"]

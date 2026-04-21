@@ -4,13 +4,17 @@ slug: supply-chain-security
 category: infra
 depth: 3
 audit_level: [3]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "SLSA Framework"
-  - "Sigstore Cosign"
-  - "CISA SBOM guidance"
-  - "OpenSSF Scorecard"
-  - "Ladisa et al. - A Taxonomy of Attacks on Open-Source Package Registries"
+  - "SLSA v1.0 — https://slsa.dev/spec/v1.0/"
+  - "Sigstore / cosign — https://docs.sigstore.dev"
+  - "in-toto attestations — https://in-toto.io/specs/"
+  - "CycloneDX SBOM — https://cyclonedx.org/specification/overview/"
+  - "SPDX SBOM — https://spdx.dev/specifications/"
+  - "CISA SBOM guidance — https://www.cisa.gov/sbom"
+  - "CNCF Software Supply Chain Security paper — https://github.com/cncf/tag-security"
+  - "OpenSSF Scorecard — https://scorecard.dev"
+  - "Ladisa et al. — A Taxonomy of Attacks on Open-Source Package Registries"
 triggers_strong: ["sbom", "slsa", "cosign", "dependency confusion"]
 triggers_weak: ["supply chain", "artifact integrity"]
 related: ["container-k8s-hardening", "vuln-management"]

@@ -4,15 +4,17 @@ slug: agent-evals-red-teaming
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 for Large Language Model Applications"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
   - "OWASP MCP Top 10"
-  - "OpenAI Deployment Safety Hub"
-  - "OpenAI Red Teaming Network"
+  - "OpenAI Red Teaming Network — https://openai.com/safety"
   - "OpenAI's Approach to Frontier Risk"
-  - "Google SAIF Risk Assessment"
-  - "Anthropic Model System Cards"
+  - "Anthropic Model System Cards — https://www.anthropic.com/research"
+  - "UK AI Safety Institute evaluations — https://www.aisi.gov.uk"
+  - "US AI Safety Institute — https://www.nist.gov/aisi"
+  - "Wei et al. — Jailbroken: mismatched generalization — https://arxiv.org/abs/2307.02483 (2023-07)"
+  - "Zou et al. — GCG universal adversarial suffixes — https://arxiv.org/abs/2307.15043 (2023-07)"
 triggers_strong: ["agent evals", "red teaming", "regression gate", "prompt injection test", "adversarial eval"]
 triggers_weak: ["evals", "test suite", "safety evaluation"]
 related: ["llm-agent-security", "mcp-security", "hostile-corpus-review", "ai-agent-incident-response"]
