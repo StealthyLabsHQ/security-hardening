@@ -4,12 +4,14 @@ slug: remote-browser-isolation-and-disposable-browsing
 category: platform
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
   - "Remote browser isolation architecture guidance"
   - "Browser enterprise security guidance"
   - "Zero trust browsing and isolation patterns"
-  - "CIS Benchmarks for enterprise browsers"
+  - "CIS Benchmarks for enterprise browsers — https://www.cisecurity.org/cis-benchmarks"
+  - "NIST SP 800-152 (CKMS Profile) — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-152.pdf"
+  - "Cloudflare Browser Isolation — https://developers.cloudflare.com/cloudflare-one/policies/browser-isolation/"
 triggers_strong: ["remote browser isolation", "disposable browsing", "rbi", "untrusted web isolation", "isolated browser session"]
 triggers_weak: ["browser sandbox", "isolated browser", "safe web research"]
 related: ["browser-isolation-and-profile-segmentation", "secure-workstation-builds", "browser-computer-use-security", "developer-workstation-secrets-and-local-ai"]

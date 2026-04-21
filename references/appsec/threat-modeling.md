@@ -4,11 +4,13 @@ slug: threat-modeling
 category: appsec
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Threat Dragon"
-  - "Microsoft Threat Modeling Tool"
-  - "NIST SP 800-154"
+  - "OWASP Threat Dragon — https://owasp.org/www-project-threat-dragon/"
+  - "Microsoft Threat Modeling Tool — https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool"
+  - "NIST SP 800-154 — https://csrc.nist.gov/pubs/sp/800/154/ipd"
+  - "MITRE ATT&CK — https://attack.mitre.org"
+  - "MITRE ATLAS (AI adversarial tactics) — https://atlas.mitre.org"
 triggers_strong: ["threat modeling", "stride", "trust boundary", "abuse case"]
 triggers_weak: ["architecture review", "design review"]
 related: ["security-testing-examples", "security-improvements"]

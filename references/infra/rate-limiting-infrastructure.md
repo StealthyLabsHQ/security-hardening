@@ -4,11 +4,13 @@ slug: rate-limiting-infrastructure
 category: infra
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP API Security Top 10 2023"
-  - "NGINX rate limiting documentation"
-  - "Cloudflare rate limiting documentation"
+  - "OWASP API Security Top 10 2023 (API4) — https://owasp.org/API-Security/editions/2023/en/0xa4-unrestricted-resource-consumption/"
+  - "NGINX rate limiting — https://www.nginx.com/blog/rate-limiting-nginx/"
+  - "Cloudflare rate limiting — https://developers.cloudflare.com/waf/rate-limiting-rules/"
+  - "IETF RFC 6585 (HTTP 429 Too Many Requests) — https://www.rfc-editor.org/info/rfc6585"
+  - "Envoy rate limit service — https://www.envoyproxy.io/docs/envoy/latest/configuration/other_features/rate_limit"
 triggers_strong: ["rate limiting", "429", "nginx rate limit", "edge throttling"]
 triggers_weak: ["abuse prevention", "throttling"]
 related: ["api-security", "security-testing-examples"]

@@ -4,11 +4,13 @@ slug: agent-approval-patterns
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF"
-  - "OWASP LLM Top 10"
-  - "Anthropic / model-provider guidance on tool use and human oversight"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
+  - "Anthropic — Building Effective Agents — https://www.anthropic.com/research/building-effective-agents (2024)"
+  - "OpenAI Preparedness Framework — https://cdn.openai.com/openai-preparedness-framework-beta.pdf (2023-12)"
 triggers_strong: ["agent approval", "human in the loop", "agent autonomy", "approval workflow", "tool use approval"]
 triggers_weak: ["approval pattern", "agent permissions", "HITL"]
 related: ["llm-agent-security", "ai-tool-profiles", "prompt-and-tool-evidence-handling", "browser-computer-use-security"]

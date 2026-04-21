@@ -4,12 +4,14 @@ slug: ai-system-release-gates
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF"
-  - "OWASP Top 10 for LLM Applications"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
   - "OWASP MCP Top 10"
-  - "provider guidance on deployment safety, tool use, and human oversight"
+  - "OpenAI Preparedness Framework — https://cdn.openai.com/openai-preparedness-framework-beta.pdf (2023-12)"
+  - "Provider guidance on deployment safety, tool use, and human oversight"
 triggers_strong: ["ai release gate", "agent release checklist", "model rollout gate", "agent launch approval", "ai system go live"]
 triggers_weak: ["release gate", "launch checklist", "pre release review"]
 related: ["agent-evals-red-teaming", "agent-approval-patterns", "browser-computer-use-security", "multi-agent-boundaries-and-delegation", "ai-agent-incident-response"]

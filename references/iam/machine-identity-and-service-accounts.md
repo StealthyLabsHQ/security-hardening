@@ -4,13 +4,13 @@ slug: machine-identity-and-service-accounts
 category: iam
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-207 Zero Trust Architecture"
-  - "AWS IAM best practices"
-  - "Google Cloud IAM and service account guidance"
-  - "Microsoft Entra workload and application identity guidance"
-  - "SPIFFE / SPIRE workload identity concepts"
+  - "NIST SP 800-207 Zero Trust Architecture — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-207.pdf"
+  - "AWS IAM best practices — https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+  - "Google Cloud IAM and service account guidance — https://cloud.google.com/iam/docs/best-practices-service-accounts"
+  - "Microsoft Entra workload and application identity guidance — https://learn.microsoft.com/entra/workload-id/"
+  - "SPIFFE / SPIRE documentation — https://spiffe.io/docs/latest/spiffe-about/spiffe-concepts/"
 triggers_strong: ["machine identity", "service account sprawl", "non-human identity", "bot account", "service principal review"]
 triggers_weak: ["service account", "automation identity", "application credentials"]
 related: ["workload-identity-federation", "cloud-iam-hardening", "identity-lifecycle-jml", "github-actions-hardening"]

@@ -4,11 +4,12 @@ slug: identity-lifecycle-jml
 category: iam
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-63 and IAM lifecycle guidance"
-  - "Microsoft Entra provisioning and access review guidance"
-  - "CIS Controls access management practices"
+  - "NIST SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07, supersedes all drafts)"
+  - "Microsoft Entra provisioning and access review guidance — https://learn.microsoft.com/entra/identity-governance/"
+  - "CIS Controls v8.1 (IG1-IG3 account management) — https://www.cisecurity.org/controls/v8-1"
+  - "SCIM 2.0 (RFC 7644) — https://www.rfc-editor.org/info/rfc7644"
 triggers_strong: ["joiner mover leaver", "identity lifecycle", "offboarding", "access review", "jml"]
 triggers_weak: ["user lifecycle", "access provisioning", "offboarding review"]
 related: ["authorization-rbac", "sso-saml-oidc-hardening", "session-management", "workload-identity-federation", "active-directory-hardening"]

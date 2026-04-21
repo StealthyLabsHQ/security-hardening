@@ -4,12 +4,14 @@ slug: agent-memory-and-context-retention
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF"
-  - "OWASP Top 10 for LLM Applications"
-  - "privacy-by-design and retention control guidance"
-  - "provider guidance on conversation history and memory features"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
+  - "Privacy-by-design and retention control guidance"
+  - "Provider guidance on conversation history and memory features"
+  - "CVE-2025-3108 LlamaIndex JsonPickleSerializer deserialization RCE — https://nvd.nist.gov/vuln/detail/CVE-2025-3108 (2025-07, CVSS 7.5)"
+  - "CVE-2024-5998 LangChain FAISS pickle deserialization RCE — https://nvd.nist.gov/vuln/detail/CVE-2024-5998 (2024-09, CVSS 7.8)"
 triggers_strong: ["agent memory", "context retention", "prompt history", "ai memory security", "conversation retention"]
 triggers_weak: ["memory review", "agent context", "retention review"]
 related: ["llm-agent-security", "prompt-and-tool-evidence-handling", "ai-tool-profiles", "data-classification-and-handling", "ai-prompt-data-handling"]

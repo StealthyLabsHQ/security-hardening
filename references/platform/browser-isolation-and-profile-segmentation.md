@@ -4,11 +4,12 @@ slug: browser-isolation-and-profile-segmentation
 category: platform
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
   - "Browser enterprise security guidance"
-  - "CIS Benchmarks for Chrome and Edge"
+  - "CIS Benchmarks for Chrome and Edge — https://www.cisecurity.org/cis-benchmarks"
   - "Remote browser isolation architecture guidance"
+  - "NIST SP 800-152 (CKMS Profile) — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-152.pdf"
 triggers_strong: ["browser isolation", "profile segmentation", "admin browser", "cookie theft", "separate browser profiles"]
 triggers_weak: ["browser security", "profile review", "workstation browser"]
 related: ["endpoint-vba-security", "desktop-app-security", "browser-computer-use-security", "data-classification-and-handling"]

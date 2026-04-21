@@ -4,11 +4,12 @@ slug: cloud-iam-hardening
 category: iam
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "AWS IAM best practices"
-  - "Google Cloud IAM best practices"
-  - "Azure identity security documentation"
+  - "AWS IAM best practices — https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+  - "Google Cloud IAM best practices — https://cloud.google.com/iam/docs/using-iam-securely"
+  - "Azure identity security documentation — https://learn.microsoft.com/entra/identity/"
+  - "NIST SP 800-162 (ABAC) — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-162.pdf"
 triggers_strong: ["aws iam", "gcp iam", "azure security", "metadata service"]
 triggers_weak: ["cloud hardening", "identity review"]
 related: ["active-directory-hardening", "container-k8s-hardening"]

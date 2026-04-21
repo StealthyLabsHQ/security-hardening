@@ -4,12 +4,14 @@ slug: security-improvements
 category: ops
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP"
-  - "NIST SP 800-53"
-  - "NIST SP 800-63B"
-  - "CIS Benchmarks"
+  - "OWASP — https://owasp.org"
+  - "NIST SP 800-53 Rev.5 — https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+  - "NIST SP 800-63B (legacy) / SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
+  - "CIS Benchmarks — https://www.cisecurity.org/cis-benchmarks"
+  - "NIST Cybersecurity Framework 2.0 — https://www.nist.gov/cyberframework (2024-02)"
+  - "Google SRE Workbook — https://sre.google/workbook/"
 triggers_strong: ["security improvement plan", "defense in depth", "hardening roadmap", "security backlog"]
 triggers_weak: ["security roadmap", "prioritization"]
 related: ["defensive-security-baseline", "vuln-management"]

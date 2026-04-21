@@ -4,12 +4,13 @@ slug: nis2-dora-operational-evidence
 category: compliance
 depth: 3
 audit_level: [3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIS2 Directive"
-  - "Digital Operational Resilience Act (DORA)"
-  - "ENISA guidance"
-  - "European Supervisory Authorities DORA materials"
+  - "NIS2 Directive (EU 2022/2555) — https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+  - "DORA Regulation (EU 2022/2554) — https://eur-lex.europa.eu/eli/reg/2022/2554/oj"
+  - "ENISA NIS2 Technical Implementation Guidance — https://www.enisa.europa.eu/publications/nis2-technical-implementation-guidance (2025-07)"
+  - "Commission Implementing Regulation (EU) 2024/2690 — https://eur-lex.europa.eu/eli/reg_impl/2024/2690/oj"
+  - "European Supervisory Authorities DORA RTS/ITS — https://www.eba.europa.eu/regulation-and-policy/operational-resilience"
 triggers_strong: ["nis2 evidence", "dora evidence", "operational evidence mapping", "regulator evidence", "nis2 dora checklist"]
 triggers_weak: ["nis2 review", "dora review", "evidence mapping"]
 related: ["compliance-mapping", "coverage-matrix", "incident-playbooks", "security-metrics-kpis"]

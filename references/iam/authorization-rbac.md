@@ -4,10 +4,12 @@ slug: authorization-rbac
 category: iam
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Authorization Cheat Sheet"
-  - "OWASP API Security Top 10 2023"
+  - "OWASP Authorization Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+  - "OWASP API Security Top 10 2023 — https://owasp.org/API-Security/editions/2023/en/0x00-header/"
+  - "NIST SP 800-162 (ABAC) — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-162.pdf"
+  - "Google Zanzibar (USENIX ATC 2019) — https://research.google/pubs/zanzibar-googles-consistent-global-authorization-system/"
 triggers_strong: ["idor", "rbac", "abac", "rebac"]
 triggers_weak: ["authorization review", "access control"]
 related: ["api-security", "session-management"]
