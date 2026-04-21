@@ -9,7 +9,7 @@ sources:
   - "OWASP Session Management Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
   - "NIST SP 800-63B (legacy) / SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
   - "IETF RFC 6265bis — https://datatracker.ietf.org/doc/draft-ietf-httpbis-rfc6265bis/"
-  - "PCI DSS 4.0.1 — https://docs-prv.pcisecuritystandards.org (2024-06)"
+  - "PCI DSS 4.0.1 — https://www.pcisecuritystandards.org/document_library/ (2024-06)"
 triggers_strong: ["session management", "refresh token", "session fixation", "cookie security"]
 triggers_weak: ["session review", "authn"]
 related: ["authorization-rbac", "webauthn-fido2"]

@@ -10,7 +10,7 @@ sources:
   - "OWASP Cheat Sheet Series — https://cheatsheetseries.owasp.org"
   - "NIST SP 800-63B (legacy) / SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
   - "CWE Top 25 — https://cwe.mitre.org/top25/"
-  - "PCI DSS 4.0.1 — https://docs-prv.pcisecuritystandards.org (2024-06, PCI DSS 3.2.1/4.0 retired)"
+  - "PCI DSS 4.0.1 — https://www.pcisecuritystandards.org/document_library/ (2024-06, PCI DSS 3.2.1/4.0 retired)"
 triggers_strong: ["security baseline", "core invariants", "always apply", "minimum security bar"]
 triggers_weak: ["security defaults", "baseline controls"]
 related: ["security-audit-levels", "defensive-security-baseline", "security-improvements"]

@@ -7,9 +7,9 @@ audit_level: [2, 3, 4]
 last_reviewed: 2026-04-21
 sources:
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
-  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
-  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
-  - "CISA Deploying AI Systems Securely — https://www.cisa.gov/resources-tools/resources/deploying-ai-systems-securely (2024-04)"
+  - "NIST AI RMF 1.0 — https://doi.org/10.6028/NIST.AI.100-1 (2023-01)"
+  - "NIST AI 600-1 Generative AI Profile — https://doi.org/10.6028/NIST.AI.600-1 (2024-07)"
+  - "CISA Deploying AI Systems Securely — https://www.cisa.gov/news-events/alerts/2024/04/15/joint-guidance-deploying-ai-systems-securely (2024-04)"
   - "MITRE ATLAS — https://atlas.mitre.org"
   - "Anthropic Project Glasswing / Claude Mythos Preview — https://www.anthropic.com/glasswing (2026)"
   - "OpenAI Trusted Access for Cyber — https://openai.com/index/trusted-access-for-cyber"

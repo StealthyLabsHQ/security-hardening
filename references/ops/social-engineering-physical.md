@@ -6,7 +6,7 @@ depth: 2
 audit_level: [3, 4]
 last_reviewed: 2026-04-21
 sources:
-  - "CISA phishing guidance — https://www.cisa.gov/topics/cybersecurity-best-practices/phishing"
+  - "CISA phishing guidance — https://www.cisa.gov/topics/cybersecurity-best-practices"
   - "NIST SP 800-50 Rev.1 (Cybersecurity and Privacy Learning Programs) — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-50r1.pdf (2024-09, supersedes SP 800-50 2003 and SP 800-16)"
 triggers_strong: ["social engineering", "business email compromise", "tailgating", "physical security"]
 triggers_weak: ["security awareness", "human layer"]

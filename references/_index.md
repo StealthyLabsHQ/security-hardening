@@ -10,7 +10,7 @@
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| Core Invariants | `core-invariants` | 1 | `1, 2, 3, 4` | 2026-04-18 | `references/_core-invariants.md` |
+| Core Invariants | `core-invariants` | 1 | `1, 2, 3, 4` | 2026-04-21 | `references/_core-invariants.md` |
 
 ## Category Summary
 
@@ -29,37 +29,37 @@
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| API Security Reference | `api-security` | 2 | `2, 3` | 2026-04-03 | `references/appsec/api-security.md` |
-| Applied Cryptography for Developers | `applied-cryptography` | 3 | `2, 3` | 2026-04-19 | `references/appsec/applied-cryptography.md` |
-| Database Security | `database-security` | 2 | `2, 3` | 2026-04-14 | `references/appsec/database-security.md` |
+| API Security Reference | `api-security` | 2 | `2, 3` | 2026-04-21 | `references/appsec/api-security.md` |
+| Applied Cryptography for Developers | `applied-cryptography` | 3 | `2, 3` | 2026-04-21 | `references/appsec/applied-cryptography.md` |
+| Database Security | `database-security` | 2 | `2, 3` | 2026-04-21 | `references/appsec/database-security.md` |
 | Framework Security Examples | `framework-examples` | 2 | `1, 2` | 2026-04-19 | `references/appsec/framework-examples.md` |
 | Frontend Framework Security | `frontend-frameworks-security` | 3 | `2, 3` | 2026-04-03 | `references/appsec/frontend-frameworks-security.md` |
-| GraphQL Security | `graphql-security` | 3 | `2, 3` | 2026-04-19 | `references/appsec/graphql-security.md` |
+| GraphQL Security | `graphql-security` | 3 | `2, 3` | 2026-04-21 | `references/appsec/graphql-security.md` |
 | Language Specific Dangerous Patterns | `language-patterns` | 3 | `1, 2, 3` | 2026-04-03 | `references/appsec/language-patterns.md` |
-| Modern Browser Security | `browser-security-modern` | 3 | `2, 3` | 2026-04-14 | `references/appsec/browser-security-modern.md` |
-| OWASP Top 10 | `owasp-top10` | 1 | `1, 2` | 2026-04-03 | `references/appsec/owasp-top10.md` |
+| Modern Browser Security | `browser-security-modern` | 3 | `2, 3` | 2026-04-21 | `references/appsec/browser-security-modern.md` |
+| OWASP Top 10 | `owasp-top10` | 1 | `1, 2` | 2026-04-21 | `references/appsec/owasp-top10.md` |
 | Production Error Handling & Logging Security | `production-error-handling` | 2 | `1, 2` | 2026-04-03 | `references/appsec/production-error-handling.md` |
 | Secure HTTP Headers Reference | `secure-headers` | 1 | `1, 2` | 2026-04-19 | `references/appsec/secure-headers.md` |
 | Security Diff Review | `security-diff-review` | 2 | `1, 2, 3` | 2026-04-18 | `references/appsec/security-diff-review.md` |
 | Security Myths & Misconceptions | `security-myths` | 1 | `1, 2` | 2026-04-19 | `references/appsec/security-myths.md` |
 | Security Testing Examples | `security-testing-examples` | 2 | `2, 3` | 2026-04-14 | `references/appsec/security-testing-examples.md` |
-| SSRF, Deserialization & Command Injection | `ssrf-deserialization-command-injection` | 2 | `2, 3, 4` | 2026-04-19 | `references/appsec/ssrf-deserialization-command-injection.md` |
-| Threat Modeling | `threat-modeling` | 2 | `2, 3, 4` | 2026-04-14 | `references/appsec/threat-modeling.md` |
-| Webhook Security | `webhooks-security` | 2 | `2, 3` | 2026-04-14 | `references/appsec/webhooks-security.md` |
+| SSRF, Deserialization & Command Injection | `ssrf-deserialization-command-injection` | 2 | `2, 3, 4` | 2026-04-21 | `references/appsec/ssrf-deserialization-command-injection.md` |
+| Threat Modeling | `threat-modeling` | 2 | `2, 3, 4` | 2026-04-21 | `references/appsec/threat-modeling.md` |
+| Webhook Security | `webhooks-security` | 2 | `2, 3` | 2026-04-21 | `references/appsec/webhooks-security.md` |
 
 ## infra
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
 | Cloud & Container Runnable Hardening Tests | `cloud-container-runnable-hardening-tests` | 2 | `3, 4` | 2026-04-19 | `references/infra/cloud-container-runnable-hardening-tests.md` |
-| Container & Kubernetes Hardening | `container-k8s-hardening` | 2 | `3` | 2026-04-03 | `references/infra/container-k8s-hardening.md` |
-| GitHub Actions Hardening | `github-actions-hardening` | 2 | `2, 3, 4` | 2026-04-18 | `references/infra/github-actions-hardening.md` |
-| IoT & OT Security | `iot-ot-security` | 2 | `3, 4` | 2026-04-03 | `references/infra/iot-ot-security.md` |
+| Container & Kubernetes Hardening | `container-k8s-hardening` | 2 | `3` | 2026-04-21 | `references/infra/container-k8s-hardening.md` |
+| GitHub Actions Hardening | `github-actions-hardening` | 2 | `2, 3, 4` | 2026-04-21 | `references/infra/github-actions-hardening.md` |
+| IoT & OT Security | `iot-ot-security` | 2 | `3, 4` | 2026-04-21 | `references/infra/iot-ot-security.md` |
 | Policy Exception Handling | `policy-exception-handling` | 2 | `2, 3, 4` | 2026-04-19 | `references/infra/policy-exception-handling.md` |
-| Rate Limiting Infrastructure Patterns | `rate-limiting-infrastructure` | 2 | `2, 3` | 2026-04-14 | `references/infra/rate-limiting-infrastructure.md` |
+| Rate Limiting Infrastructure Patterns | `rate-limiting-infrastructure` | 2 | `2, 3` | 2026-04-21 | `references/infra/rate-limiting-infrastructure.md` |
 | Secrets Manager Boundaries and Injection Patterns | `secrets-manager-boundaries-and-injection-patterns` | 2 | `2, 3, 4` | 2026-04-19 | `references/infra/secrets-manager-boundaries-and-injection-patterns.md` |
-| Software Supply Chain Security | `supply-chain-security` | 3 | `3` | 2026-04-19 | `references/infra/supply-chain-security.md` |
-| Terraform & IaC Hardening | `terraform-iac-hardening` | 2 | `2, 3, 4` | 2026-04-18 | `references/infra/terraform-iac-hardening.md` |
+| Software Supply Chain Security | `supply-chain-security` | 3 | `3` | 2026-04-21 | `references/infra/supply-chain-security.md` |
+| Terraform & IaC Hardening | `terraform-iac-hardening` | 2 | `2, 3, 4` | 2026-04-21 | `references/infra/terraform-iac-hardening.md` |
 | Terraform Policy as Code Recipes | `terraform-policy-as-code-recipes` | 2 | `2, 3, 4` | 2026-04-19 | `references/infra/terraform-policy-as-code-recipes.md` |
 
 ## iam
@@ -68,65 +68,65 @@
 |---|---|---:|---|---|---|
 | Active Directory & Entra ID Hardening | `active-directory-hardening` | 2 | `3, 4` | 2026-04-03 | `references/iam/active-directory-hardening.md` |
 | Authorization Regression Testing | `authorization-regression-testing` | 2 | `2, 3, 4` | 2026-04-19 | `references/iam/authorization-regression-testing.md` |
-| Authorization: RBAC, ABAC, ReBAC & IDOR Prevention | `authorization-rbac` | 2 | `2, 3` | 2026-04-03 | `references/iam/authorization-rbac.md` |
-| Cloud & IAM Hardening | `cloud-iam-hardening` | 2 | `3, 4` | 2026-04-03 | `references/iam/cloud-iam-hardening.md` |
-| Identity Lifecycle: Joiner, Mover, Leaver | `identity-lifecycle-jml` | 2 | `2, 3, 4` | 2026-04-18 | `references/iam/identity-lifecycle-jml.md` |
-| Machine Identity and Service Accounts | `machine-identity-and-service-accounts` | 2 | `2, 3, 4` | 2026-04-19 | `references/iam/machine-identity-and-service-accounts.md` |
-| Service Account Inventory and Ownership | `service-account-inventory-and-ownership` | 2 | `2, 3, 4` | 2026-04-19 | `references/iam/service-account-inventory-and-ownership.md` |
-| Session Management | `session-management` | 2 | `2, 3` | 2026-04-14 | `references/iam/session-management.md` |
-| SSO, SAML & OIDC Hardening | `sso-saml-oidc-hardening` | 2 | `2, 3, 4` | 2026-04-18 | `references/iam/sso-saml-oidc-hardening.md` |
-| Temporary Access and Break-Glass Governance | `temporary-access-and-break-glass-governance` | 2 | `2, 3, 4` | 2026-04-19 | `references/iam/temporary-access-and-break-glass-governance.md` |
-| WebAuthn / FIDO2 Implementation Guide | `webauthn-fido2` | 2 | `2, 3` | 2026-04-14 | `references/iam/webauthn-fido2.md` |
-| Workload Identity Federation | `workload-identity-federation` | 2 | `3, 4` | 2026-04-18 | `references/iam/workload-identity-federation.md` |
+| Authorization: RBAC, ABAC, ReBAC & IDOR Prevention | `authorization-rbac` | 2 | `2, 3` | 2026-04-21 | `references/iam/authorization-rbac.md` |
+| Cloud & IAM Hardening | `cloud-iam-hardening` | 2 | `3, 4` | 2026-04-21 | `references/iam/cloud-iam-hardening.md` |
+| Identity Lifecycle: Joiner, Mover, Leaver | `identity-lifecycle-jml` | 2 | `2, 3, 4` | 2026-04-21 | `references/iam/identity-lifecycle-jml.md` |
+| Machine Identity and Service Accounts | `machine-identity-and-service-accounts` | 2 | `2, 3, 4` | 2026-04-21 | `references/iam/machine-identity-and-service-accounts.md` |
+| Service Account Inventory and Ownership | `service-account-inventory-and-ownership` | 2 | `2, 3, 4` | 2026-04-21 | `references/iam/service-account-inventory-and-ownership.md` |
+| Session Management | `session-management` | 2 | `2, 3` | 2026-04-21 | `references/iam/session-management.md` |
+| SSO, SAML & OIDC Hardening | `sso-saml-oidc-hardening` | 2 | `2, 3, 4` | 2026-04-21 | `references/iam/sso-saml-oidc-hardening.md` |
+| Temporary Access and Break-Glass Governance | `temporary-access-and-break-glass-governance` | 2 | `2, 3, 4` | 2026-04-21 | `references/iam/temporary-access-and-break-glass-governance.md` |
+| WebAuthn / FIDO2 Implementation Guide | `webauthn-fido2` | 2 | `2, 3` | 2026-04-21 | `references/iam/webauthn-fido2.md` |
+| Workload Identity Federation | `workload-identity-federation` | 2 | `3, 4` | 2026-04-21 | `references/iam/workload-identity-federation.md` |
 
 ## platform
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| Browser Isolation and Profile Segmentation | `browser-isolation-and-profile-segmentation` | 2 | `2, 3, 4` | 2026-04-18 | `references/platform/browser-isolation-and-profile-segmentation.md` |
-| Desktop Application Security | `desktop-app-security` | 2 | `2, 3` | 2026-04-19 | `references/platform/desktop-app-security.md` |
+| Browser Isolation and Profile Segmentation | `browser-isolation-and-profile-segmentation` | 2 | `2, 3, 4` | 2026-04-21 | `references/platform/browser-isolation-and-profile-segmentation.md` |
+| Desktop Application Security | `desktop-app-security` | 2 | `2, 3` | 2026-04-21 | `references/platform/desktop-app-security.md` |
 | Developer Workstation Secrets and Local AI | `developer-workstation-secrets-and-local-ai` | 2 | `2, 3, 4` | 2026-04-18 | `references/platform/developer-workstation-secrets-and-local-ai.md` |
 | Electron Update and Auto-Update Hardening | `electron-update-and-auto-update-hardening` | 2 | `2, 3, 4` | 2026-04-19 | `references/platform/electron-update-and-auto-update-hardening.md` |
 | Endpoint & Office Macro Security | `endpoint-vba-security` | 2 | `3` | 2026-04-03 | `references/platform/endpoint-vba-security.md` |
 | High-Trust Admin Workstations | `high-trust-admin-workstations` | 2 | `3, 4` | 2026-04-19 | `references/platform/high-trust-admin-workstations.md` |
 | MDM Baselines: Intune, Jamf & Kandji | `mdm-baselines-intune-jamf-kandji` | 2 | `2, 3, 4` | 2026-04-19 | `references/platform/mdm-baselines-intune-jamf-kandji.md` |
-| Memory Safety Hardening | `memory-safety-hardening` | 2 | `2, 3` | 2026-04-19 | `references/platform/memory-safety-hardening.md` |
+| Memory Safety Hardening | `memory-safety-hardening` | 2 | `2, 3` | 2026-04-21 | `references/platform/memory-safety-hardening.md` |
 | Mobile Application Security | `mobile-security` | 2 | `2, 3` | 2026-04-03 | `references/platform/mobile-security.md` |
-| Remote Browser Isolation & Disposable Browsing | `remote-browser-isolation-and-disposable-browsing` | 2 | `2, 3, 4` | 2026-04-19 | `references/platform/remote-browser-isolation-and-disposable-browsing.md` |
+| Remote Browser Isolation & Disposable Browsing | `remote-browser-isolation-and-disposable-browsing` | 2 | `2, 3, 4` | 2026-04-21 | `references/platform/remote-browser-isolation-and-disposable-browsing.md` |
 | SaaS Admin Browser Separation | `saas-admin-browser-separation` | 2 | `2, 3, 4` | 2026-04-19 | `references/platform/saas-admin-browser-separation.md` |
 
 ## ai
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| Agent Approval Patterns | `agent-approval-patterns` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/agent-approval-patterns.md` |
-| Agent Evals & Red Teaming | `agent-evals-red-teaming` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/agent-evals-red-teaming.md` |
-| Agent Memory and Context Retention | `agent-memory-and-context-retention` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/agent-memory-and-context-retention.md` |
-| AI Agent Incident Response Playbook | `ai-agent-incident-response` | 2 | `3, 4` | 2026-04-06 | `references/ai/ai-agent-incident-response.md` |
-| AI Coding CLI Hardening | `ai-cli-hardening` | 2 | `2, 3, 4` | 2026-04-06 | `references/ai/ai-cli-hardening.md` |
-| AI IDE and No-Code Security | `ai-ide-no-code-security` | 2 | `1, 2, 3` | 2026-04-14 | `references/ai/ai-ide-no-code-security.md` |
-| AI System Release Gates | `ai-system-release-gates` | 2 | `2, 3, 4` | 2026-04-19 | `references/ai/ai-system-release-gates.md` |
-| AI Tool Profiles | `ai-tool-profiles` | 1 | `1, 2, 3` | 2026-04-18 | `references/ai/ai-tool-profiles.md` |
-| Browser & Computer-Use Security | `browser-computer-use-security` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/browser-computer-use-security.md` |
-| Connector and Integration Governance | `connector-and-integration-governance` | 2 | `2, 3, 4` | 2026-04-19 | `references/ai/connector-and-integration-governance.md` |
-| Hostile Corpus Review | `hostile-corpus-review` | 2 | `2, 3` | 2026-04-14 | `references/ai/hostile-corpus-review.md` |
-| LLM & AI Agent Security | `llm-agent-security` | 3 | `2, 3, 4` | 2026-04-19 | `references/ai/llm-agent-security.md` |
-| MCP Security | `mcp-security` | 2 | `2, 3` | 2026-04-03 | `references/ai/mcp-security.md` |
-| Multi-Agent Boundaries and Delegation | `multi-agent-boundaries-and-delegation` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/multi-agent-boundaries-and-delegation.md` |
-| Prompt and Tool Evidence Handling | `prompt-and-tool-evidence-handling` | 2 | `3, 4` | 2026-04-18 | `references/ai/prompt-and-tool-evidence-handling.md` |
-| Quick Start: Security for AI Assisted Coding | `quick-start-ai-coding` | 1 | `1, 2` | 2026-04-03 | `references/ai/quick-start-ai-coding.md` |
-| RAG & Retrieval Security | `rag-retrieval-security` | 2 | `2, 3, 4` | 2026-04-18 | `references/ai/rag-retrieval-security.md` |
-| Vibecoder Security Traps | `vibecoder-traps` | 1 | `1, 2` | 2026-04-03 | `references/ai/vibecoder-traps.md` |
+| Agent Approval Patterns | `agent-approval-patterns` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/agent-approval-patterns.md` |
+| Agent Evals & Red Teaming | `agent-evals-red-teaming` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/agent-evals-red-teaming.md` |
+| Agent Memory and Context Retention | `agent-memory-and-context-retention` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/agent-memory-and-context-retention.md` |
+| AI Agent Incident Response Playbook | `ai-agent-incident-response` | 2 | `3, 4` | 2026-04-21 | `references/ai/ai-agent-incident-response.md` |
+| AI Coding CLI Hardening | `ai-cli-hardening` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/ai-cli-hardening.md` |
+| AI IDE and No-Code Security | `ai-ide-no-code-security` | 2 | `1, 2, 3` | 2026-04-21 | `references/ai/ai-ide-no-code-security.md` |
+| AI System Release Gates | `ai-system-release-gates` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/ai-system-release-gates.md` |
+| AI Tool Profiles | `ai-tool-profiles` | 1 | `1, 2, 3` | 2026-04-21 | `references/ai/ai-tool-profiles.md` |
+| Browser & Computer-Use Security | `browser-computer-use-security` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/browser-computer-use-security.md` |
+| Connector and Integration Governance | `connector-and-integration-governance` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/connector-and-integration-governance.md` |
+| Hostile Corpus Review | `hostile-corpus-review` | 2 | `2, 3` | 2026-04-21 | `references/ai/hostile-corpus-review.md` |
+| LLM & AI Agent Security | `llm-agent-security` | 3 | `2, 3, 4` | 2026-04-21 | `references/ai/llm-agent-security.md` |
+| MCP Security | `mcp-security` | 2 | `2, 3` | 2026-04-21 | `references/ai/mcp-security.md` |
+| Multi-Agent Boundaries and Delegation | `multi-agent-boundaries-and-delegation` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/multi-agent-boundaries-and-delegation.md` |
+| Prompt and Tool Evidence Handling | `prompt-and-tool-evidence-handling` | 2 | `3, 4` | 2026-04-21 | `references/ai/prompt-and-tool-evidence-handling.md` |
+| Quick Start: Security for AI Assisted Coding | `quick-start-ai-coding` | 1 | `1, 2` | 2026-04-21 | `references/ai/quick-start-ai-coding.md` |
+| RAG & Retrieval Security | `rag-retrieval-security` | 2 | `2, 3, 4` | 2026-04-21 | `references/ai/rag-retrieval-security.md` |
+| Vibecoder Security Traps | `vibecoder-traps` | 1 | `1, 2` | 2026-04-21 | `references/ai/vibecoder-traps.md` |
 
 ## privacy
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
 | AI Prompt Data Handling | `ai-prompt-data-handling` | 2 | `2, 3, 4` | 2026-04-18 | `references/privacy/ai-prompt-data-handling.md` |
-| Cross Border AI Data Transfer Review | `cross-border-ai-data-transfer-review` | 2 | `3, 4` | 2026-04-19 | `references/privacy/cross-border-ai-data-transfer-review.md` |
+| Cross Border AI Data Transfer Review | `cross-border-ai-data-transfer-review` | 2 | `3, 4` | 2026-04-21 | `references/privacy/cross-border-ai-data-transfer-review.md` |
 | Data Classification and Handling | `data-classification-and-handling` | 2 | `2, 3, 4` | 2026-04-18 | `references/privacy/data-classification-and-handling.md` |
 | DSAR Export & Erasure Runbook | `dsar-export-erasure-runbook` | 2 | `2, 3, 4` | 2026-04-18 | `references/privacy/dsar-export-erasure-runbook.md` |
-| GDPR Security Operations | `gdpr-security-ops` | 2 | `2, 3, 4` | 2026-04-14 | `references/privacy/gdpr-security-ops.md` |
+| GDPR Security Operations | `gdpr-security-ops` | 2 | `2, 3, 4` | 2026-04-21 | `references/privacy/gdpr-security-ops.md` |
 | Privacy and Data Minimization | `privacy-data-minimization` | 2 | `2, 3` | 2026-04-03 | `references/privacy/privacy-data-minimization.md` |
 | Privacy Review for AI Vendors | `privacy-review-for-ai-vendors` | 2 | `2, 3, 4` | 2026-04-19 | `references/privacy/privacy-review-for-ai-vendors.md` |
 | Privacy Safe Analytics and Product Instrumentation | `privacy-safe-analytics-and-product-instrumentation` | 2 | `2, 3, 4` | 2026-04-18 | `references/privacy/privacy-safe-analytics-and-product-instrumentation.md` |
@@ -139,31 +139,31 @@
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
-| Defensive Security Baseline | `defensive-security-baseline` | 2 | `1, 2, 3` | 2026-04-14 | `references/ops/defensive-security-baseline.md` |
-| Detection Engineering | `detection-engineering` | 3 | `3, 4` | 2026-04-19 | `references/ops/detection-engineering.md` |
+| Defensive Security Baseline | `defensive-security-baseline` | 2 | `1, 2, 3` | 2026-04-21 | `references/ops/defensive-security-baseline.md` |
+| Detection Engineering | `detection-engineering` | 3 | `3, 4` | 2026-04-21 | `references/ops/detection-engineering.md` |
 | Detection Translations | `detection-translations` | 2 | `3, 4` | 2026-04-18 | `references/ops/detection-translations.md` |
-| Incident Playbooks | `incident-playbooks` | 2 | `3, 4` | 2026-04-03 | `references/ops/incident-playbooks.md` |
+| Incident Playbooks | `incident-playbooks` | 2 | `3, 4` | 2026-04-21 | `references/ops/incident-playbooks.md` |
 | Pre Push Security Checklist | `pre-push-checklist` | 1 | `1, 2, 3` | 2026-04-03 | `references/ops/pre-push-checklist.md` |
 | Secret Leak Prevention | `secret-leak-prevention` | 2 | `1, 2` | 2026-04-03 | `references/ops/secret-leak-prevention.md` |
 | Secure Workstation Builds | `secure-workstation-builds` | 2 | `2, 3, 4` | 2026-04-18 | `references/ops/secure-workstation-builds.md` |
 | Security Audit Levels | `security-audit-levels` | 2 | `1, 2, 3, 4` | 2026-04-03 | `references/ops/security-audit-levels.md` |
-| Security Backlog Triage and Prioritization | `security-backlog-triage-and-prioritization` | 2 | `2, 3, 4` | 2026-04-19 | `references/ops/security-backlog-triage-and-prioritization.md` |
-| Security Improvement Plan | `security-improvements` | 2 | `2, 3, 4` | 2026-04-03 | `references/ops/security-improvements.md` |
-| Security Metrics & KPIs | `security-metrics-kpis` | 2 | `2, 3, 4` | 2026-04-18 | `references/ops/security-metrics-kpis.md` |
-| Social Engineering & Physical Security | `social-engineering-physical` | 2 | `3, 4` | 2026-04-03 | `references/ops/social-engineering-physical.md` |
-| Vulnerability Management Process | `vuln-management` | 2 | `3` | 2026-04-03 | `references/ops/vuln-management.md` |
+| Security Backlog Triage and Prioritization | `security-backlog-triage-and-prioritization` | 2 | `2, 3, 4` | 2026-04-21 | `references/ops/security-backlog-triage-and-prioritization.md` |
+| Security Improvement Plan | `security-improvements` | 2 | `2, 3, 4` | 2026-04-21 | `references/ops/security-improvements.md` |
+| Security Metrics & KPIs | `security-metrics-kpis` | 2 | `2, 3, 4` | 2026-04-21 | `references/ops/security-metrics-kpis.md` |
+| Social Engineering & Physical Security | `social-engineering-physical` | 2 | `3, 4` | 2026-04-21 | `references/ops/social-engineering-physical.md` |
+| Vulnerability Management Process | `vuln-management` | 2 | `3` | 2026-04-21 | `references/ops/vuln-management.md` |
 
 ## compliance
 
 | Title | Slug | Depth | Audit levels | Reviewed | Path |
 |---|---|---:|---|---|---|
 | Audit Sample Requests & Evidence Response Patterns | `audit-sample-request-response` | 3 | `3, 4` | 2026-04-19 | `references/compliance/audit-sample-request-response.md` |
-| Compliance Mapping | `compliance-mapping` | 3 | `3, 4` | 2026-04-18 | `references/compliance/compliance-mapping.md` |
+| Compliance Mapping | `compliance-mapping` | 3 | `3, 4` | 2026-04-21 | `references/compliance/compliance-mapping.md` |
 | Control Ownership and Review Cadence | `control-ownership-and-review-cadence` | 2 | `2, 3, 4` | 2026-04-19 | `references/compliance/control-ownership-and-review-cadence.md` |
 | Coverage Matrix | `coverage-matrix` | 2 | `3, 4` | 2026-04-18 | `references/compliance/coverage-matrix.md` |
 | Customer Security Questionnaire Response Pack | `customer-security-questionnaire-response-pack` | 3 | `2, 3, 4` | 2026-04-19 | `references/compliance/customer-security-questionnaire-response-pack.md` |
-| CWE / OWASP / ASVS Mapping | `cwe-owasp-mapping` | 2 | `2, 3` | 2026-04-03 | `references/compliance/cwe-owasp-mapping.md` |
+| CWE / OWASP / ASVS Mapping | `cwe-owasp-mapping` | 2 | `2, 3` | 2026-04-21 | `references/compliance/cwe-owasp-mapping.md` |
 | Evidence Redaction and Sharing Rules | `evidence-redaction-and-sharing-rules` | 3 | `2, 3, 4` | 2026-04-19 | `references/compliance/evidence-redaction-and-sharing-rules.md` |
-| NIS2 & DORA Operational Evidence Mapping | `nis2-dora-operational-evidence` | 3 | `3, 4` | 2026-04-18 | `references/compliance/nis2-dora-operational-evidence.md` |
+| NIS2 & DORA Operational Evidence Mapping | `nis2-dora-operational-evidence` | 3 | `3, 4` | 2026-04-21 | `references/compliance/nis2-dora-operational-evidence.md` |
 | Regulator Notification Decision Matrix | `regulator-notification-decision-matrix` | 2 | `3, 4` | 2026-04-19 | `references/compliance/regulator-notification-decision-matrix.md` |
 | SOC 2 & ISO 27001 Evidence Packs | `soc2-iso27001-evidence-packs` | 3 | `3, 4` | 2026-04-18 | `references/compliance/soc2-iso27001-evidence-packs.md` |

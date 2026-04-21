@@ -9,7 +9,7 @@ sources:
   - "OWASP SQL Injection Prevention Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
   - "PostgreSQL documentation — https://www.postgresql.org/docs/"
   - "SQLAlchemy documentation — https://docs.sqlalchemy.org"
-  - "PCI DSS 4.0.1 — https://docs-prv.pcisecuritystandards.org (2024-06, requires keyed cryptographic hashes for PAN)"
+  - "PCI DSS 4.0.1 — https://www.pcisecuritystandards.org/document_library/ (2024-06, requires keyed cryptographic hashes for PAN)"
 triggers_strong: ["sql injection", "parameterized queries", "row-level security", "database security"]
 triggers_weak: ["db review", "storage security"]
 related: ["api-security", "language-patterns"]

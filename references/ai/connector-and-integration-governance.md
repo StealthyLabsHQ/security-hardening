@@ -6,7 +6,7 @@ depth: 2
 audit_level: [2, 3, 4]
 last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "NIST AI RMF 1.0 — https://doi.org/10.6028/NIST.AI.100-1 (2023-01)"
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
   - "MCP and tool-integration security guidance — https://modelcontextprotocol.io"
   - "Enterprise SaaS integration governance practices"

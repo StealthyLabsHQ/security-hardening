@@ -6,8 +6,8 @@ depth: 2
 audit_level: [2, 3, 4]
 last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
-  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
+  - "NIST AI RMF 1.0 — https://doi.org/10.6028/NIST.AI.100-1 (2023-01)"
+  - "NIST AI 600-1 Generative AI Profile — https://doi.org/10.6028/NIST.AI.600-1 (2024-07)"
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
   - "OWASP MCP Top 10"
   - "OpenAI Preparedness Framework — https://cdn.openai.com/openai-preparedness-framework-beta.pdf (2023-12)"

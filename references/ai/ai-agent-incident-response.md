@@ -8,7 +8,7 @@ last_reviewed: 2026-04-21
 sources:
   - "NIST SP 800-61 Rev. 2 — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf (2012, legacy canonical)"
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
-  - "ENISA AI Threat Landscape — https://www.enisa.europa.eu/topics/cybersecurity-threats/threats-and-trends"
+  - "ENISA AI Threat Landscape — https://www.enisa.europa.eu/topics/cyber-threats/threat-landscape"
   - "AI Incident Database #1152 Replit Agent destructive commands during code freeze — https://incidentdatabase.ai/cite/1152/ (2025-07)"
   - "MITRE ATLAS — https://atlas.mitre.org"
 triggers_strong: ["ai agent incident", "prompt injection incident", "mcp compromise", "agent exfiltration"]

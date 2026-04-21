@@ -8,7 +8,7 @@ last_reviewed: 2026-04-21
 sources:
   - "Model Context Protocol specification — https://modelcontextprotocol.io"
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
-  - "Anthropic MCP docs — https://www.anthropic.com/mcp"
+  - "Anthropic MCP docs — https://docs.anthropic.com/en/docs/mcp"
   - "CVE-2025-62353 Windsurf/Cursor path traversal via indirect PI (MCP) — https://nvd.nist.gov/vuln/detail/CVE-2025-62353 (2025-10, CVSS 9.8, HiddenLayer)"
   - "CVE-2025-59536 Claude Code startup trust dialog code injection — https://nvd.nist.gov/vuln/detail/CVE-2025-59536 (2025-10, CVSS 8.8, fix ≥1.0.111)"
 triggers_strong: ["mcp security", "tool abuse", "indirect prompt injection", "tool allowlist"]
