@@ -4,13 +4,14 @@ slug: service-account-inventory-and-ownership
 category: iam
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-53 CM-8 and AC-2 inventory and account-management guidance"
-  - "AWS IAM service-account and role governance guidance"
-  - "Google Cloud service-account security best practices"
-  - "Microsoft Entra workload identity and application-account guidance"
-  - "SPIFFE / SPIRE workload identity inventory concepts"
+  - "NIST SP 800-53 Rev.5 (CM-8, AC-2) — https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+  - "AWS IAM service-account and role governance guidance — https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+  - "Google Cloud service-account security best practices — https://cloud.google.com/iam/docs/best-practices-service-accounts"
+  - "Microsoft Entra workload identity guidance — https://learn.microsoft.com/entra/workload-id/"
+  - "SPIFFE / SPIRE inventory concepts — https://spiffe.io"
+  - "CIS Controls v8.1 (controls 5 & 6) — https://www.cisecurity.org/controls/v8-1 (adds Govern function aligned with NIST CSF 2.0)"
 triggers_strong: ["service account inventory", "orphaned service account", "service account owner", "non-human identity inventory", "service principal ownership"]
 triggers_weak: ["service account review", "application account", "machine identity inventory"]
 related: ["machine-identity-and-service-accounts", "workload-identity-federation", "identity-lifecycle-jml", "control-ownership-and-review-cadence"]

@@ -4,12 +4,13 @@ slug: security-metrics-kpis
 category: ops
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIST Cybersecurity Framework 2.0"
-  - "NIST SP 800-55"
-  - "OpenSSF Scorecard"
-  - "DORA metrics"
+  - "NIST Cybersecurity Framework 2.0 — https://www.nist.gov/cyberframework (2024-02)"
+  - "NIST SP 800-55 Rev.2 — https://csrc.nist.gov/pubs/sp/800/55/r2/final"
+  - "OpenSSF Scorecard — https://scorecard.dev"
+  - "DORA metrics — https://dora.dev"
+  - "FIRST EPSS — https://www.first.org/epss/ (coverage/efficiency of exploited vulnerabilities)"
 triggers_strong: ["security metrics", "security kpis", "security dashboard", "sla metrics", "security program measurement"]
 triggers_weak: ["metrics", "kpi", "security reporting"]
 related: ["vuln-management", "security-improvements", "detection-engineering"]

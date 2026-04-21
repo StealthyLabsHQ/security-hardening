@@ -4,11 +4,12 @@ slug: quick-start-ai-coding
 category: ai
 depth: 1
 audit_level: [1, 2]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 2021"
-  - "OWASP Top 10 for LLM Applications"
-  - "Gitleaks"
+  - "OWASP Top 10 2021 — https://owasp.org/Top10/"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
+  - "Gitleaks — https://github.com/gitleaks/gitleaks"
+  - "CVE-2025-54136 Cursor MCPoison persistent RCE — https://nvd.nist.gov/vuln/detail/CVE-2025-54136 (2025-08, Check Point)"
 triggers_strong: ["ai assisted coding security", "ship ai code safely", "before you push ai code", "quick start security"]
 triggers_weak: ["ai coding", "security quick start"]
 related: ["vibecoder-traps", "pre-push-checklist"]

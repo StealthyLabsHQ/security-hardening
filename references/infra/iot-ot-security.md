@@ -4,11 +4,12 @@ slug: iot-ot-security
 category: infra
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-82 Rev. 3"
-  - "CISA ICS advisories"
-  - "MITRE ATT&CK for ICS"
+  - "NIST SP 800-82 Rev.3 Final — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-82r3.pdf (2023-09)"
+  - "CISA ICS advisories — https://www.cisa.gov/topics/industrial-control-systems"
+  - "MITRE ATT&CK for ICS — https://attack.mitre.org/matrices/ics/"
+  - "IEC 62443 — https://www.iec.ch/cyber-security"
 triggers_strong: ["ot security", "industrial network", "purdue model", "ics"]
 triggers_weak: ["iot security", "operational technology"]
 related: ["detection-engineering", "incident-playbooks"]

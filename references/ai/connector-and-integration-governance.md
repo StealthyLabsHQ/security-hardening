@@ -4,13 +4,15 @@ slug: connector-and-integration-governance
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST AI RMF"
-  - "OWASP Top 10 for LLM Applications"
-  - "MCP and tool-integration security guidance"
+  - "NIST AI RMF 1.0 — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-1.pdf (2023-01)"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
+  - "MCP and tool-integration security guidance — https://modelcontextprotocol.io"
   - "Enterprise SaaS integration governance practices"
   - "Common admin-control and third-party connector review patterns"
+  - "CVE-2024-8309 LangChain GraphCypherQAChain SQL injection via PI — https://nvd.nist.gov/vuln/detail/CVE-2024-8309 (2024-10, CVSS 9.8)"
+  - "Red Hat CVE-2024-8309 mitigation advisory — https://access.redhat.com/security/cve/cve-2024-8309"
 triggers_strong: ["ai connector governance", "integration governance", "llm connector review", "agent connector review", "tool integration governance"]
 triggers_weak: ["connector review", "integration review", "ai integration"]
 related: ["mcp-security", "ai-tool-profiles", "multi-agent-boundaries-and-delegation", "agent-approval-patterns", "privacy-review-for-ai-vendors"]

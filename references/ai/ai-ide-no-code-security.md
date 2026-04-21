@@ -4,11 +4,15 @@ slug: ai-ide-no-code-security
 category: ai
 depth: 2
 audit_level: [1, 2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
   - "Cursor documentation"
-  - "Anthropic Claude Code settings"
+  - "Anthropic Claude Code settings — https://docs.anthropic.com/en/docs/claude-code"
   - "OpenAI Codex CLI"
+  - "Model Context Protocol specification — https://modelcontextprotocol.io"
+  - "CVE-2025-59944 Cursor case-sensitive bypass on .cursor/mcp.json — https://nvd.nist.gov/vuln/detail/CVE-2025-59944 (2025-10, CVSS 9.8, CWE-178)"
+  - "CVE-2025-54136 Cursor MCPoison persistent RCE via trusted MCP config — https://nvd.nist.gov/vuln/detail/CVE-2025-54136 (2025-08, CVSS 8.8, Check Point)"
+  - "CVE-2025-54135 Cursor CurXecute mcp.json creation RCE — https://nvd.nist.gov/vuln/detail/CVE-2025-54135 (2025-08, CVSS 9.8, Aim Labs)"
 triggers_strong: ["cursor security", "no-code security", "browser builder security", "connector abuse"]
 triggers_weak: ["ai ide", "low-code"]
 related: ["ai-cli-hardening", "ai-tool-profiles"]

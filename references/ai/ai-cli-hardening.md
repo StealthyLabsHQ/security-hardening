@@ -4,11 +4,14 @@ slug: ai-cli-hardening
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-06
+last_reviewed: 2026-04-21
 sources:
-  - "Anthropic Claude Code settings"
+  - "Anthropic Claude Code settings — https://docs.anthropic.com/en/docs/claude-code"
   - "OpenAI Codex CLI"
   - "Gemini CLI configuration"
+  - "MITRE ATLAS — https://atlas.mitre.org"
+  - "CVE-2024-48919 Cursor Cmd-K terminal prompt injection — https://nvd.nist.gov/vuln/detail/CVE-2024-48919 (2024-09, CVSS 4.0 = 9.2)"
+  - "CVE-2025-59536 Claude Code startup trust dialog code injection — https://nvd.nist.gov/vuln/detail/CVE-2025-59536 (2025-10, fix ≥1.0.111)"
 triggers_strong: ["claude code hardening", "codex cli security", "gemini cli security", "agent policy"]
 triggers_weak: ["ai cli", "agent hardening"]
 related: ["ai-tool-profiles", "llm-agent-security"]

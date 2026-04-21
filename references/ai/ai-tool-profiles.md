@@ -4,13 +4,14 @@ slug: ai-tool-profiles
 category: ai
 depth: 1
 audit_level: [1, 2, 3]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "Anthropic Claude Code settings"
+  - "Anthropic Claude Code settings — https://docs.anthropic.com/en/docs/claude-code"
   - "OpenAI Codex CLI"
   - "Gemini CLI configuration"
   - "Cursor documentation"
   - "Repository template bundles"
+  - "CVE-2024-46946 LangChain LLMSymbolicMathChain sympy eval RCE — https://nvd.nist.gov/vuln/detail/CVE-2024-46946 (2024-09, CVSS 9.8, CWE-20)"
 triggers_strong: ["claude code profile", "codex profile", "gemini settings", "cursor rules", "bundle preset", "prod-sensitive preset"]
 triggers_weak: ["tool profile", "ai tool", "bundle selection"]
 related: ["ai-cli-hardening", "ai-ide-no-code-security"]

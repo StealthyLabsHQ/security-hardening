@@ -4,12 +4,12 @@ slug: security-backlog-triage-and-prioritization
 category: ops
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-40"
-  - "CISA Known Exploited Vulnerabilities concepts"
-  - "OWASP risk rating ideas"
-  - "Product security prioritization practices"
+  - "NIST SP 800-40 Rev.4 — https://csrc.nist.gov/pubs/sp/800/40/r4/final"
+  - "CISA Known Exploited Vulnerabilities catalog — https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  - "OWASP risk rating — https://owasp.org/www-community/OWASP_Risk_Rating_Methodology"
+  - "FIRST EPSS (Exploit Prediction Scoring System) — https://www.first.org/epss/ (complement to CVSS: empirical probability of near-term exploitation)"
   - "Vulnerability management and engineering-triage workflows"
 triggers_strong: ["security backlog triage", "security prioritization", "security backlog", "fix prioritization", "finding prioritization"]
 triggers_weak: ["security backlog", "triage", "prioritization"]

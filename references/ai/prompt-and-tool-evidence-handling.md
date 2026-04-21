@@ -4,10 +4,11 @@ slug: prompt-and-tool-evidence-handling
 category: ai
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-61 Rev. 2"
-  - "OWASP Top 10 for LLM Applications"
+  - "NIST SP 800-61 Rev. 2 — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10"
+  - "NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)"
   - "Digital forensics chain-of-custody practices"
   - "Provider audit logging guidance for AI systems"
 triggers_strong: ["prompt evidence", "tool evidence", "agent forensics", "ai evidence handling", "prompt trace review"]

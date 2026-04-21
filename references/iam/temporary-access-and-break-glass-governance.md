@@ -4,12 +4,14 @@ slug: temporary-access-and-break-glass-governance
 category: iam
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-53 AC-2, AC-6, and IR guidance on privileged and emergency access"
-  - "Microsoft Entra PIM and emergency access account guidance"
-  - "AWS emergency access and privileged identity governance guidance"
-  - "CISA privileged access and account security recommendations"
+  - "NIST SP 800-53 Rev.5 (AC-2, AC-6, IR) — https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+  - "NIST SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
+  - "Microsoft Entra PIM and emergency access — https://learn.microsoft.com/entra/id-governance/privileged-identity-management/"
+  - "AWS emergency access and privileged identity governance — https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/"
+  - "CISA privileged access recommendations — https://www.cisa.gov/topics/cybersecurity-best-practices"
+  - "Netflix BLESS — https://github.com/Netflix/bless"
 triggers_strong: ["break glass account", "temporary access", "emergency admin access", "just in time access", "privileged elevation"]
 triggers_weak: ["temporary admin", "emergency access", "jit access"]
 related: ["identity-lifecycle-jml", "sso-saml-oidc-hardening", "service-account-inventory-and-ownership", "high-trust-admin-workstations", "incident-playbooks"]

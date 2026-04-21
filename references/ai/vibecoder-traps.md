@@ -4,10 +4,11 @@ slug: vibecoder-traps
 category: ai
 depth: 1
 audit_level: [1, 2]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 2021"
-  - "NIST SP 800-63B"
+  - "OWASP Top 10 2021 — https://owasp.org/Top10/"
+  - "NIST SP 800-63B / SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
+  - "CVE-2025-54135 Cursor CurXecute RCE — https://nvd.nist.gov/vuln/detail/CVE-2025-54135 (2025-08, CVSS 9.8, Aim Labs)"
 triggers_strong: ["vibecoding traps", "unsafe generated code", "ai code mistakes", "llm code review"]
 triggers_weak: ["vibecoding", "ai coding"]
 related: ["quick-start-ai-coding", "language-patterns"]

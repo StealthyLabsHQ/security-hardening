@@ -4,11 +4,13 @@ slug: core-invariants
 category: ops
 depth: 1
 audit_level: [1, 2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Application Security Verification Standard"
-  - "OWASP Cheat Sheet Series"
-  - "NIST SP 800-63B"
+  - "OWASP Application Security Verification Standard 5.0 — https://owasp.org/www-project-application-security-verification-standard/"
+  - "OWASP Cheat Sheet Series — https://cheatsheetseries.owasp.org"
+  - "NIST SP 800-63B (legacy) / SP 800-63-4 Final — https://pages.nist.gov/800-63-4/ (2025-07)"
+  - "CWE Top 25 — https://cwe.mitre.org/top25/"
+  - "PCI DSS 4.0.1 — https://docs-prv.pcisecuritystandards.org (2024-06, PCI DSS 3.2.1/4.0 retired)"
 triggers_strong: ["security baseline", "core invariants", "always apply", "minimum security bar"]
 triggers_weak: ["security defaults", "baseline controls"]
 related: ["security-audit-levels", "defensive-security-baseline", "security-improvements"]

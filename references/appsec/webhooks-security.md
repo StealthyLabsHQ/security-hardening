@@ -4,11 +4,13 @@ slug: webhooks-security
 category: appsec
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "Stripe webhook signatures"
-  - "GitHub webhooks documentation"
+  - "Stripe webhook signatures — https://stripe.com/docs/webhooks#verify-official-libraries"
+  - "GitHub webhooks documentation — https://docs.github.com/en/webhooks"
   - "OWASP Webhook Security guidance"
+  - "IETF RFC 8292 VAPID — https://datatracker.ietf.org/doc/html/rfc8292"
+  - "CVE-2024-27564 SSRF in third-party pictureproxy.php — https://nvd.nist.gov/vuln/detail/CVE-2024-27564 (2024-03, illustrates why webhook/proxy endpoints require strict egress filtering and URL allowlists)"
 triggers_strong: ["webhook signature", "replay protection", "stripe signature", "timing safe compare"]
 triggers_weak: ["webhooks", "callback security"]
 related: ["api-security", "applied-cryptography"]

@@ -4,11 +4,11 @@ slug: defensive-security-baseline
 category: ops
 depth: 2
 audit_level: [1, 2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "CISA Cyber Essentials"
-  - "NIST Cybersecurity Framework 2.0"
-  - "CIS Critical Security Controls"
+  - "CISA Cyber Essentials — https://www.cisa.gov/cyber-essentials"
+  - "NIST Cybersecurity Framework 2.0 — https://www.nist.gov/cyberframework (2024-02)"
+  - "CIS Controls v8.1 — https://www.cisecurity.org/controls/v8-1 (adds Govern function)"
 triggers_strong: ["security baseline", "founder security", "workstation hardening", "small team security"]
 triggers_weak: ["baseline hardening", "security checklist"]
 related: ["security-improvements", "social-engineering-physical"]
