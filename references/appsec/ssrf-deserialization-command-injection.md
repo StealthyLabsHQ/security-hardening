@@ -4,14 +4,15 @@ slug: ssrf-deserialization-command-injection
 category: appsec
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP SSRF Prevention Cheat Sheet"
-  - "OWASP Deserialization Cheat Sheet"
-  - "OWASP API Security Top 10 2023"
-  - "CWE-78: OS Command Injection"
-  - "CWE-502: Deserialization of Untrusted Data"
-  - "CWE-918: Server-Side Request Forgery"
+  - "OWASP SSRF Prevention Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+  - "OWASP Deserialization Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html"
+  - "OWASP API Security Top 10 2023 — https://owasp.org/API-Security/editions/2023/en/0x00-header/"
+  - "CWE-78: OS Command Injection — https://cwe.mitre.org/data/definitions/78.html"
+  - "CWE-502: Deserialization of Untrusted Data — https://cwe.mitre.org/data/definitions/502.html"
+  - "CWE-918: Server-Side Request Forgery — https://cwe.mitre.org/data/definitions/918.html"
+  - "RFC 8725 JWT BCP — https://datatracker.ietf.org/doc/rfc8725/ (2020-02)"
 triggers_strong: ["ssrf", "unsafe deserialization", "command injection", "shell true", "pickle loads", "yaml load"]
 triggers_weak: ["remote fetch review", "parser risk", "process execution"]
 related: ["api-security", "language-patterns", "security-diff-review", "cloud-iam-hardening"]

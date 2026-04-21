@@ -4,10 +4,11 @@ slug: graphql-security
 category: appsec
 depth: 3
 audit_level: [2, 3]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP GraphQL Cheat Sheet"
-  - "OWASP API Security Top 10 2023"
+  - "OWASP GraphQL Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/GraphQL_Cheat_Sheet.html"
+  - "OWASP API Security Top 10 2023 — https://owasp.org/API-Security/editions/2023/en/0x00-header/"
+  - "GraphQL Spec — https://spec.graphql.org (October 2021)"
 triggers_strong: ["graphql depth limit", "persisted queries", "introspection", "resolver authz"]
 triggers_weak: ["graphql review", "api graph"]
 related: ["api-security", "authorization-rbac"]

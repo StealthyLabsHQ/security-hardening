@@ -4,10 +4,11 @@ slug: webauthn-fido2
 category: iam
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-14
+last_reviewed: 2026-04-21
 sources:
-  - "W3C Web Authentication Level 3"
-  - "FIDO Alliance Passkeys guidance"
+  - "W3C Web Authentication Level 3 — https://www.w3.org/TR/webauthn-3/"
+  - "FIDO Alliance Passkeys guidance — https://fidoalliance.org/passkeys/"
+  - "FIDO2 CTAP 2.2 — https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html"
 triggers_strong: ["webauthn", "fido2", "passkeys", "phishing resistant mfa"]
 triggers_weak: ["strong authentication", "passkey rollout"]
 related: ["session-management", "authorization-rbac"]

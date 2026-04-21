@@ -4,11 +4,12 @@ slug: container-k8s-hardening
 category: infra
 depth: 2
 audit_level: [3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "CIS Kubernetes Benchmark"
-  - "NSA and CISA Kubernetes Hardening Guidance"
-  - "OWASP Docker Security Cheat Sheet"
+  - "CIS Kubernetes Benchmark — https://www.cisecurity.org/benchmark/kubernetes"
+  - "NSA / CISA Kubernetes Hardening Guide v1.2 — https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF"
+  - "OWASP Docker Security Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html"
+  - "Kubernetes Pod Security Standards — https://kubernetes.io/docs/concepts/security/pod-security-standards/"
 triggers_strong: ["kubernetes hardening", "docker security", "pod security", "network policy"]
 triggers_weak: ["container security", "k8s review"]
 related: ["supply-chain-security", "cloud-iam-hardening"]

@@ -4,10 +4,12 @@ slug: incident-playbooks
 category: ops
 depth: 2
 audit_level: [3, 4]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-61 Rev. 2"
-  - "CISA incident response guidance"
+  - "NIST SP 800-61 Rev. 2 — https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-61r2.pdf"
+  - "CISA incident response guidance — https://www.cisa.gov/topics/cybersecurity-best-practices/cyber-threats-and-advisories"
+  - "Verizon DBIR (annual) — https://www.verizon.com/business/resources/reports/dbir/"
+  - "Mandiant M-Trends (annual) — https://www.mandiant.com/m-trends"
 triggers_strong: ["incident playbook", "compromised account", "jwt secret leak", "bucket exposure"]
 triggers_weak: ["incident response", "recovery"]
 related: ["ai-agent-incident-response", "secret-leak-prevention"]

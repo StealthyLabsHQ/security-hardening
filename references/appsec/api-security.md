@@ -4,10 +4,10 @@ slug: api-security
 category: appsec
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP API Security Top 10 2023"
-  - "OWASP Application Security Verification Standard"
+  - "OWASP API Security Top 10 2023 — https://owasp.org/API-Security/editions/2023/en/0x00-header/"
+  - "OWASP ASVS 5.0 — https://owasp.org/www-project-application-security-verification-standard/"
 triggers_strong: ["api security", "bola", "bfla", "api authz"]
 triggers_weak: ["rest api review", "api hardening"]
 related: ["authorization-rbac", "graphql-security"]

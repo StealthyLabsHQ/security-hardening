@@ -4,11 +4,13 @@ slug: detection-engineering
 category: ops
 depth: 3
 audit_level: [3, 4]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "Sigma specification"
-  - "MITRE ATT&CK"
-  - "OWASP API Security Top 10 2023"
+  - "Sigma specification — https://sigmahq.io"
+  - "MITRE ATT&CK (Enterprise/Cloud/Containers) — https://attack.mitre.org"
+  - "OWASP API Security Top 10 2023 — https://owasp.org/API-Security/editions/2023/en/0x00-header/"
+  - "Falco — https://falco.org"
+  - "Elastic detection rules — https://github.com/elastic/detection-rules"
 triggers_strong: ["sigma rules", "detection engineering", "siem correlation", "attack detection"]
 triggers_weak: ["detections", "alerting"]
 related: ["incident-playbooks", "threat-modeling", "detection-translations"]

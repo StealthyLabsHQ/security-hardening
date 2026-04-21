@@ -4,15 +4,14 @@ slug: rag-retrieval-security
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "OWASP Top 10 for Large Language Model Applications"
-  - "OWASP LLM08:2025 Vector and Embedding Weaknesses"
-  - "NIST retrieval-augmented generation glossary"
+  - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (LLM04 Data/Model Poisoning, LLM08 Vector/Embedding Weaknesses)"
+  - "NIST retrieval-augmented generation glossary — https://www.nist.gov/trustworthy-and-responsible-ai"
   - "NIST IR 8579"
-  - "Google SAIF Risk Assessment"
-  - "OpenAI Retrieval guide"
-  - "OpenAI File search guide"
+  - "Hines et al. — Spotlighting (Delimiting, Datamarking, Encoding) — https://arxiv.org/abs/2403.14720 (2024-03)"
+  - "Zou et al. — GCG universal adversarial suffixes — https://arxiv.org/abs/2307.15043 (2023-07)"
+  - "Carlini et al. — Extracting Training Data from LLMs — https://www.usenix.org/conference/usenixsecurity21/presentation/carlini-extracting (USENIX 2021)"
 triggers_strong: ["rag security", "retrieval security", "vector store", "embedding leakage", "document poisoning"]
 triggers_weak: ["retrieval", "knowledge base", "semantic search"]
 related: ["llm-agent-security", "hostile-corpus-review", "agent-evals-red-teaming", "privacy-data-minimization"]

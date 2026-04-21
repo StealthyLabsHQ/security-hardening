@@ -4,12 +4,14 @@ slug: vuln-management
 category: ops
 depth: 2
 audit_level: [3]
-last_reviewed: 2026-04-03
+last_reviewed: 2026-04-21
 sources:
-  - "NIST SP 800-40"
-  - "CVSS v3.1 Specification"
-  - "OWASP Vulnerability Disclosure Cheat Sheet"
-  - "NVD"
+  - "NIST SP 800-40 Rev.4 — https://csrc.nist.gov/pubs/sp/800/40/r4/final"
+  - "CVSS v3.1 Specification — https://www.first.org/cvss/specification-document"
+  - "OWASP Vulnerability Disclosure Cheat Sheet — https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html"
+  - "NVD — https://nvd.nist.gov"
+  - "CISA KEV catalog — https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+  - "Falco — https://falco.org"
 triggers_strong: ["vulnerability management", "remediation sla", "triage", "risk acceptance"]
 triggers_weak: ["vulnerability process", "finding lifecycle"]
 related: ["security-improvements", "detection-engineering"]

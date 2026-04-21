@@ -4,15 +4,17 @@ slug: compliance-mapping
 category: compliance
 depth: 3
 audit_level: [3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "SOC 2 Trust Services Criteria"
-  - "ISO/IEC 27001:2022"
-  - "PCI DSS v4.0"
-  - "HIPAA Security Rule"
-  - "NIS2"
-  - "DORA"
-  - "GDPR"
+  - "SOC 2 Trust Services Criteria (AICPA 2017 rev 2022) — https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-2"
+  - "ISO/IEC 27001:2022 — https://www.iso.org/standard/27001"
+  - "ISO/IEC 27002:2022 — https://www.iso.org/standard/75652.html"
+  - "PCI DSS 4.0.1 — https://www.pcisecuritystandards.org/document_library/"
+  - "HIPAA Security Rule — https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/"
+  - "NIS2 Directive (EU 2022/2555) — https://eur-lex.europa.eu/eli/dir/2022/2555/oj"
+  - "DORA Regulation (EU 2022/2554) — https://eur-lex.europa.eu/eli/reg/2022/2554/oj"
+  - "GDPR (EU 2016/679) — https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+  - "EU AI Act (Reg 2024/1689) — https://artificialintelligenceact.eu"
 triggers_strong: ["soc 2 mapping", "iso 27001 mapping", "gdpr crosswalk", "pci mapping"]
 triggers_weak: ["compliance mapping", "audit evidence"]
 related: ["coverage-matrix", "security-audit-levels"]

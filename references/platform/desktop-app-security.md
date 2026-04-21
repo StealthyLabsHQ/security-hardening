@@ -4,10 +4,12 @@ slug: desktop-app-security
 category: platform
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "Electron Security Checklist"
-  - "Microsoft Secure Development Lifecycle"
+  - "Electron Security Checklist — https://www.electronjs.org/docs/latest/tutorial/security"
+  - "Microsoft Secure Development Lifecycle — https://www.microsoft.com/securityengineering/sdl"
+  - "Apple Platform Security Guide — https://support.apple.com/guide/security/welcome/web"
+  - "OWASP MASVS — https://mas.owasp.org/MASVS/"
 triggers_strong: ["electron security", "desktop app security", "dll hijacking", "csharp security"]
 triggers_weak: ["desktop security", "native app review", "memory corruption review"]
 related: ["endpoint-vba-security", "mobile-security", "memory-safety-hardening"]

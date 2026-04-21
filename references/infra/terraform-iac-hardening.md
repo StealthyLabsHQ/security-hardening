@@ -4,12 +4,14 @@ slug: terraform-iac-hardening
 category: infra
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-18
+last_reviewed: 2026-04-21
 sources:
-  - "Terraform documentation"
-  - "OpenTofu documentation"
-  - "CIS Benchmarks"
-  - "NIST SP 800-53"
+  - "Terraform documentation — https://developer.hashicorp.com/terraform/docs"
+  - "OpenTofu documentation — https://opentofu.org/docs/"
+  - "CIS Benchmarks — https://www.cisecurity.org/cis-benchmarks"
+  - "NIST SP 800-53 Rev.5 — https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final"
+  - "CycloneDX SBOM — https://cyclonedx.org/specification/overview/"
+  - "SPDX SBOM — https://spdx.dev/specifications/"
 triggers_strong: ["terraform hardening", "iac security", "state file security", "terraform review", "opentofu security"]
 triggers_weak: ["terraform", "iac review", "cloud misconfig"]
 related: ["cloud-iam-hardening", "container-k8s-hardening", "supply-chain-security"]

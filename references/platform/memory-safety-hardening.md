@@ -4,12 +4,13 @@ slug: memory-safety-hardening
 category: platform
 depth: 2
 audit_level: [2, 3]
-last_reviewed: 2026-04-19
+last_reviewed: 2026-04-21
 sources:
-  - "Szekeres et al. - SoK: Eternal War in Memory"
-  - "Clang sanitizer and CFI guidance"
-  - "Microsoft exploit protection and Control Flow Guard guidance"
-  - "GrapheneOS hardened allocator guidance"
+  - "Szekeres et al. — SoK: Eternal War in Memory (IEEE S&P 2013)"
+  - "Clang sanitizer and CFI guidance — https://clang.llvm.org/docs/ControlFlowIntegrity.html"
+  - "Microsoft exploit protection and Control Flow Guard — https://learn.microsoft.com/windows/security/threat-protection/overview-of-threat-mitigations-in-windows-10"
+  - "GrapheneOS hardened allocator — https://github.com/GrapheneOS/hardened_malloc"
+  - "CISA The Case for Memory Safe Roadmaps — https://www.cisa.gov/sites/default/files/2023-12/The-Case-for-Memory-Safe-Roadmaps-508c.pdf (2023-12)"
 triggers_strong: ["memory safety", "buffer overflow", "use after free", "asan", "ubsan"]
 triggers_weak: ["native hardening", "format string", "cfi", "relro", "fortify"]
 related: ["desktop-app-security", "language-patterns", "high-trust-admin-workstations"]
