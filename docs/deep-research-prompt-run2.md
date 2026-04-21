@@ -1,44 +1,44 @@
-# Prompt Deep Research Max — Run 2 (fichiers restants)
+# Deep Research Max Prompt — Run 2 (remaining files)
 
-Second run ciblé sur les fichiers non couverts par `docs/sources-resolved.md` (run 1).
-Même format de livrable que le run 1 (section par fichier : Sources vérifiées / À ajouter / À retirer / Excerpts).
+Second run targeting files not covered by `docs/sources-resolved.md` (run 1).
+Same deliverable format as run 1 (section per file: Verified sources / To add / To remove / Excerpts).
 
-## Contexte condensé
+## Condensed context
 
-Repo public : `https://github.com/StealthyLabsHQ/security-hardening`
-Structure : `references/<domain>/<slug>.md` avec frontmatter YAML contenant `sources: []`.
-Fetche les fichiers directement via URL context. Ne pas joindre.
+Public repo: `https://github.com/StealthyLabsHQ/security-hardening`
+Structure: `references/<domain>/<slug>.md` with YAML frontmatter containing `sources: []`.
+Fetch files directly via URL context. Do not attach.
 
-## Contraintes de qualité (reprise du run 1)
+## Quality constraints (from run 1)
 
-- URLs canoniques vivantes (vérifier live, archive.org si 404)
-- Accepter : NIST, ISO, IETF RFC, W3C, OWASP, MITRE, CISA, ENISA, ANSSI, CNIL, EDPB, vendor docs, papers DOI
-- Refuser : blogs, StackOverflow, YouTube non-conférence
-- **IMPORTANT — NE PAS** utiliser de redirections `vertexaisearch.cloud.google.com/grounding-api-redirect/...`. Livre l'URL cible directement.
-- **IMPORTANT — Vérifier les CVEs** : si tu cites CVE-XXXX-YYYYY, vérifie que le CVE existe sur `nvd.nist.gov/vuln/detail/` ET que le produit/description correspond au claim. Le run 1 avait mal attribué CVE-2024-27564 (SSRF PHP fork ≠ agent RCE).
-- Fenêtre 2023-04 → 2026-04 prioritaire ; plus ancien seulement si canonique
+- Live canonical URLs (verify live access, fall back to archive.org on 404)
+- Accept: NIST, ISO, IETF RFC, W3C, OWASP, MITRE, CISA, ENISA, ANSSI, CNIL, EDPB, official vendor docs, DOI papers
+- Reject: blogs, StackOverflow, non-conference YouTube
+- **IMPORTANT — DO NOT** use `vertexaisearch.cloud.google.com/grounding-api-redirect/...` redirects. Emit the canonical target URL directly.
+- **IMPORTANT — Verify CVEs**: if you cite CVE-XXXX-YYYYY, confirm the CVE exists on `nvd.nist.gov/vuln/detail/` AND that the affected product/description matches the claim. Run 1 mis-attributed CVE-2024-27564 (PHP fork SSRF ≠ agent RCE).
+- Time window: prioritize 2023-04 → 2026-04; older sources only if canonical
 
-## Format livrable par fichier
+## Deliverable format per file
 
 ```markdown
 ### references/<domain>/<slug>.md
 
-**Sources vérifiées**
-| # | Actuel | Titre complet | URL | Version/Date | Statut | Claim |
+**Verified sources**
+| # | Current | Full title | URL | Version/Date | Status | Claim |
 
-**À ajouter**
-| Source | URL | Date | Gap comblé | Priorité (P0/P1/P2) |
+**To add**
+| Source | URL | Date | Gap filled | Priority (P0/P1/P2) |
 
-**À retirer**
-| Source | Raison | Remplacée par |
+**To remove**
+| Source | Reason | Replaced by |
 
-**Excerpts citables**
-> « ... » — Ref X §Y p.Z
+**Quotable excerpts**
+> "..." — Ref X §Y p.Z
 ```
 
-## Fichiers à traiter (71)
+## Files to process (71)
 
-### AI — 11 fichiers (P0)
+### AI — 11 files (P0)
 - `references/ai/agent-approval-patterns.md`
 - `references/ai/agent-memory-and-context-retention.md`
 - `references/ai/ai-cli-hardening.md`
@@ -51,9 +51,9 @@ Fetche les fichiers directement via URL context. Ne pas joindre.
 - `references/ai/quick-start-ai-coding.md`
 - `references/ai/vibecoder-traps.md`
 
-Sources probables : OWASP Top 10 LLM v2025, NIST AI 600-1, MITRE ATLAS, Anthropic MCP/Computer Use docs, OpenAI Preparedness, CVE cataloguées 2024-2026 sur Claude Code / Cursor / Windsurf / LangChain / LlamaIndex, papers USENIX/IEEE S&P/CCS/NDSS sur agent misalignment, tool poisoning, memory persistence exploits.
+Expected sources: OWASP Top 10 LLM v2025, NIST AI 600-1, MITRE ATLAS, Anthropic MCP/Computer Use docs, OpenAI Preparedness Framework, 2024-2026 CVEs on Claude Code / Cursor / Windsurf / LangChain / LlamaIndex, USENIX/IEEE S&P/CCS/NDSS papers on agent misalignment, tool poisoning, memory persistence exploits.
 
-### AppSec — 12 fichiers (P1)
+### AppSec — 12 files (P1)
 - `browser-security-modern.md` → W3C CSP L3, Trusted Types, Fetch Metadata, COOP/COEP/CORP, SameSite RFC 6265bis
 - `database-security.md` → OWASP DB Cheat Sheets, NIST SP 800-53 AC/SC, PCI DSS 4.0.1 §3
 - `framework-examples.md` → OWASP framework guides (Express, Django, Spring, Rails)
@@ -62,12 +62,12 @@ Sources probables : OWASP Top 10 LLM v2025, NIST AI 600-1, MITRE ATLAS, Anthropi
 - `production-error-handling.md` → OWASP Error Handling Cheat Sheet, Google SRE error budgets
 - `secure-headers.md` → OWASP Secure Headers Project, web.dev headers guidance, HSTS preload list
 - `security-diff-review.md` → Google Code Review Guidelines, OWASP Code Review Guide
-- `security-myths.md` → cross-ref academic sources challenging myths
+- `security-myths.md` → cross-reference academic sources that debunk myths
 - `security-testing-examples.md` → OWASP WSTG v4.2, OWASP ASVS test cases, PortSwigger Academy
 - `threat-modeling.md` → STRIDE (Microsoft), MITRE ATT&CK, OWASP Threat Modeling, Shostack "Threat Modeling" book
 - `webhooks-security.md` → Stripe/GitHub/Slack webhook signing docs, RFC 8292 VAPID, OWASP Webhook Security
 
-### Compliance — 8 fichiers (P2)
+### Compliance — 8 files (P2)
 - `audit-sample-request-response.md`
 - `control-ownership-and-review-cadence.md`
 - `coverage-matrix.md`
@@ -77,28 +77,28 @@ Sources probables : OWASP Top 10 LLM v2025, NIST AI 600-1, MITRE ATLAS, Anthropi
 - `regulator-notification-decision-matrix.md`
 - `soc2-iso27001-evidence-packs.md`
 
-Sources probables : AICPA Trust Services Criteria 2022, ISO/IEC 27001:2022 Annex A, ENISA NIS2 implementation guide, DORA RTS/ITS publiés par ESAs, EDPB breach notification guidelines 9/2022, FedRAMP assessment handbook.
+Expected sources: AICPA Trust Services Criteria 2022, ISO/IEC 27001:2022 Annex A, ENISA NIS2 implementation guide, DORA RTS/ITS published by the ESAs, EDPB breach notification guidelines 9/2022, FedRAMP assessment handbook.
 
-### IAM — 9 fichiers (P1)
+### IAM — 9 files (P1)
 - `active-directory-hardening.md` → Microsoft Tiered Admin Model, NSA AD hardening, SpecterOps BloodHound papers
-- `authorization-rbac.md` → NIST SP 800-162 ABAC, OWASP Authz Cheat Sheet, Zanzibar paper (Google)
+- `authorization-rbac.md` → NIST SP 800-162 ABAC, OWASP Authz Cheat Sheet, Google Zanzibar paper
 - `authorization-regression-testing.md` → OWASP Authz Testing Cheat Sheet, OPA/Rego docs
 - `cloud-iam-hardening.md` → AWS IAM best practices, GCP IAM Recommender, Azure Conditional Access
 - `identity-lifecycle-jml.md` → NIST SP 800-63-4 enrollment, SCIM 2.0 RFC 7644
 - `machine-identity-and-service-accounts.md` → SPIFFE/SPIRE, AWS Roles Anywhere
-- `service-account-inventory-and-ownership.md` → CIS Controls 5&6, Netflix ConsoleMe
+- `service-account-inventory-and-ownership.md` → CIS Controls 5 & 6, Netflix ConsoleMe
 - `session-management.md` → OWASP Session Management Cheat Sheet, RFC 6265bis, OAuth 2.0 Token Introspection RFC 7662
 - `temporary-access-and-break-glass-governance.md` → Netflix BLESS, Google BeyondCorp, NIST SP 800-63-4 §5
 
-### Infra — 6 fichiers (P2)
-- `cloud-container-runnable-hardening-tests.md` → kube-bench, Docker Bench, conftest, OPA gatekeeper
+### Infra — 6 files (P2)
+- `cloud-container-runnable-hardening-tests.md` → kube-bench, Docker Bench, conftest, OPA Gatekeeper
 - `iot-ot-security.md` → IEC 62443, NIST SP 800-82 Rev.3, ENISA IoT baseline
 - `policy-exception-handling.md` → Google SRE error budget policy, SOC 2 CC 3.1
 - `rate-limiting-infrastructure.md` → RFC 6585, OWASP API4:2023, Envoy rate limit service
-- `secrets-manager-boundaries-and-injection-patterns.md` → HashiCorp Vault docs, AWS Secrets Manager rotation, CVE Vault 2024+
+- `secrets-manager-boundaries-and-injection-patterns.md` → HashiCorp Vault docs, AWS Secrets Manager rotation, Vault 2024+ CVEs
 - `terraform-policy-as-code-recipes.md` → HashiCorp Sentinel, Open Policy Agent, Checkov/tfsec/Trivy rulesets
 
-### Ops — 10 fichiers (P2)
+### Ops — 10 files (P2)
 - `defensive-security-baseline.md` → CIS Controls v8.1, NIST CSF 2.0 core
 - `detection-translations.md` → Sigma backend mappings (Splunk SPL, Elastic, CrowdStrike)
 - `pre-push-checklist.md` → OWASP Pre-push, gitleaks, GitHub secret scanning
@@ -110,7 +110,7 @@ Sources probables : AICPA Trust Services Criteria 2022, ISO/IEC 27001:2022 Annex
 - `security-metrics-kpis.md` → FIRST EPSS, CISA CPG metrics, Google SRE SLOs
 - `social-engineering-physical.md` → SANS social engineering whitepaper, CISA phishing guidance, NIST SP 800-50
 
-### Platform — 9 fichiers (P2)
+### Platform — 9 files (P2)
 - `browser-isolation-and-profile-segmentation.md` → Chrome Enterprise docs, Menlo/Cloudflare Browser Isolation, NIST SP 800-152
 - `developer-workstation-secrets-and-local-ai.md` → GitHub Copilot enterprise privacy, Cursor privacy mode, ollama hardening
 - `electron-update-and-auto-update-hardening.md` → Electron auto-updater security, code signing guides, Squirrel.Mac
@@ -121,7 +121,7 @@ Sources probables : AICPA Trust Services Criteria 2022, ISO/IEC 27001:2022 Annex
 - `remote-browser-isolation-and-disposable-browsing.md` → NIST SP 800-152, Menlo/Cloudflare docs
 - `saas-admin-browser-separation.md` → Microsoft Secure Admin Workstation, Google BeyondCorp
 
-### Privacy — 9 fichiers (P2)
+### Privacy — 9 files (P2)
 - `ai-prompt-data-handling.md` → OpenAI API data usage policy, Anthropic data retention, EDPB AI guidelines
 - `data-classification-and-handling.md` → NIST SP 800-60, ISO/IEC 27701
 - `dsar-export-erasure-runbook.md` → EDPB Guidelines 01/2022 DSAR, CNIL DSAR toolkit
@@ -133,11 +133,11 @@ Sources probables : AICPA Trust Services Criteria 2022, ISO/IEC 27001:2022 Annex
 - `screenshot-and-support-artifact-handling.md` → ISO/IEC 27701, OWASP Logging Cheat Sheet, PCI DSS §3.4
 - `vendor-and-processor-tiering.md` → GDPR Art. 28, ISO/IEC 27036, NIST SP 800-161 Rev.1
 
-### Core — 1 fichier (P0)
-- `references/_core-invariants.md` → déjà bien sourcé (ASVS, Cheat Sheets, NIST SP 800-63B) mais mériter une vérification URL + ajout MITRE CWE Top 25.
+### Core — 1 file (P0)
+- `references/_core-invariants.md` → already well sourced (ASVS, Cheat Sheets, NIST SP 800-63B); deserves URL verification + MITRE CWE Top 25 addition.
 
-## Livraison
+## Delivery
 
-Document markdown unique, un titre par fichier. Patch directement injectable.
-Signaler hallucinations CVE/source comme le run 1 a pu en produire.
-Ne pas dupliquer les sources déjà documentées dans `docs/sources-resolved.md` (runt 1) — ré-utiliser quand pertinent (ex: OWASP Top 10 LLM v2025 reste la même URL pour les 11 fichiers AI).
+Single markdown document, one heading per file. Directly injectable patch.
+Flag any CVE/source hallucinations as run 1 produced.
+Do not duplicate sources already documented in `docs/sources-resolved.md` (run 1) — reuse when relevant (e.g., OWASP Top 10 LLM v2025 stays the same URL for the 11 AI files).

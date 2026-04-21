@@ -1,11 +1,11 @@
 # Sources Resolved — Deep Research Max Run 1
 
-Consolidation nettoyée du livrable `source.md` (DR Max, Gemini 3.1 Pro, 2026-04-21).
-Les URLs `vertexaisearch.cloud.google.com/grounding-api-redirect/...` (biblio DR) ont été remplacées par les URLs canoniques extraites des tables.
+Cleaned consolidation of the `source.md` deliverable (DR Max, Gemini 3.1 Pro, 2026-04-21).
+URLs of the form `vertexaisearch.cloud.google.com/grounding-api-redirect/...` (DR bibliography) have been replaced with canonical URLs extracted from the content tables.
 
-## Validation spot-check (2026-04-21)
+## Spot-check validation (2026-04-21)
 
-| Source | URL livrée par DR | Statut | URL canonique |
+| Source | URL delivered by DR | Status | Canonical URL |
 |---|---|---|---|
 | CVE-2024-8309 (LangChain) | nvd.nist.gov/vuln/detail/CVE-2024-8309 | ✓ verified | https://nvd.nist.gov/vuln/detail/CVE-2024-8309 |
 | CVE-2024-14021 (LlamaIndex) | nvd.nist.gov/vuln/detail/CVE-2024-14021 | ✓ verified | https://nvd.nist.gov/vuln/detail/CVE-2024-14021 |
@@ -14,14 +14,14 @@ Les URLs `vertexaisearch.cloud.google.com/grounding-api-redirect/...` (biblio DR
 | Replit Incident 1152 | incidentdatabase.ai/cite/1152 | ✓ verified | https://incidentdatabase.ai/cite/1152/ |
 | Anthropic Project Glasswing | anthropic.com/news/project-glasswing | ✗ 404 | https://www.anthropic.com/glasswing |
 | PromptArmor Slack AI | promptarmor.com/resources/data-exfiltration-from-slack-ai | ✗ 404 | https://www.promptarmor.com/resources/data-exfiltration-from-slack-ai-via-indirect-prompt-injection |
-| CVE-2024-27564 (ChatGPT pickle RCE) | nvd.nist.gov/vuln/detail/CVE-2024-27564 | ⚠ mis-attributed | Réel: SSRF dans `pictureproxy.php` du fork tiers dirk1983/chatgpt, PAS un agent sandbox RCE. À retirer du patch. |
+| CVE-2024-27564 (ChatGPT pickle RCE) | nvd.nist.gov/vuln/detail/CVE-2024-27564 | ⚠ mis-attributed | Actual content: SSRF in `pictureproxy.php` of the third-party fork dirk1983/chatgpt, NOT an agent sandbox RCE. Remove from patch. |
 
-## Nouvelles sources validées par domaine
+## New validated sources per domain
 
 ### AI
 - NIST AI 600-1 Generative AI Profile — https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.600-1.pdf (2024-07)
 - CISA Deploying AI Systems Securely — https://www.cisa.gov/resources-tools/resources/deploying-ai-systems-securely (2024-04)
-- MITRE ATLAS — https://atlas.mitre.org (v-latest)
+- MITRE ATLAS — https://atlas.mitre.org (latest)
 - Anthropic Project Glasswing / Claude Mythos Preview — https://www.anthropic.com/glasswing (2026)
 - CVE-2024-8309 LangChain GraphCypherQAChain SQL injection via PI — https://nvd.nist.gov/vuln/detail/CVE-2024-8309 (2024-10, CVSS 9.8)
 - CVE-2024-14021 LlamaIndex BGEM3Index pickle RCE — https://nvd.nist.gov/vuln/detail/CVE-2024-14021 (CWE-502, CVSS 7.8)
@@ -80,7 +80,7 @@ Les URLs `vertexaisearch.cloud.google.com/grounding-api-redirect/...` (biblio DR
 - Sigma rules — https://sigmahq.io
 - Falco — https://falco.org
 - CISA KEV catalog — https://www.cisa.gov/known-exploited-vulnerabilities-catalog
-- Verizon DBIR (édition annuelle) — https://www.verizon.com/business/resources/reports/dbir/
+- Verizon DBIR (annual) — https://www.verizon.com/business/resources/reports/dbir/
 - Mandiant M-Trends — https://www.mandiant.com/m-trends
 
 ### Platform
@@ -95,22 +95,22 @@ Les URLs `vertexaisearch.cloud.google.com/grounding-api-redirect/...` (biblio DR
 - ISO/IEC 27701:2019 — https://www.iso.org/standard/71670.html
 - CNIL AI how-to sheets — https://www.cnil.fr/en/ai-how-sheets
 
-## Sources retirées (deprecated/mis-attributed)
+## Removed sources (deprecated / mis-attributed)
 
-- ~~Google SAIF Risk Assessment~~ — remplacée par NIST AI 600-1 + MITRE ATLAS (DR recommandation)
-- ~~OpenAI Deployment Safety Hub~~ — remplacée par UK/US AISI evaluations
-- ~~PodSecurityPolicy (PSP) guide~~ — déprécié K8s 1.21, supprimé 1.25 → Pod Security Admission
-- ~~Privacy Shield~~ — invalidé par CJUE Schrems II → EU-US DPF 2023
+- ~~Google SAIF Risk Assessment~~ — replaced by NIST AI 600-1 + MITRE ATLAS (DR recommendation)
+- ~~OpenAI Deployment Safety Hub~~ — replaced by UK/US AISI evaluations
+- ~~PodSecurityPolicy (PSP) guide~~ — deprecated in K8s 1.21, removed in 1.25 → Pod Security Admission
+- ~~Privacy Shield~~ — invalidated by CJEU Schrems II → EU-US DPF 2023
 - ~~NIST CSF 1.1~~ → NIST CSF 2.0
-- ~~OAuth 2.0 Implicit Flow~~ → OAuth 2.1 avec PKCE obligatoire
+- ~~OAuth 2.0 Implicit Flow~~ → OAuth 2.1 with mandatory PKCE
 - ~~PCI DSS 3.2.1~~ → PCI DSS 4.0.1
 - ~~OWASP API Security Top 10 2019~~ → 2023
 - ~~IoC static blocklists~~ → TTPs via ATT&CK + Sigma
-- ~~Patch Management policies CVSS-only~~ → Risk-Based VM via CISA KEV
-- ~~CVE-2024-27564 (attribution fausse)~~ — DR a confondu fork PHP dirk1983/chatgpt avec ChatGPT officiel
+- ~~CVSS-only patch management policies~~ → Risk-Based VM via CISA KEV
+- ~~CVE-2024-27564 (mis-attribution)~~ — DR conflated the third-party PHP fork dirk1983/chatgpt with the official ChatGPT product
 
-## Notes de qualité
+## Quality notes
 
-- Les 47 refs bibliographiques DR (redirections vertexaisearch) ont été ignorées : URLs non-persistantes, non-citables dans un corpus canonique.
-- 3 hallucinations DR corrigées ci-dessus.
-- Couverture run 1 : 29/100 fichiers (~30%). Run 2 requis pour les 71 restants.
+- The 47 DR bibliographic references (vertexaisearch redirects) were ignored: URLs are non-persistent and non-citable in a canonical corpus.
+- 3 DR hallucinations corrected above.
+- Run 1 coverage: 29/100 files (~30%). Run 2 required for the remaining 71.
