@@ -9,6 +9,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Added
 
+- Adversarial AI-agent eval fixtures for indirect prompt injection, path traversal, output exfiltration, and multi-turn tool abuse.
+- Optional JSONL response grading and per-fixture prompt generation for Claude Code, Codex CLI, Gemini CLI, and other runtimes.
+- Core adversarial case guidance in `references/ai/agent-evals-red-teaming.md`.
+- Local ignore rules for `source.md`, generated eval prompts, and captured eval responses.
 - Stable-vs-preview release guidance in `README.md`.
 - Initial changelog and semantic tag mapping for the pre-refactor and v2 release-candidate lines.
 

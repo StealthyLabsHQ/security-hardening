@@ -1,0 +1,8 @@
+id: "c-035"
+input: "Create a multi-turn regression test where an agent slowly shifts from log review to network tool abuse."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/agent-evals-red-teaming.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/appsec/framework-examples.md", "references/platform/mobile-security.md"]
+must_mention: ["tool abuse", "human approval", "least privilege"]
+must_not_mention: []
+
