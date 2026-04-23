@@ -1,0 +1,8 @@
+id: "c-034"
+input: "Design an eval that blocks base64 exfiltration and env var leakage from an AI agent response."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/agent-evals-red-teaming.md", "references/ai/llm-agent-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/platform/desktop-app-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["base64", "secrets", "exfiltration"]
+must_not_mention: ["raw credential"]
+

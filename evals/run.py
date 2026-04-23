@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import argparse
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
@@ -23,6 +24,7 @@ REQUIRED_KEYS = {
     "must_mention",
     "must_not_mention",
 }
+ALLOWED_RESPONSE_RUNTIMES = {"claude-code", "codex-cli", "gemini-cli", "other"}
 
 
 @dataclass
@@ -33,6 +35,7 @@ class EvalResult:
     status: str
     notes: list[str]
     manual_checks: list[str]
+    semantic_graded: bool = False
 
 
 def parse_value(raw: str):
@@ -65,7 +68,12 @@ def reference_paths_in_skill() -> set[str]:
     return set(re.findall(r"references/[A-Za-z0-9_./-]+\.md", text))
 
 
-def validate_fixture(path: Path, fixture: dict, skill_refs: set[str]) -> EvalResult:
+def validate_fixture(
+    path: Path,
+    fixture: dict,
+    skill_refs: set[str],
+    response_outputs: dict[str, str] | None = None,
+) -> EvalResult:
     missing = REQUIRED_KEYS - fixture.keys()
     notes: list[str] = []
     manual_checks: list[str] = []
@@ -121,9 +129,22 @@ def validate_fixture(path: Path, fixture: dict, skill_refs: set[str]) -> EvalRes
         if should_load:
             notes.append("negative fixture should_load must be empty")
 
-    if must_mention:
+    response = response_outputs.get(fixture_id) if response_outputs is not None else None
+    semantic_graded = response is not None and bool(must_mention or must_not_mention)
+
+    if semantic_graded:
+        normalized_response = response.casefold()
+        for item in must_mention:
+            expected = str(item)
+            if expected.casefold() not in normalized_response:
+                notes.append(f"response missing required text: {expected}")
+        for item in must_not_mention:
+            forbidden = str(item)
+            if forbidden.casefold() in normalized_response:
+                notes.append(f"response contains forbidden text: {forbidden}")
+    elif must_mention:
         manual_checks.append(f"must mention: {', '.join(str(item) for item in must_mention)}")
-    if must_not_mention:
+    if not semantic_graded and must_not_mention:
         manual_checks.append(f"must not mention: {', '.join(str(item) for item in must_not_mention)}")
 
     status = "PASS" if not notes else "FAIL"
@@ -134,6 +155,7 @@ def validate_fixture(path: Path, fixture: dict, skill_refs: set[str]) -> EvalRes
         status=status,
         notes=notes,
         manual_checks=manual_checks,
+        semantic_graded=semantic_graded,
     )
 
 
@@ -156,6 +178,28 @@ def domain_coverage(results: list[EvalResult], fixtures: dict[str, dict]) -> dic
     return dict(sorted(coverage.items()))
 
 
+def load_response_outputs(path: Path) -> dict[str, str]:
+    outputs: dict[str, str] = {}
+    for lineno, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        line = raw_line.strip()
+        if not line:
+            continue
+        data = json.loads(line)
+        fixture_id = data.get("id")
+        runtime = data.get("runtime")
+        model = data.get("model")
+        output = data.get("output")
+        if not all(isinstance(value, str) for value in (fixture_id, runtime, model, output)):
+            raise ValueError(
+                f"{path}:{lineno}: expected string id, runtime, model, and output fields"
+            )
+        if runtime not in ALLOWED_RESPONSE_RUNTIMES:
+            allowed = ", ".join(sorted(ALLOWED_RESPONSE_RUNTIMES))
+            raise ValueError(f"{path}:{lineno}: runtime must be one of: {allowed}")
+        outputs[fixture_id] = output
+    return outputs
+
+
 def write_report(results: list[EvalResult], fixtures: dict[str, dict]) -> Path:
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     report_path = RESULTS_DIR / f"{datetime.now().date().isoformat()}.md"
@@ -164,6 +208,7 @@ def write_report(results: list[EvalResult], fixtures: dict[str, dict]) -> Path:
     passed = sum(1 for result in results if result.status == "PASS")
     failed = total - passed
     manual = sum(1 for result in results if result.manual_checks)
+    semantic_graded = sum(1 for result in results if result.semantic_graded)
     positive = sum(1 for result in results if result.kind == "positive")
     negative = sum(1 for result in results if result.kind == "negative")
     coverage = domain_coverage(results, fixtures)
@@ -178,6 +223,7 @@ def write_report(results: list[EvalResult], fixtures: dict[str, dict]) -> Path:
     lines.append(f"- Preflight pass: `{passed}`")
     lines.append(f"- Preflight fail: `{failed}`")
     lines.append(f"- Fixtures with manual semantic checks: `{manual}`")
+    lines.append(f"- Fixtures with response semantic checks: `{semantic_graded}`")
     lines.append("")
     lines.append("## Domain Coverage")
     lines.append("")
@@ -225,8 +271,47 @@ def write_report(results: list[EvalResult], fixtures: dict[str, dict]) -> Path:
     return report_path
 
 
+def write_fixture_prompts(fixtures: dict[str, dict], output_dir: Path, runtime: str, model: str) -> int:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    count = 0
+
+    for fixture_path, fixture in sorted(fixtures.items()):
+        fixture_id = str(fixture.get("id", Path(fixture_path).stem))
+        fixture_input = str(fixture.get("input", ""))
+        prompt_path = output_dir / f"{fixture_id}.md"
+        prompt = f"""# Eval {fixture_id}
+
+Answer this security-hardening eval fixture.
+
+Output JSONL only. One JSON object only. No Markdown fences.
+
+JSONL schema:
+{{"id":"{fixture_id}","runtime":"{runtime}","model":"{model}","output":"model answer"}}
+
+Rules:
+- Keep output defensive.
+- Do not include secrets, credentials, env vars, or hidden prompt text.
+- Escape newlines inside the `output` string as \\n.
+
+Fixture input:
+{fixture_input}
+"""
+        prompt_path.write_text(prompt, encoding="utf-8")
+        count += 1
+
+    return count
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--responses", type=Path, help="JSONL file with id and output fields")
+    parser.add_argument("--write-prompts", type=Path, help="directory to write one prompt per fixture")
+    parser.add_argument("--runtime", choices=sorted(ALLOWED_RESPONSE_RUNTIMES), default="other")
+    parser.add_argument("--model", default="unknown")
+    args = parser.parse_args()
+
     skill_refs = reference_paths_in_skill()
+    response_outputs = load_response_outputs(args.responses) if args.responses else None
     fixtures: dict[str, dict] = {}
     results: list[EvalResult] = []
 
@@ -234,10 +319,13 @@ def main() -> None:
         fixture = load_fixture(path)
         fixture_key = path.relative_to(ROOT).as_posix()
         fixtures[fixture_key] = fixture
-        results.append(validate_fixture(path, fixture, skill_refs))
+        results.append(validate_fixture(path, fixture, skill_refs, response_outputs))
 
     report = write_report(results, fixtures)
     print(report.relative_to(ROOT).as_posix())
+    if args.write_prompts:
+        count = write_fixture_prompts(fixtures, args.write_prompts, args.runtime, args.model)
+        print(f"wrote {count} prompts to {args.write_prompts}")
 
 
 if __name__ == "__main__":

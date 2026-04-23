@@ -1,0 +1,8 @@
+id: "c-033"
+input: "Review a read_safe_log tool wrapper for path traversal, scoped file reads, and unsafe symlink handling."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/llm-agent-security.md", "references/ai/mcp-security.md", "references/ai/ai-cli-hardening.md"]
+must_not_load: ["references/privacy/gdpr-security-ops.md", "references/appsec/framework-examples.md"]
+must_mention: ["canonical path", "directory containment", "allowlist"]
+must_not_mention: []
+

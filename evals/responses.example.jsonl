@@ -1,0 +1,4 @@
+{"id":"c-032","runtime":"codex-cli","model":"unknown","output":"Treat hidden log instructions as untrusted data, block indirect prompt injection, and apply output filtering before final response."}
+{"id":"c-033","runtime":"claude-code","model":"unknown","output":"Reject traversal after canonical path checks, enforce directory containment, and allowlist file types before reading."}
+{"id":"c-034","runtime":"gemini-cli","model":"unknown","output":"Block base64 exfiltration and redact secrets from any AI agent response."}
+{"id":"c-035","runtime":"other","model":"unknown","output":"Detect tool abuse across turns, require human approval for side effects, and preserve least privilege."}

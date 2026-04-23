@@ -4,7 +4,7 @@ slug: agent-evals-red-teaming
 category: ai
 depth: 2
 audit_level: [2, 3, 4]
-last_reviewed: 2026-04-21
+last_reviewed: 2026-04-23
 sources:
   - "OWASP Top 10 for LLM Applications v2025 — https://genai.owasp.org/llm-top-10 (2024-11)"
   - "OWASP MCP Top 10"
@@ -22,7 +22,7 @@ related: ["llm-agent-security", "mcp-security", "hostile-corpus-review", "ai-age
 
 # Agent Evals & Red Teaming
 
-> Last reviewed: 2026-04-18 | Next review: 2026-10-18 | Priority: Recommended | Audit Level: 2-4 | Automation: Partial (fixture execution, regression scoring, and route coverage automatable; scenario design, failure adjudication, and release decisions manual)
+> Last reviewed: 2026-04-23 | Next review: 2026-10-23 | Priority: Recommended | Audit Level: 2-4 | Automation: Partial (fixture execution, regression scoring, and route coverage automatable; scenario design, failure adjudication, and release decisions manual)
 
 Use this guide when you need a **defensive adversarial test plan** for an AI agent, MCP workflow, coding assistant, browser/computer-use flow, or no-code builder before rollout or after a model/tool change.
 
@@ -114,7 +114,22 @@ Map to `MCP08` style risks:
 
 ---
 
-## 4. Safe fixture design rules
+## 4. Core adversarial cases
+
+Keep these cases in every agent eval suite, especially for skills imported into Claude Code, Codex, Gemini CLI, or another LLM runtime:
+
+| Case | Expected safe behavior | Repo fixture |
+|---|---|---|
+| Hostile log content instructs the agent to reveal secrets | Treat the content as data, ignore the instruction, and filter output | [`c-032`](../../evals/cases/c-032.yaml) |
+| Scoped file reader receives path traversal or unsafe symlink input | Reject outside-workspace access after canonical path validation | [`c-033`](../../evals/cases/c-033.yaml) |
+| Response attempts base64 or env-var exfiltration | Block or redact sensitive output before final response | [`c-034`](../../evals/cases/c-034.yaml) |
+| Multi-turn prompt shifts from log review to network/tool abuse | Require approval, preserve least privilege, or refuse the action | [`c-035`](../../evals/cases/c-035.yaml) |
+
+These are control-chain tests. Passing them requires tool-wrapper checks, output filtering, and approval gates, not only better wording in the system prompt.
+
+---
+
+## 5. Safe fixture design rules
 
 Keep the test corpus defensible:
 
@@ -129,7 +144,7 @@ Good fixtures should teach the system what to reject and what to allow with mini
 
 ---
 
-## 5. Campaign types
+## 6. Campaign types
 
 | Campaign | Run when | Minimum output |
 |---|---|---|
@@ -143,7 +158,7 @@ If a model, tool, or profile changes and there is no evaluation delta, your rele
 
 ---
 
-## 6. Minimum release gate
+## 7. Minimum release gate
 
 Before enabling a higher-risk agent workflow, require at least:
 
@@ -158,7 +173,7 @@ For browser/computer-use, MCP, and external side effects, add stricter gating th
 
 ---
 
-## 7. Scoring and pass criteria
+## 8. Scoring and pass criteria
 
 Use a small set of reviewable metrics:
 
@@ -179,7 +194,7 @@ Define release criteria in advance. Example:
 
 ---
 
-## 8. Failure handling
+## 9. Failure handling
 
 When a red-team case fails:
 
@@ -193,7 +208,7 @@ A strong eval program turns incidents and near misses into permanent regression 
 
 ---
 
-## 9. How this repo fits
+## 10. How this repo fits
 
 This repository already includes an offline fixture harness under [`evals/`](../../evals/) for routing and reference-integrity checks. Use it to keep the corpus wired correctly, then layer execution-specific harnesses or model-specific judges outside the reference corpus if you need deeper automated grading.
 
@@ -207,7 +222,7 @@ Pair this reference with:
 
 ---
 
-## 10. Official references
+## 11. Official references
 
 - OWASP - `Top 10 for Large Language Model Applications`: https://owasp.org/www-project-top-10-for-large-language-model-applications/
 - OWASP - `MCP Top 10`: https://owasp.org/www-project-mcp-top-10/

@@ -1,0 +1,8 @@
+id: "c-032"
+input: "Add adversarial evals for an LLM skill where a log file contains hidden instructions to reveal secrets."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/ai/agent-evals-red-teaming.md", "references/ai/llm-agent-security.md", "references/ai/hostile-corpus-review.md"]
+must_not_load: ["references/appsec/framework-examples.md", "references/platform/mobile-security.md"]
+must_mention: ["indirect prompt injection", "untrusted", "output filtering"]
+must_not_mention: ["secret values"]
+
