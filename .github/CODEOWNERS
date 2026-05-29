@@ -3,17 +3,17 @@
 # Every file in this repo requires review from the security team because the
 # content here is copied into other projects. Wrong advice == wide blast radius.
 #
-# Replace @StealthyLabsHQ/security-team with your actual GitHub team handle.
+# Replace @stealthsrc with your actual GitHub team handle.
 # Until that team exists, fall back to the org admins.
 
-* @StealthyLabsHQ/security-team
+* @stealthsrc
 
 # Workflows: extra scrutiny - they execute on every push and have access to
 # secrets. Require a CI/SecOps reviewer in addition to the default owner.
-/.github/workflows/   @StealthyLabsHQ/security-team @StealthyLabsHQ/devops
-/.github/dependabot.yml @StealthyLabsHQ/security-team @StealthyLabsHQ/devops
+/.github/workflows/   @stealthsrc @stealthsrc
+/.github/dependabot.yml @stealthsrc @stealthsrc
 
 # Skill manifest: changes here affect how every downstream AI tool ingests the
 # corpus. Treat as a public API.
-/SKILL.md  @StealthyLabsHQ/security-team
-/SECURITY.md @StealthyLabsHQ/security-team
+/SKILL.md  @stealthsrc
+/SECURITY.md @stealthsrc
