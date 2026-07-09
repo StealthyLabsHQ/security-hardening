@@ -50,6 +50,7 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/infra/container-k8s-hardening.md](references/infra/container-k8s-hardening.md)
 - [references/infra/rate-limiting-infrastructure.md](references/infra/rate-limiting-infrastructure.md)
 - [references/infra/iot-ot-security.md](references/infra/iot-ot-security.md)
+- [references/infra/policy-exception-handling.md](references/infra/policy-exception-handling.md)
 
 ## IAM
 
@@ -64,6 +65,7 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/iam/machine-identity-and-service-accounts.md](references/iam/machine-identity-and-service-accounts.md)
 - [references/iam/service-account-inventory-and-ownership.md](references/iam/service-account-inventory-and-ownership.md)
 - [references/iam/temporary-access-and-break-glass-governance.md](references/iam/temporary-access-and-break-glass-governance.md)
+- [references/iam/identity-lifecycle-jml.md](references/iam/identity-lifecycle-jml.md)
 
 ## Platform
 
@@ -73,6 +75,11 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/platform/browser-isolation-and-profile-segmentation.md](references/platform/browser-isolation-and-profile-segmentation.md)
 - [references/platform/high-trust-admin-workstations.md](references/platform/high-trust-admin-workstations.md)
 - [references/platform/endpoint-vba-security.md](references/platform/endpoint-vba-security.md)
+- [references/platform/developer-workstation-secrets-and-local-ai.md](references/platform/developer-workstation-secrets-and-local-ai.md)
+- [references/platform/electron-update-and-auto-update-hardening.md](references/platform/electron-update-and-auto-update-hardening.md)
+- [references/platform/mdm-baselines-intune-jamf-kandji.md](references/platform/mdm-baselines-intune-jamf-kandji.md)
+- [references/platform/remote-browser-isolation-and-disposable-browsing.md](references/platform/remote-browser-isolation-and-disposable-browsing.md)
+- [references/platform/saas-admin-browser-separation.md](references/platform/saas-admin-browser-separation.md)
 
 ## AI
 
@@ -94,6 +101,7 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/ai/quick-start-ai-coding.md](references/ai/quick-start-ai-coding.md)
 - [references/ai/vibecoder-traps.md](references/ai/vibecoder-traps.md)
 - [references/ai/ai-agent-incident-response.md](references/ai/ai-agent-incident-response.md)
+- [references/ai/agent-memory-and-context-retention.md](references/ai/agent-memory-and-context-retention.md)
 
 ## Privacy
 
@@ -104,6 +112,11 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/privacy/privacy-review-for-ai-vendors.md](references/privacy/privacy-review-for-ai-vendors.md)
 - [references/privacy/retention-enforcement-and-deletion-evidence.md](references/privacy/retention-enforcement-and-deletion-evidence.md)
 - [references/privacy/screenshot-and-support-artifact-handling.md](references/privacy/screenshot-and-support-artifact-handling.md)
+- [references/privacy/cross-border-ai-data-transfer-review.md](references/privacy/cross-border-ai-data-transfer-review.md)
+- [references/privacy/dsar-export-erasure-runbook.md](references/privacy/dsar-export-erasure-runbook.md)
+- [references/privacy/privacy-safe-analytics-and-product-instrumentation.md](references/privacy/privacy-safe-analytics-and-product-instrumentation.md)
+- [references/privacy/ropa-dpia-dpa-scc-tia-template-pack.md](references/privacy/ropa-dpia-dpa-scc-tia-template-pack.md)
+- [references/privacy/vendor-and-processor-tiering.md](references/privacy/vendor-and-processor-tiering.md)
 
 ## Ops
 
@@ -130,6 +143,9 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/compliance/customer-security-questionnaire-response-pack.md](references/compliance/customer-security-questionnaire-response-pack.md)
 - [references/compliance/evidence-redaction-and-sharing-rules.md](references/compliance/evidence-redaction-and-sharing-rules.md)
 - [references/compliance/regulator-notification-decision-matrix.md](references/compliance/regulator-notification-decision-matrix.md)
+- [references/compliance/control-ownership-and-review-cadence.md](references/compliance/control-ownership-and-review-cadence.md)
+- [references/compliance/nis2-dora-operational-evidence.md](references/compliance/nis2-dora-operational-evidence.md)
+- [references/compliance/soc2-iso27001-evidence-packs.md](references/compliance/soc2-iso27001-evidence-packs.md)
 
 ## Templates
 
