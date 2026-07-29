@@ -15,7 +15,7 @@ Posture overlays are also available under `templates/ai-tool-profiles/postures/`
 - `prod-sensitive`
 - `gdpr-sensitive`
 
-Ready-made merged bundles are available under `templates/ai-tool-profiles/bundles/`:
+Premerged bundles are available under `templates/ai-tool-profiles/bundles/`:
 
 - `claude-code-prod-sensitive`
 - `cursor-prod-sensitive`

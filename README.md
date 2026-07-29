@@ -47,11 +47,11 @@ This repository is designed as a portable security knowledge base. It is primari
 
 ### Release channels
 
-- **Stable default:** `v1.0.0` is the last pre-refactor portable snapshot and the safest default for existing consumers.
-- **Preview / refactor line:** `v2.0.0-rc.1` is the first auditable, testable release candidate produced by phases 1-6 of the refactor.
+- **Compatibility default:** `v1.0.0` is the last pre-refactor portable snapshot for existing consumers.
+- **Preview / refactor line:** `v2.0.0-rc.1` contains the changes produced by phases 1-6 of the refactor.
 - **Working branch:** `main` may move ahead of both tags during ongoing refactor work.
 
-### 0. Fast install prompt
+### 0. Install with agentskill.sh
 
 If the assistant supports `agentskill.sh`, give it this exact instruction:
 
@@ -217,7 +217,7 @@ It also ships posture overlays under `templates/ai-tool-profiles/postures/` for:
 - `prod-sensitive`
 - `gdpr-sensitive`
 
-And ready-made merged bundles under `templates/ai-tool-profiles/bundles/` for:
+Premerged bundles are available under `templates/ai-tool-profiles/bundles/` for:
 
 - `claude-code-prod-sensitive`
 - `cursor-prod-sensitive`
@@ -299,7 +299,7 @@ Covers: BOLA/IDOR, BFLA, mass assignment, rate limiting, JSON schema validation,
 Covers: object and field-level authorization, introspection disablement, depth and complexity budgets, alias/batching caps, persisted queries, multipart upload risks, WebSocket subscriptions, telemetry, and N+1 / backend fan-out abuse.
 
 ### `references/appsec/secure-headers.md`
-Production-ready **HTTP security headers** with copy-paste values.
+**HTTP security header examples** with copy-paste values.
 
 Covers: HSTS, CSP (nonce/hash-based), X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, COEP/COOP/CORP, cookie attributes (`Secure`, `HttpOnly`, `SameSite`), CORS, headers to remove, drop-in blocks for **Nginx** and **Cloudflare Workers**.
 
@@ -462,7 +462,7 @@ Covers: default-deny permissions, tiered elevation model (read-only to high-impa
 ### `references/ai/ai-tool-profiles.md`
 **Copy-paste defensive profile map** for Claude Code, Codex, Gemini CLI, Cursor, and no-code / low-code tools.
 
-Covers: exact template paths, posture overlays, ready-made bundle selection, direct copy paths for the repository's conservative presets, and links to official vendor documentation used for the field names or behavior.
+Covers: exact template paths, posture overlays, premerged bundle selection, direct copy paths for the repository's conservative presets, and links to official vendor documentation used for the field names or behavior.
 
 ### `references/ai/ai-ide-no-code-security.md`
 **Security guide for AI IDE assistants, browser builders, and no-code / low-code tools**.

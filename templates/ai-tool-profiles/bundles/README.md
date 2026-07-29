@@ -1,8 +1,8 @@
 # AI Bundle Presets
 
-Ready-made merged bundles for common high-security use cases.
+Premerged profile and posture bundles for high-security use cases.
 
-These bundles already combine:
+Each bundle combines:
 
 - base tool profile,
 - risk posture overlay,
