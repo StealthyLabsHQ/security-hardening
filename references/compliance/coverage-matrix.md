@@ -93,9 +93,10 @@ Last matrix review: **2026-04-18**
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard with SARIF upload | Push to `main` / weekly |
 | `.github/workflows/script-lint.yml` | Shell and PowerShell script linting | Script changes |
 | `.github/workflows/security.yml` | Gitleaks + Semgrep + Trivy + SBOM + Dep Review + secure-review smoke | Every push / PR |
-| `scripts/secure-review.py` | Agent entrypoint: Semgrep + Gitleaks → unified JSON | Local / CI smoke |
-| `scripts/map_findings.py` | Map scanner check IDs to `references/` paths | Local / after scan |
-| `semgrep/` | Custom AI/vibecoder Semgrep rules for remediation loop | Local + CI Semgrep job |
+| `scripts/secure-review.py` | Agent entrypoint: Semgrep + Gitleaks → unified JSON (detect/propose/apply) | Local / CI smoke |
+| `scripts/map_findings.py` | Map scanner check IDs to refs + blast_radius / safe_to_autofix | Local / after scan |
+| `evals/scale/run_scale.py` | Labeled corpus precision/recall harness | Local / CI smoke |
+| `semgrep/` | Custom AI/vibecoder Semgrep rules (Python/JS/PHP) | Local + CI Semgrep job |
 | `.github/pull_request_template.md` | Security checklist | Every PR (manual) |
 
 ---
