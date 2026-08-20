@@ -75,6 +75,7 @@ rules:
     metadata:
       cwe: "CWE-502"
       category: deserialization
+      blast_radius: rce
       references:
         - references/appsec/ssrf-deserialization-command-injection.md
         - references/appsec/language-patterns.md
@@ -84,3 +85,79 @@ rules:
       - pattern: yaml.load($X)
       - pattern: yaml.load($X, Loader=yaml.Loader)
       - pattern: marshal.loads(...)
+
+  - id: ai.python.sql-fstring
+    message: "SQL built with an f-string is a common AI-generated injection pattern. Use parameterized queries or ORM binds."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-regex: (?i)f["'].*\b(SELECT|INSERT|UPDATE|DELETE)\b.*\{
+
+  - id: ai.python.sql-format
+    message: "SQL built with str.format is injection-prone. Use parameterized queries."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $S.format(...)
+          - pattern: |
+              "...".format(...)
+          - pattern: |
+              '...'.format(...)
+      - pattern-regex: (?i)["'].*\b(SELECT|INSERT|UPDATE|DELETE)\b
+
+  - id: ai.python.sql-percent
+    message: "SQL built with % formatting is injection-prone. Use parameterized execute(query, params)."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern: $QUERY % $ARGS
+      - pattern-regex: (?i)(SELECT|INSERT|UPDATE|DELETE)
+
+  - id: ai.python.sql-execute-concat
+    message: "Passing concatenated SQL into execute()/raw() is a common AI SQL-injection pattern. Bind parameters instead."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: $DB.execute($SQL + $X, ...)
+          - pattern: $CUR.execute($SQL + $X, ...)
+          - pattern: $OBJ.raw($SQL + $X, ...)
+          - pattern: $DB.execute($SQL + $X + $Y, ...)
+          - pattern: $CUR.execute($SQL + $X + $Y, ...)
+      - metavariable-regex:
+          metavariable: $SQL
+          regex: (?i).*\b(SELECT|INSERT|UPDATE|DELETE)\b.*

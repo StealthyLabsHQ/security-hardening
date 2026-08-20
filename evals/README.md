@@ -22,7 +22,7 @@ with simple case-insensitive string matching.
 
 - `cases/`: positive routing fixtures
 - `negative/`: non-trigger fixtures
-- `fixtures/vulnerable-snippet/`: intentional insecure snippets for `scripts/secure-review.py` smoke tests
+- `fixtures/vulnerable-snippet/`: intentional insecure snippets for `scripts/secure-review.py` smoke tests (static detect-only; never run against a real DB)
 - `results/`: generated markdown reports
 - `run.py`: offline runner
 - `response-collection-prompt.md`: copy-paste prompt for Claude Code, Codex CLI, Gemini CLI, or another LLM runtime

@@ -30,10 +30,11 @@ When reviewing or hardening AI-generated code:
 
 ```bash
 # Requires: Python 3, optionally semgrep and gitleaks on PATH (or Semgrep Docker image)
-python3 scripts/secure-review.py path/to/changed-code -o review.json
+# Default is detect-only: static scan, no production DB touch, no file edits by the script.
+python3 scripts/secure-review.py path/to/changed-code --mode detect -o review.json
 python3 scripts/map_findings.py --report review.json
-# Apply defensive fixes, then:
-python3 scripts/secure-review.py path/to/changed-code -o review-after.json
+# Apply defensive source fixes only when explicitly requested, then:
+python3 scripts/secure-review.py path/to/changed-code --mode detect -o review-after.json
 python3 scripts/rescan-after-fix.py review.json review-after.json
 ```
 
