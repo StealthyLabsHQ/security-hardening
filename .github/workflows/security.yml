@@ -87,7 +87,7 @@ jobs:
       - name: Run secure-review on vulnerable fixtures
         run: |
           set +e
-          python3 scripts/secure-review.py evals/fixtures/vulnerable-snippet --skip-gitleaks -o /tmp/secure-review.json
+          python3 scripts/secure-review.py evals/fixtures/vulnerable-snippet --mode detect --skip-gitleaks -o /tmp/secure-review.json
           status=$?
           set -e
           python3 - <<'PY'
@@ -96,6 +96,11 @@ jobs:
           errors = report.get("summary", {}).get("error", 0)
           tools = report.get("tools", {})
           semgrep = tools.get("semgrep", {})
+          blast = report.get("blast_summary", {})
+          safety = report.get("safety", {})
+          if report.get("mode") != "detect":
+              print("expected mode=detect", file=sys.stderr)
+              sys.exit(1)
           if not semgrep.get("available"):
               print("semgrep unavailable in smoke container", file=sys.stderr)
               sys.exit(1)
@@ -103,7 +108,13 @@ jobs:
               print("expected ERROR findings in vulnerable fixtures", file=sys.stderr)
               print(json.dumps(report, indent=2), file=sys.stderr)
               sys.exit(1)
-          print(f"smoke ok: {errors} ERROR finding(s)")
+          if blast.get("db", 0) < 1:
+              print("expected at least one db blast_radius finding", file=sys.stderr)
+              sys.exit(1)
+          if safety.get("touches_production_db") is not False:
+              print("safety.touches_production_db must be false", file=sys.stderr)
+              sys.exit(1)
+          print(f"smoke ok: {errors} ERROR finding(s); blast={blast}")
           PY
           # secure-review exits 1 when ERROR findings exist; that is success here
           if [ "$status" -ne 1 ]; then

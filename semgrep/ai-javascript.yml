@@ -6,6 +6,7 @@ rules:
     metadata:
       cwe: "CWE-95"
       category: injection
+      blast_radius: rce
       references:
         - references/ai/vibecoder-traps.md
         - references/appsec/language-patterns.md
@@ -18,6 +19,7 @@ rules:
     metadata:
       cwe: "CWE-78"
       category: injection
+      blast_radius: rce
       references:
         - references/ai/vibecoder-traps.md
         - references/appsec/language-patterns.md
@@ -35,6 +37,7 @@ rules:
     metadata:
       cwe: "CWE-79"
       category: xss
+      blast_radius: frontend
       references:
         - references/appsec/browser-security-modern.md
         - references/appsec/frontend-frameworks-security.md
@@ -49,6 +52,7 @@ rules:
     metadata:
       cwe: "CWE-79"
       category: xss
+      blast_radius: frontend
       references:
         - references/appsec/frontend-frameworks-security.md
         - references/appsec/browser-security-modern.md
@@ -62,16 +66,38 @@ rules:
     metadata:
       cwe: "CWE-89"
       category: injection
+      blast_radius: db
       references:
         - references/appsec/language-patterns.md
         - references/appsec/database-security.md
         - references/ai/vibecoder-traps.md
-    pattern-either:
-      - pattern: |
-          $Q = "SELECT " + $X
-      - pattern: |
-          $Q = `SELECT ${$X}`
-      - pattern: |
-          $DB.query("SELECT " + $X, ...)
-      - pattern: |
-          $DB.query(`SELECT ${$X}`, ...)
+    patterns:
+      - pattern-either:
+          - pattern: $Q = $STR + $X
+          - pattern: $Q = $STR + $X + $Y
+          - pattern: $DB.query($STR + $X, ...)
+          - pattern: $DB.execute($STR + $X, ...)
+          - pattern: $DB.query($STR + $X + $Y, ...)
+          - pattern: $DB.execute($STR + $X + $Y, ...)
+      - metavariable-regex:
+          metavariable: $STR
+          regex: (?i).*\b(SELECT|INSERT|UPDATE|DELETE)\b.*
+
+  - id: ai.javascript.sql-template
+    message: "SQL built with a template literal interpolates untrusted values. Use parameterized queries / bind parameters."
+    languages: [javascript, typescript]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: $Q = `...${$X}...`
+          - pattern: $DB.query(`...${$X}...`, ...)
+          - pattern: $DB.execute(`...${$X}...`, ...)
+      - pattern-regex: (?i)(SELECT|INSERT|UPDATE|DELETE)

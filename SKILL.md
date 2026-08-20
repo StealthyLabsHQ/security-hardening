@@ -33,7 +33,7 @@ Prefer defensive fixes.
 | Signal | Charger | Ne pas charger |
 |---|---|---|
 | Secure code review, web auth, headers, input validation, XSS, SSRF, insecure defaults | `references/_core-invariants.md`, `references/appsec/owasp-top10.md`, `references/appsec/ssrf-deserialization-command-injection.md`, `references/appsec/api-security.md`, `references/appsec/browser-security-modern.md`, `references/appsec/secure-headers.md` | `references/platform/*` unless the target is a desktop or mobile app; `references/compliance/*` unless an audit mapping is explicitly requested |
-| AI-generated patch review, Semgrep remediation, scan-and-fix, revue code IA, corriger après Semgrep | `references/_core-invariants.md`, `references/appsec/ai-code-secure-remediation.md`, `references/appsec/security-diff-review.md`, `references/ai/vibecoder-traps.md`, `references/ai/quick-start-ai-coding.md`, `references/appsec/language-patterns.md` | `references/compliance/*` unless evidence mapping is requested; `references/platform/*` unless the target is a client app |
+| AI-generated patch review, Semgrep remediation, scan-and-fix, revue code IA, corriger après Semgrep | `references/_core-invariants.md`, `references/appsec/ai-code-secure-remediation.md`, `references/appsec/security-diff-review.md`, `references/ai/vibecoder-traps.md`, `references/ai/quick-start-ai-coding.md`, `references/appsec/language-patterns.md`, `references/appsec/database-security.md` | `references/compliance/*` unless evidence mapping is requested; `references/platform/*` unless the target is a client app |
 | GraphQL authz, depth, persisted queries, batching | `references/_core-invariants.md`, `references/appsec/graphql-security.md`, `references/iam/authorization-rbac.md` | `references/platform/*`; `references/privacy/*` unless the schema exposes personal data |
 | Threat modeling, abuse cases, test design | `references/_core-invariants.md`, `references/appsec/threat-modeling.md`, `references/appsec/security-testing-examples.md` | `references/ai/*` unless the system includes agents, MCP, or prompt-bearing workflows |
 | Security architecture, secure design, control selection, roadmap | `references/_core-invariants.md`, `references/appsec/threat-modeling.md`, `references/ops/security-improvements.md`, `references/ops/detection-engineering.md` | `references/platform/*` unless platform-specific runtime constraints matter |
@@ -66,15 +66,24 @@ Always load `references/_core-invariants.md` once before any domain-specific ref
 
 ## Operational Review Loop
 
-When the task is to review or harden AI-generated code, remediate Semgrep/SAST findings, or scan-and-fix a patch, follow this loop instead of advice-only responses:
+When the task is to review or harden AI-generated code, remediate Semgrep/SAST findings, or scan-and-fix a patch, follow this loop. **Default mode is `detect-only`**: scan and report without editing the product or touching a live database.
 
-1. **Scope** the change set (`git diff`, provided files, or a directory). Prefer the AI patch surface over the whole monorepo.
-2. **Scan** with `python scripts/secure-review.py <target>` (Semgrep via `semgrep/` + Gitleaks). If a tool is missing, record the gap and continue with hotspot review from `security-diff-review.md`.
-3. **Map** findings to references using each finding's `suggested_refs` or `python scripts/map_findings.py --report <json>`. Always load `_core-invariants.md`, `ai-code-secure-remediation.md`, `security-diff-review.md`, and `vibecoder-traps.md` for AI patches.
-4. **Triage** by exploitability and blast radius. Confirmed secrets are a hard stop: remove, rotate, and follow `secret-leak-prevention.md` — do not patch around a live credential.
-5. **Fix** High/Critical issues with the smallest defensive change (parameterized queries, argv subprocesses, server-side ownership checks, real password hashing, TLS verify on). Never ship exploit PoCs.
-6. **Re-scan** the same scope. Optionally diff reports with `python scripts/rescan-after-fix.py before.json after.json`.
-7. **Report** using the finding format in `security-diff-review.md` section 10. Exit only when Critical/High are cleared or residual risk is explicitly documented.
+### Modes
+
+- **`detect-only` (default)** — run `python scripts/secure-review.py <target> --mode detect`, triage, report. No source edits.
+- **`propose-fixes`** — same as detect, plus minimal defensive diffs in the report only (do not write files).
+- **`apply-fixes`** — only when the user explicitly asks to fix/remediate/apply/corriger: write the smallest defensive source changes, then re-scan. Never auto-apply destructive DB migrations.
+
+### Steps
+
+1. **Choose mode** from the user intent (ambiguous → `detect-only`).
+2. **Scope** the change set (`git diff`, provided files, or a directory). Prefer the AI patch surface over the whole monorepo.
+3. **Scan** with `python scripts/secure-review.py <target> --mode detect` (Semgrep via `semgrep/` + Gitleaks). If a tool is missing, record the gap and continue with hotspot review from `security-diff-review.md`. The scanner never opens the user's production DB.
+4. **Map** findings via `suggested_refs`, `blast_radius`, and `safe_to_autofix` (or `python scripts/map_findings.py --report <json>`). Always load `_core-invariants.md`, `ai-code-secure-remediation.md`, `security-diff-review.md`, and `vibecoder-traps.md` for AI patches. For `blast_radius: db`, also load `database-security.md`.
+5. **Triage** P0 first (`db` / `rce` / `secrets`), then API authz, then frontend. Confirmed secrets are a hard stop: remove/rotate only in `apply-fixes`, follow `secret-leak-prevention.md`.
+6. **Propose or fix** only in the matching mode. Smallest defensive change (parameterized queries, argv subprocesses, server-side ownership checks). Preserve API/UI contracts. Never ship exploit PoCs. Never run injection payloads against prod or a real user database.
+7. **Re-scan** after `apply-fixes` only. Optionally diff reports with `python scripts/rescan-after-fix.py before.json after.json`. Runtime verification only on ephemeral/isolated test DBs if the project already has them.
+8. **Report** using the finding format in `security-diff-review.md` section 10. State the mode and that production/DB were not probed. Exit when Critical/High are cleared (apply) or residual risk is documented (detect/propose).
 
 SAST findings are signals. IDOR and business-logic gaps still require manual review via `authorization-rbac.md` / `api-security.md`.
 

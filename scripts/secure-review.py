@@ -3,6 +3,9 @@
 
 Soft-fails when a tool is missing: continues with available scanners and records
 tool status. Intended for agent-driven secure review loops.
+
+This script is detect-only against application runtimes: it never opens a
+production database connection and never executes injection payloads.
 """
 
 from __future__ import annotations
@@ -19,6 +22,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SEMGREP_CONFIG = ROOT / "semgrep"
 SEVERITY_RANK = {"ERROR": 3, "WARNING": 2, "INFO": 1, "CRITICAL": 4, "HIGH": 3, "MEDIUM": 2, "LOW": 1}
+BLAST_RANK = {"secrets": 5, "db": 4, "rce": 4, "api": 2, "frontend": 1, "other": 0}
+ALLOWED_MODES = {"detect", "propose", "apply"}
 
 
 def which(name: str) -> str | None:
@@ -46,14 +51,17 @@ def normalize_severity(raw: str | None) -> str:
     return "INFO"
 
 
-def map_check_id(check_id: str) -> list[str]:
-    """Load map-findings helpers from the scripts directory."""
+def _map_module():
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
-    from map_findings import refs_for_check_id  # type: ignore
+    import map_findings  # type: ignore
 
-    return refs_for_check_id(check_id)
+    return map_findings
+
+
+def enrich(finding: dict[str, Any]) -> dict[str, Any]:
+    return _map_module().enrich_finding(finding)
 
 
 def parse_semgrep(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -63,8 +71,9 @@ def parse_semgrep(payload: dict[str, Any]) -> list[dict[str, Any]]:
         extra = item.get("extra") or {}
         severity = normalize_severity(extra.get("severity") or item.get("severity"))
         path = item.get("path") or ""
-        start = (item.get("start") or {})
+        start = item.get("start") or {}
         message = extra.get("message") or item.get("message") or check_id
+        metadata = extra.get("metadata") or {}
         finding = {
             "tool": "semgrep",
             "check_id": check_id,
@@ -72,9 +81,9 @@ def parse_semgrep(payload: dict[str, Any]) -> list[dict[str, Any]]:
             "path": path,
             "start_line": start.get("line"),
             "message": message,
-            "suggested_refs": map_check_id(check_id),
+            "metadata": metadata if isinstance(metadata, dict) else {},
         }
-        findings.append(finding)
+        findings.append(enrich(finding))
     return findings
 
 
@@ -89,10 +98,11 @@ def parse_gitleaks(payload: Any) -> list[dict[str, Any]]:
             "severity": "ERROR",
             "path": item.get("File") or item.get("file") or "",
             "start_line": item.get("StartLine") or item.get("start_line"),
-            "message": item.get("Description") or item.get("description") or "Potential secret detected",
-            "suggested_refs": map_check_id(f"gitleaks.{rule_id}"),
+            "message": item.get("Description")
+            or item.get("description")
+            or "Potential secret detected",
         }
-        findings.append(finding)
+        findings.append(enrich(finding))
     return findings
 
 
@@ -134,7 +144,11 @@ def run_gitleaks(target: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
         status["error"] = "gitleaks not found on PATH"
         return [], status
 
-    report = target / ".secure-review-gitleaks.json" if target.is_dir() else target.parent / ".secure-review-gitleaks.json"
+    report = (
+        target / ".secure-review-gitleaks.json"
+        if target.is_dir()
+        else target.parent / ".secure-review-gitleaks.json"
+    )
     argv = [
         binary,
         "detect",
@@ -179,6 +193,31 @@ def summarize(findings: list[dict[str, Any]]) -> dict[str, int]:
     return summary
 
 
+def blast_summary(findings: list[dict[str, Any]]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for finding in findings:
+        blast = str(finding.get("blast_radius") or "other")
+        counts[blast] = counts.get(blast, 0) + 1
+    return counts
+
+
+def mode_hint(mode: str) -> str:
+    if mode == "detect":
+        return (
+            "detect-only: report findings with blast_radius; do not edit product files "
+            "or probe production databases."
+        )
+    if mode == "propose":
+        return (
+            "propose-fixes: include minimal defensive diffs in the report only; "
+            "do not write files or touch real DBs."
+        )
+    return (
+        "apply-fixes: write smallest defensive source fixes where safe_to_autofix is true, "
+        "then re-scan. Never apply destructive migrations or probe prod DBs."
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -191,6 +230,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--config",
         default=str(DEFAULT_SEMGREP_CONFIG),
         help="Semgrep config path (default: repo semgrep/)",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=sorted(ALLOWED_MODES),
+        default="detect",
+        help="Agent workflow mode recorded in the report (default: detect)",
     )
     parser.add_argument(
         "--skip-gitleaks",
@@ -214,6 +259,7 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     target = Path(args.target).resolve()
     config = Path(args.config).resolve()
+    mode = args.mode
 
     if not target.exists():
         print(json.dumps({"error": f"target not found: {target}"}), file=sys.stderr)
@@ -238,6 +284,7 @@ def main(argv: list[str] | None = None) -> int:
 
     findings.sort(
         key=lambda f: (
+            -BLAST_RANK.get(str(f.get("blast_radius") or "other"), 0),
             -SEVERITY_RANK.get(str(f.get("severity", "WARNING")).upper(), 0),
             f.get("path") or "",
             f.get("check_id") or "",
@@ -246,10 +293,20 @@ def main(argv: list[str] | None = None) -> int:
 
     report = {
         "target": str(target),
+        "mode": mode,
         "findings": findings,
         "summary": summarize(findings),
+        "blast_summary": blast_summary(findings),
         "tools": tools,
-        "remediation_hint": "Load suggested_refs, apply defensive fixes for ERROR findings, then re-run this script.",
+        "safety": {
+            "touches_production_db": False,
+            "executes_injection_payloads": False,
+            "note": (
+                "Static source scan only. No production DB connection. "
+                "Do not verify findings by attacking live frontend/backend/API/DB."
+            ),
+        },
+        "remediation_hint": mode_hint(mode),
     }
 
     text = json.dumps(report, indent=2, sort_keys=False) + "\n"

@@ -16,6 +16,10 @@ function buildQuery(id) {
   return db.query(q);
 }
 
+function buildTemplateQuery(id) {
+  return db.execute(`UPDATE users SET active=1 WHERE id = ${id}`);
+}
+
 function runEval(code) {
   return eval(code);
 }

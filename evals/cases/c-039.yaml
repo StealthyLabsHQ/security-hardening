@@ -1,0 +1,7 @@
+id: "c-039"
+input: "Apply fix for shell=True in this AI-generated Python helper, then re-scan."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/ai-code-secure-remediation.md", "references/ai/vibecoder-traps.md", "references/appsec/language-patterns.md", "references/appsec/security-diff-review.md"]
+must_not_load: ["references/compliance/compliance-mapping.md"]
+must_mention: ["apply-fixes", "secure-review.py", "subprocess", "re-scan", "safe_to_autofix"]
+must_not_mention: ["exploit PoC", "production database"]

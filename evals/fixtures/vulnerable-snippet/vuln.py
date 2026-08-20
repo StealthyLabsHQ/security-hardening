@@ -41,3 +41,17 @@ def eval_input(expr: str):
 
 def system_call(cmd: str) -> int:
     return os.system(cmd)
+
+
+def insecure_sql_fstring(user_id: str):
+    # AI often builds SQL with f-strings
+    query = f"SELECT * FROM users WHERE id = '{user_id}'"
+    return query
+
+
+def insecure_sql_execute(cursor, name: str):
+    cursor.execute("SELECT * FROM accounts WHERE name = '" + name + "'")
+
+
+def insecure_sql_format(email: str):
+    return "SELECT * FROM users WHERE email = '{}'".format(email)
