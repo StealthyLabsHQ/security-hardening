@@ -39,12 +39,21 @@ This skill prefers defensive fixes. Do not produce exploit PoCs, weaponized payl
 | Mode | When | Agent may |
 |------|------|-----------|
 | `detect-only` (**default**) | User asks to review, audit, scan, or detect | Run `scripts/secure-review.py`, triage, report. **No file edits.** |
-| `propose-fixes` | User asks for suggested patches / how to fix | Same as detect, plus minimal diffs in the report. **Do not write files.** |
-| `apply-fixes` | User explicitly says fix / remediate / apply / corriger | Write only defensive source changes, then re-scan. No destructive migrations. |
+| `propose-fixes` | User asks for suggested patches / how to fix | Same as detect, plus `proposed_fixes` text in JSON. **Do not write files.** |
+| `apply-fixes` | User explicitly says fix / remediate / apply / corriger | Write only findings with `safe_to_autofix=true`. **`db` and `secrets` are never writable.** No destructive migrations. |
 
 Enter `apply-fixes` only on explicit intent (`fix`, `remediate`, `apply fixes`, `corriger`). Ambiguous prompts stay in `detect-only`.
 
-`scripts/secure-review.py --mode detect` is always read-only against the filesystem of the target app runtime: it never opens a production DB connection.
+Hard rule: `blast_radius` in `{db, secrets}` always has `safe_to_autofix=false`. Prefer propose-only parameterized-query templates for SQL.
+
+### Uncovered by SAST (always mention)
+
+Even with a clean Semgrep report, still review manually:
+
+- IDOR / object-level authorization,
+- business-logic abuse,
+- mass assignment of privileged fields,
+- destructive schema migrations (`DROP` / `TRUNCATE` / data rewrites).
 
 ---
 
@@ -142,7 +151,7 @@ Contract rules:
 - If a correct fix needs a breaking API or destructive migration, stay in `propose-fixes` and document residual risk.
 - Do not widen permissions "to make it work."
 - Do not disable scanners with unexplained `# nosemgrep` / `# noqa` — require a one-line justification.
-- `safe_to_autofix: false` means propose only unless the operator explicitly accepts the risk.
+- `safe_to_autofix: false` means propose only — always true for `db` and `secrets` blast radii.
 
 ---
 

@@ -13,6 +13,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - Non-destructive defaults: `detect-only` / `propose-fixes` / `apply-fixes` modes, DB/RCE blast-radius classification, and no production DB probing.
 - Local Semgrep AI/vibecoder rule packs under `semgrep/` (including SQL injection AI patterns) and agent entrypoints `scripts/secure-review.py`, `scripts/map_findings.py`, `scripts/rescan-after-fix.py`.
 - Vulnerable snippet fixtures under `evals/fixtures/vulnerable-snippet/` plus eval cases `c-036`–`c-039` for remediation and DB-safe detect routing.
+- Scale harness `evals/scale/run_scale.py`, PHP Semgrep pack, propose/apply agent policy, and hard `safe_to_autofix=false` for db/secrets.
 - CI Semgrep local-rules job and secure-review smoke job in `.github/workflows/security.yml`.
 - Adversarial AI-agent eval fixtures for indirect prompt injection, path traversal, output exfiltration, and multi-turn tool abuse.
 - Optional JSONL response grading and per-fixture prompt generation for Claude Code, Codex CLI, Gemini CLI, and other runtimes.

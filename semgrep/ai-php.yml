@@ -1,0 +1,63 @@
+rules:
+  - id: ai.php.sql-concat
+    message: "SQL built via string concatenation is a common AI/PHP injection pattern. Use prepared statements."
+    languages: [php]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: $SQL = $STR . $X
+          - pattern: $SQL = $STR . $X . $Y
+          - pattern: mysqli_query($DB, $STR . $X, ...)
+          - pattern: mysqli_query($DB, $STR . $X . $Y, ...)
+          - pattern: mysql_query($STR . $X, ...)
+          - pattern: $DB->query($STR . $X, ...)
+          - pattern: $PDO->query($STR . $X, ...)
+      - metavariable-regex:
+          metavariable: $STR
+          regex: (?i).*\b(SELECT|INSERT|UPDATE|DELETE)\b.*
+
+  - id: ai.php.sql-interpolation
+    message: "SQL string with variable interpolation is injection-prone. Use PDO/MySQLi prepared statements."
+    languages: [php]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: mysqli_query($DB, $S, ...)
+          - pattern: mysql_query($S, ...)
+          - pattern: $DB->query($S, ...)
+          - pattern: $PDO->query($S, ...)
+      - metavariable-regex:
+          metavariable: $S
+          regex: (?i).*\b(SELECT|INSERT|UPDATE|DELETE)\b.*\$[a-zA-Z_]
+
+  - id: ai.php.eval
+    message: "eval() enables code injection. Avoid dynamic code execution on untrusted input."
+    languages: [php]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95"
+      category: injection
+      blast_radius: rce
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    patterns:
+      - pattern: eval($X)
+      - pattern-not: eval("...")
+      - pattern-not: eval('...')

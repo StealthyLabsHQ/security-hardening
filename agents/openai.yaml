@@ -5,6 +5,7 @@ default_prompt: >
   run python scripts/secure-review.py --mode detect, load only mapped
   references plus core invariants, prioritize db/rce/secrets blast radius,
   and report without editing files or touching production databases.
-  Propose or apply the smallest defensive source fixes only when the user
-  explicitly asks. Never run injection payloads against real systems, never
-  apply destructive migrations, and never produce exploit PoCs.
+  Use --mode propose for fix text only. Use --mode apply only when the user
+  explicitly asks, and never autofix db/secrets findings. Always mention
+  SAST gaps (IDOR, business logic, destructive migrations). Never run
+  injection payloads against real systems and never produce exploit PoCs.
