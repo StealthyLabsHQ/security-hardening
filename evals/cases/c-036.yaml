@@ -1,0 +1,7 @@
+id: "c-036"
+input: "Review this AI-generated Express route and fix IDOR. Run the secure review loop and remediate."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/ai-code-secure-remediation.md", "references/appsec/security-diff-review.md", "references/appsec/api-security.md", "references/iam/authorization-rbac.md", "references/ai/vibecoder-traps.md"]
+must_not_load: ["references/platform/mobile-security.md", "references/compliance/compliance-mapping.md"]
+must_mention: ["secure-review.py", "ownership", "deny-by-default", "object-level", "re-scan"]
+must_not_mention: ["exploit PoC", "weaponized payload"]

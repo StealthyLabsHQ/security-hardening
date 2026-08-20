@@ -303,3 +303,37 @@ Route them explicitly from:
 - `llm-agent-security.md` can stay as the general threat-model document instead of absorbing every AI subdomain.
 - The repo gains stronger coverage for authenticated web agents, GUI automation, vector-store authorization, and retrieval-layer poisoning.
 
+## ADR-0011: Operational scan-triage-fix loop becomes a first-class skill path
+
+- Date: 2026-08-20
+- Status: accepted
+
+### Context
+
+Through v2.0.0-rc.1 the skill is a routing layer plus reference corpus. Agents can load the right documents, but the repository does not define an executable loop that:
+
+- runs Semgrep and Gitleaks on a target scope,
+- maps findings to references,
+- applies defensive remediations,
+- re-scans before reporting done.
+
+CI already runs Semgrep/Gitleaks against this repository, but that does not help an agent reviewing AI-generated patches in another tree.
+
+### Decision
+
+Add an operational remediation path:
+
+- `references/appsec/ai-code-secure-remediation.md` as the runbook,
+- local Semgrep rules under `semgrep/` aligned to AI/vibecoder traps,
+- `scripts/secure-review.py` and `scripts/map_findings.py` as agent entrypoints,
+- an **Operational Review Loop** section in `SKILL.md`,
+- eval fixtures and CI smoke coverage for the loop.
+
+Scanner findings remain signals. Authorization and business-logic gaps stay manual via existing AppSec/IAM references. The skill stays defensive-only: no exploit PoCs.
+
+### Consequences
+
+- Agents have a concrete scan → triage → fix → re-scan procedure.
+- Routing and evals can assert remediation behavior, not only corpus selection.
+- Rule IDs and finding→reference maps become part of the maintained surface area.
+

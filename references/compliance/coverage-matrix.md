@@ -31,6 +31,7 @@ Last matrix review: **2026-04-18**
 | `pre-push-checklist.md` | Pre-push operational checklist | Medium | Essential | 1-2 | Annual | Partial (grep commands provided; auth checks manual) |
 | `secret-leak-prevention.md` | Secret leak prevention & IR | High | Essential | 1-2 | Bi-annual | Full (Gitleaks, TruffleHog, GitHub push protection) |
 | `vibecoder-traps.md` | Common copy-paste mistakes | High | Essential | 1 | Bi-annual | Full (Semgrep, Bandit, Gitleaks cover most patterns) |
+| `ai-code-secure-remediation.md` | Scan → triage → defensive fix → re-scan for AI patches | High | Essential | 1-3 | Bi-annual | Partial (Semgrep/Gitleaks + scripts; IDOR/logic manual) |
 | `owasp-top10.md` | OWASP Top 10 (2021) | High | Essential | 1-2 | Every 3 years (OWASP release cycle) | Partial (SAST covers A03/A06; A01/A04 need manual review) |
 | `database-security.md` | Database hardening, least privilege, RLS, backups | High | Recommended | 2-3 | Annual | Partial (SAST catches raw SQL; DB privilege, RLS, and backup review manual) |
 | `webhooks-security.md` | Webhook signatures, replay defense, idempotency | High | Recommended | 2-3 | Annual | Partial (signature/replay tests automatable; provider-specific flow review manual) |
@@ -91,7 +92,10 @@ Last matrix review: **2026-04-18**
 | `.github/workflows/lint.yml` | actionlint + markdown link checking | Every push / PR / weekly |
 | `.github/workflows/scorecard.yml` | OpenSSF Scorecard with SARIF upload | Push to `main` / weekly |
 | `.github/workflows/script-lint.yml` | Shell and PowerShell script linting | Script changes |
-| `.github/workflows/security.yml` | Gitleaks + Semgrep + Trivy + SBOM + Dep Review | Every push / PR |
+| `.github/workflows/security.yml` | Gitleaks + Semgrep + Trivy + SBOM + Dep Review + secure-review smoke | Every push / PR |
+| `scripts/secure-review.py` | Agent entrypoint: Semgrep + Gitleaks → unified JSON | Local / CI smoke |
+| `scripts/map_findings.py` | Map scanner check IDs to `references/` paths | Local / after scan |
+| `semgrep/` | Custom AI/vibecoder Semgrep rules for remediation loop | Local + CI Semgrep job |
 | `.github/pull_request_template.md` | Security checklist | Every PR (manual) |
 
 ---

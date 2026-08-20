@@ -1,0 +1,86 @@
+rules:
+  - id: ai.python.shell-true
+    message: "subprocess with shell=True is a common AI-generated command-injection pattern. Prefer argv lists without shell=True."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+        - references/appsec/ssrf-deserialization-command-injection.md
+    pattern: subprocess.$METHOD(..., shell=True, ...)
+
+  - id: ai.python.os-system
+    message: "os.system() executes a shell string. Prefer subprocess with an argument list."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern: os.system(...)
+
+  - id: ai.python.eval-exec
+    message: "eval()/exec() on attacker-influenced input enables code injection. Avoid dynamic code execution."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: exec(...)
+
+  - id: ai.python.weak-password-hash
+    message: "Hashing passwords with MD5/SHA alone is not acceptable. Use Argon2id, bcrypt, or scrypt via a maintained library."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-328"
+      category: crypto
+      references:
+        - references/appsec/applied-cryptography.md
+        - references/ai/vibecoder-traps.md
+    pattern-either:
+      - pattern: hashlib.md5($X).hexdigest()
+      - pattern: hashlib.sha1($X).hexdigest()
+      - pattern: hashlib.sha256($PASSWORD.encode(...)).hexdigest()
+      - pattern: hashlib.sha512($PASSWORD.encode(...)).hexdigest()
+
+  - id: ai.python.verify-false
+    message: "TLS verification disabled (verify=False). Restore certificate verification instead of bypassing it."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-295"
+      category: tls
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - pattern: requests.$METHOD(..., verify=False, ...)
+      - pattern: httpx.$METHOD(..., verify=False, ...)
+
+  - id: ai.python.unsafe-deserialize
+    message: "Unsafe deserialization of untrusted data. Prefer safe loaders or schema-based formats."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502"
+      category: deserialization
+      references:
+        - references/appsec/ssrf-deserialization-command-injection.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - pattern: pickle.loads(...)
+      - pattern: pickle.load(...)
+      - pattern: yaml.load($X)
+      - pattern: yaml.load($X, Loader=yaml.Loader)
+      - pattern: marshal.loads(...)

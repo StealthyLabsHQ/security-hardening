@@ -9,6 +9,10 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ### Added
 
+- Operational scan → triage → defensive fix → re-scan loop in `SKILL.md`, with runbook `references/appsec/ai-code-secure-remediation.md`.
+- Local Semgrep AI/vibecoder rule packs under `semgrep/` and agent entrypoints `scripts/secure-review.py`, `scripts/map_findings.py`, `scripts/rescan-after-fix.py`.
+- Vulnerable snippet fixtures under `evals/fixtures/vulnerable-snippet/` plus eval cases `c-036` / `c-037` for remediation routing.
+- CI Semgrep local-rules job and secure-review smoke job in `.github/workflows/security.yml`.
 - Adversarial AI-agent eval fixtures for indirect prompt injection, path traversal, output exfiltration, and multi-turn tool abuse.
 - Optional JSONL response grading and per-fixture prompt generation for Claude Code, Codex CLI, Gemini CLI, and other runtimes.
 - Core adversarial case guidance in `references/ai/agent-evals-red-teaming.md`.
