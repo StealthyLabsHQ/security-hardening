@@ -1,0 +1,10 @@
+# Gitleaks config for security-hardening.
+# Intentional scanner fixtures must not fail CI secret scanning.
+
+title = "security-hardening"
+
+[allowlist]
+description = "Fake secret fixtures used only for local/CI smoke documentation"
+paths = [
+  '''evals/fixtures/secrets/''',
+]
