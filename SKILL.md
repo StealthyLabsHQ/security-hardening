@@ -5,9 +5,7 @@ description: >
   security, identity, infrastructure, privacy, incident response, and
   AI-agent review. Use when the task is a secure code review, audit, hardening,
   threat modeling, vulnerability management, prompt injection, MCP security,
-  or incident handling, including French triggers such as audit de sécurité,
-  durcir, revue sécurité, failles, secrets exposés, modélisation des menaces,
-  and réponse à incident. Do not use for code golf, general feature ideation
+  or incident handling. Do not use for code golf, general feature ideation
   without a security angle, or active offensive exploitation, malware,
   payloads, intrusion steps, or operator-bypass requests.
 ---
@@ -30,10 +28,10 @@ Prefer defensive fixes.
 
 ## Decision Tree
 
-| Signal | Charger | Ne pas charger |
+| Signal | Load | Do not load |
 |---|---|---|
 | Secure code review, web auth, headers, input validation, XSS, SSRF, insecure defaults | `references/_core-invariants.md`, `references/appsec/owasp-top10.md`, `references/appsec/ssrf-deserialization-command-injection.md`, `references/appsec/api-security.md`, `references/appsec/browser-security-modern.md`, `references/appsec/secure-headers.md` | `references/platform/*` unless the target is a desktop or mobile app; `references/compliance/*` unless an audit mapping is explicitly requested |
-| AI-generated patch review, Semgrep remediation, scan-and-fix, revue code IA, corriger après Semgrep | `references/_core-invariants.md`, `references/appsec/ai-code-secure-remediation.md`, `references/appsec/security-diff-review.md`, `references/ai/vibecoder-traps.md`, `references/ai/quick-start-ai-coding.md`, `references/appsec/language-patterns.md`, `references/appsec/database-security.md` | `references/compliance/*` unless evidence mapping is requested; `references/platform/*` unless the target is a client app |
+| AI-generated patch review, Semgrep remediation, scan-and-fix, AI code review | `references/_core-invariants.md`, `references/appsec/ai-code-secure-remediation.md`, `references/appsec/security-diff-review.md`, `references/ai/vibecoder-traps.md`, `references/ai/quick-start-ai-coding.md`, `references/appsec/language-patterns.md`, `references/appsec/database-security.md` | `references/compliance/*` unless evidence mapping is requested; `references/platform/*` unless the target is a client app |
 | GraphQL authz, depth, persisted queries, batching | `references/_core-invariants.md`, `references/appsec/graphql-security.md`, `references/iam/authorization-rbac.md` | `references/platform/*`; `references/privacy/*` unless the schema exposes personal data |
 | Threat modeling, abuse cases, test design | `references/_core-invariants.md`, `references/appsec/threat-modeling.md`, `references/appsec/security-testing-examples.md` | `references/ai/*` unless the system includes agents, MCP, or prompt-bearing workflows |
 | Security architecture, secure design, control selection, roadmap | `references/_core-invariants.md`, `references/appsec/threat-modeling.md`, `references/ops/security-improvements.md`, `references/ops/detection-engineering.md` | `references/platform/*` unless platform-specific runtime constraints matter |
@@ -72,7 +70,7 @@ When the task is to review or harden AI-generated code, remediate Semgrep/SAST f
 
 - **`detect-only` (default)** — run `python scripts/secure-review.py <target> --mode detect`, triage, report. No source edits.
 - **`propose-fixes`** — same as detect, plus `proposed_fixes` text in the JSON report (do not write files).
-- **`apply-fixes`** — only when the user explicitly asks to fix/remediate/apply/corriger: agent may write files **only** when `safe_to_autofix=true`. Findings with `blast_radius` `db` or `secrets` are **never** autofixable. Never auto-apply destructive DB migrations.
+- **`apply-fixes`** — only when the user explicitly asks to fix/remediate/apply: agent may write files **only** when `safe_to_autofix=true`. Findings with `blast_radius` `db` or `secrets` are **never** autofixable. Never auto-apply destructive DB migrations.
 
 SAST does **not** cover IDOR, business-logic abuse, mass assignment, or destructive schema changes — call these out as uncovered even when the scan is clean.
 
@@ -91,13 +89,13 @@ SAST findings are signals. IDOR and business-logic gaps still require manual rev
 
 ## Example
 
-Input utilisateur:
+User input:
 `Review this Express route for IDOR and auth bugs.`
 
 Decision:
 load `references/_core-invariants.md`, `references/appsec/api-security.md`, and `references/iam/authorization-rbac.md`; do not load `references/platform/mobile-security.md` or `references/compliance/compliance-mapping.md`.
 
-Output attendu:
+Expected output:
 call out missing object-level authorization, deny-by-default gaps, blast radius, and the smallest defensive fix first.
 
 Do NOT load all references at once. Load only the files required by the decision tree above.

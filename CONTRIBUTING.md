@@ -5,7 +5,7 @@ Use this checklist for any pull request that touches `references/`, `SKILL.md`, 
 ## Reference Changes
 
 - Keep YAML frontmatter present and valid on every file under `references/`.
-- Keep one language per reference file. Do not mix French and English in the same reference.
+- Keep reference files in English. Do not mix languages in the same reference.
 - Preserve existing citations. New factual claims need a source link or a clear note for later review.
 - Link to external material instead of copying long paragraphs.
 - Do not add exploit chains, weaponized payloads, or offensive operator instructions.
