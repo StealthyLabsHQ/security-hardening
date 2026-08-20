@@ -71,8 +71,10 @@ When the task is to review or harden AI-generated code, remediate Semgrep/SAST f
 ### Modes
 
 - **`detect-only` (default)** — run `python scripts/secure-review.py <target> --mode detect`, triage, report. No source edits.
-- **`propose-fixes`** — same as detect, plus minimal defensive diffs in the report only (do not write files).
-- **`apply-fixes`** — only when the user explicitly asks to fix/remediate/apply/corriger: write the smallest defensive source changes, then re-scan. Never auto-apply destructive DB migrations.
+- **`propose-fixes`** — same as detect, plus `proposed_fixes` text in the JSON report (do not write files).
+- **`apply-fixes`** — only when the user explicitly asks to fix/remediate/apply/corriger: agent may write files **only** when `safe_to_autofix=true`. Findings with `blast_radius` `db` or `secrets` are **never** autofixable. Never auto-apply destructive DB migrations.
+
+SAST does **not** cover IDOR, business-logic abuse, mass assignment, or destructive schema changes — call these out as uncovered even when the scan is clean.
 
 ### Steps
 

@@ -2,6 +2,8 @@
 """Map scanner check IDs / CWE hints to security-hardening reference paths.
 
 Also classifies blast_radius and safe_to_autofix for non-destructive remediation.
+
+Hard rule: blast_radius in {db, secrets} is never safe_to_autofix.
 """
 
 from __future__ import annotations
@@ -18,7 +20,10 @@ DEFAULT_REFS = [
     "references/appsec/security-diff-review.md",
 ]
 
+NEVER_AUTOFIX_BLAST = frozenset({"db", "secrets"})
+
 # check_id -> (refs, blast_radius, safe_to_autofix)
+# Note: classify_check_id forces safe=False for db/secrets regardless of these flags.
 CHECK_META: dict[str, tuple[list[str], str, bool]] = {
     "ai.python.shell-true": (
         [
@@ -76,7 +81,7 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     "ai.python.sql-format": (
         [
@@ -85,7 +90,7 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     "ai.python.sql-percent": (
         [
@@ -94,7 +99,7 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     "ai.python.sql-execute-concat": (
         [
@@ -103,7 +108,7 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     "ai.javascript.eval": (
         [
@@ -145,7 +150,7 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     "ai.javascript.sql-template": (
         [
@@ -154,11 +159,36 @@ CHECK_META: dict[str, tuple[list[str], str, bool]] = {
             "references/ai/vibecoder-traps.md",
         ],
         "db",
+        False,
+    ),
+    "ai.php.sql-concat": (
+        [
+            "references/appsec/database-security.md",
+            "references/appsec/language-patterns.md",
+            "references/ai/vibecoder-traps.md",
+        ],
+        "db",
+        False,
+    ),
+    "ai.php.sql-interpolation": (
+        [
+            "references/appsec/database-security.md",
+            "references/appsec/language-patterns.md",
+            "references/ai/vibecoder-traps.md",
+        ],
+        "db",
+        False,
+    ),
+    "ai.php.eval": (
+        [
+            "references/ai/vibecoder-traps.md",
+            "references/appsec/language-patterns.md",
+        ],
+        "rce",
         True,
     ),
 }
 
-# Backward-compatible alias used by older call sites.
 CHECK_ID_MAP: dict[str, list[str]] = {
     key: meta[0] for key, meta in CHECK_META.items()
 }
@@ -181,7 +211,7 @@ PREFIX_MAP: list[tuple[str, list[str], str, bool]] = [
             "references/ai/vibecoder-traps.md",
         ],
         "db",
-        True,
+        False,
     ),
     (
         "ai.javascript.sql-",
@@ -191,6 +221,25 @@ PREFIX_MAP: list[tuple[str, list[str], str, bool]] = [
             "references/ai/vibecoder-traps.md",
         ],
         "db",
+        False,
+    ),
+    (
+        "ai.php.sql-",
+        [
+            "references/appsec/database-security.md",
+            "references/appsec/language-patterns.md",
+            "references/ai/vibecoder-traps.md",
+        ],
+        "db",
+        False,
+    ),
+    (
+        "ai.php.",
+        [
+            "references/ai/vibecoder-traps.md",
+            "references/appsec/language-patterns.md",
+        ],
+        "rce",
         True,
     ),
     (
@@ -265,6 +314,42 @@ CWE_MAP: dict[str, tuple[list[str], str]] = {
 
 BLAST_PRIORITY = {"secrets": 0, "db": 1, "rce": 2, "api": 3, "frontend": 4, "other": 5}
 
+PROPOSE_TEMPLATES: dict[str, str] = {
+    "ai.python.sql-fstring": (
+        "Replace f-string SQL with a parameterized query, e.g.\n"
+        "  cur.execute('SELECT * FROM users WHERE id = %s', (user_id,))\n"
+        "Do not change schema. Verify with an ephemeral test DB only."
+    ),
+    "ai.python.sql-format": (
+        "Replace str.format SQL with bound parameters:\n"
+        "  cur.execute('SELECT * FROM users WHERE email = %s', (email,))"
+    ),
+    "ai.python.sql-percent": (
+        "Do not use SQL % formatting. Use execute(query, params) with placeholders."
+    ),
+    "ai.python.sql-execute-concat": (
+        "Stop concatenating SQL strings into execute()/raw(). Pass placeholders + a params tuple/list."
+    ),
+    "ai.javascript.sql-concat": (
+        "Use parameterized queries, e.g. db.query('SELECT * FROM users WHERE id = $1', [id])."
+    ),
+    "ai.javascript.sql-template": (
+        "Do not interpolate values into SQL template literals. Use bind parameters."
+    ),
+    "ai.php.sql-concat": (
+        "Use prepared statements: $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ?'); $stmt->execute([$id]);"
+    ),
+    "ai.php.sql-interpolation": (
+        "Remove variable interpolation inside SQL strings. Use PDO/MySQLi prepared statements."
+    ),
+    "ai.python.shell-true": (
+        "Use subprocess.run([argv...], check=True) without shell=True."
+    ),
+    "ai.javascript.child-process-shell": (
+        "Prefer execFile/spawn with an argv array; do not concatenate untrusted input into a shell string."
+    ),
+}
+
 
 def unique(paths: list[str]) -> list[str]:
     seen: set[str] = set()
@@ -312,12 +397,33 @@ def classify_check_id(
             if BLAST_PRIORITY.get(cwe_blast, 99) < BLAST_PRIORITY.get(blast, 99):
                 blast = cwe_blast
 
+    if blast in NEVER_AUTOFIX_BLAST:
+        safe = False
+
     return unique(refs), blast, safe
 
 
 def refs_for_check_id(check_id: str, cwe: str | None = None) -> list[str]:
     refs, _, _ = classify_check_id(check_id, cwe=cwe)
     return refs
+
+
+def propose_fix_for(check_id: str) -> str | None:
+    key = normalize_check_id(check_id)
+    if key in PROPOSE_TEMPLATES:
+        return PROPOSE_TEMPLATES[key]
+    for prefix, template in (
+        ("ai.python.sql-", PROPOSE_TEMPLATES["ai.python.sql-execute-concat"]),
+        ("ai.javascript.sql-", PROPOSE_TEMPLATES["ai.javascript.sql-concat"]),
+        ("ai.php.sql-", PROPOSE_TEMPLATES["ai.php.sql-concat"]),
+        ("gitleaks.", "Remove the secret from source, rotate/revoke it, and add secret scanning. Do not autofix around a live credential."),
+    ):
+        if key.startswith(prefix):
+            return template
+    return (
+        "Apply the smallest defensive source change that removes the sink. "
+        "Preserve API contracts. Do not touch production databases."
+    )
 
 
 def enrich_finding(finding: dict[str, Any]) -> dict[str, Any]:
@@ -331,10 +437,34 @@ def enrich_finding(finding: dict[str, Any]) -> dict[str, Any]:
     updated["suggested_refs"] = refs
     updated["blast_radius"] = blast
     updated["safe_to_autofix"] = safe
+    updated["proposed_fix"] = propose_fix_for(check_id)
     return updated
 
 
-def annotate_report(report: dict[str, Any]) -> dict[str, Any]:
+def agent_policy_for_mode(mode: str) -> dict[str, Any]:
+    mode = mode if mode in {"detect", "propose", "apply"} else "detect"
+    return {
+        "mode": mode,
+        "may_edit_files": mode == "apply",
+        "may_edit_db_or_secrets_findings": False,
+        "may_probe_production_db": False,
+        "may_run_injection_payloads": False,
+        "uncovered_by_sast": [
+            "IDOR / object-level authorization",
+            "business-logic abuse",
+            "destructive schema migrations",
+            "mass assignment of privileged fields",
+        ],
+        "note": (
+            "detect: report only. "
+            "propose: include proposed_fix text, do not write files. "
+            "apply: agent may write only findings with safe_to_autofix=true; "
+            "db/secrets remain propose-only."
+        ),
+    }
+
+
+def annotate_report(report: dict[str, Any], mode: str | None = None) -> dict[str, Any]:
     findings = []
     all_refs: list[str] = []
     by_blast: dict[str, int] = {}
@@ -344,15 +474,32 @@ def annotate_report(report: dict[str, Any]) -> dict[str, Any]:
         all_refs.extend(updated.get("suggested_refs") or [])
         blast = str(updated.get("blast_radius") or "other")
         by_blast[blast] = by_blast.get(blast, 0) + 1
+    effective_mode = mode or str(report.get("mode") or "detect")
     annotated = dict(report)
+    annotated["mode"] = effective_mode
     annotated["findings"] = findings
     annotated["references_to_load"] = unique(["references/_core-invariants.md"] + all_refs)
     annotated["blast_summary"] = by_blast
+    annotated["agent_policy"] = agent_policy_for_mode(effective_mode)
     annotated["safety"] = {
         "touches_production_db": False,
+        "executes_injection_payloads": False,
         "mode_default": "detect-only",
         "note": "Static detection only. Do not probe real databases or apply destructive migrations.",
     }
+    if effective_mode in {"propose", "apply"}:
+        annotated["proposed_fixes"] = [
+            {
+                "check_id": f.get("check_id"),
+                "path": f.get("path"),
+                "blast_radius": f.get("blast_radius"),
+                "safe_to_autofix": f.get("safe_to_autofix"),
+                "proposed_fix": f.get("proposed_fix"),
+                "writable_in_apply_mode": bool(f.get("safe_to_autofix"))
+                and effective_mode == "apply",
+            }
+            for f in findings
+        ]
     return annotated
 
 
@@ -372,6 +519,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Path to secure-review JSON report to annotate",
     )
     parser.add_argument(
+        "--mode",
+        choices=["detect", "propose", "apply"],
+        default=None,
+        help="Override/report mode when annotating a report",
+    )
+    parser.add_argument(
         "-o",
         "--output",
         help="Write annotated report to this path",
@@ -385,7 +538,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.report:
         path = Path(args.report)
         report = json.loads(path.read_text(encoding="utf-8"))
-        annotated = annotate_report(report)
+        annotated = annotate_report(report, mode=args.mode)
         text = json.dumps(annotated, indent=2) + "\n"
         if args.output:
             Path(args.output).write_text(text, encoding="utf-8")
@@ -405,6 +558,7 @@ def main(argv: list[str] | None = None) -> int:
                 "suggested_refs": refs,
                 "blast_radius": blast,
                 "safe_to_autofix": safe,
+                "proposed_fix": propose_fix_for(args.check_id),
             },
             indent=2,
         )

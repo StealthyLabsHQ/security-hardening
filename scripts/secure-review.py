@@ -4,8 +4,13 @@
 Soft-fails when a tool is missing: continues with available scanners and records
 tool status. Intended for agent-driven secure review loops.
 
-This script is detect-only against application runtimes: it never opens a
-production database connection and never executes injection payloads.
+This script never opens a production database connection and never executes
+injection payloads. Modes:
+
+- detect (default): findings + policy; no proposed_fixes list required
+- propose: adds proposed_fixes text; agent must not write files
+- apply: same proposals; agent may write only safe_to_autofix=true findings
+  (db/secrets are never writable)
 """
 
 from __future__ import annotations
@@ -21,7 +26,15 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SEMGREP_CONFIG = ROOT / "semgrep"
-SEVERITY_RANK = {"ERROR": 3, "WARNING": 2, "INFO": 1, "CRITICAL": 4, "HIGH": 3, "MEDIUM": 2, "LOW": 1}
+SEVERITY_RANK = {
+    "ERROR": 3,
+    "WARNING": 2,
+    "INFO": 1,
+    "CRITICAL": 4,
+    "HIGH": 3,
+    "MEDIUM": 2,
+    "LOW": 1,
+}
 BLAST_RANK = {"secrets": 5, "db": 4, "rce": 4, "api": 2, "frontend": 1, "other": 0}
 ALLOWED_MODES = {"detect", "propose", "apply"}
 
@@ -62,6 +75,30 @@ def _map_module():
 
 def enrich(finding: dict[str, Any]) -> dict[str, Any]:
     return _map_module().enrich_finding(finding)
+
+
+def finalize_report(report: dict[str, Any], mode: str) -> dict[str, Any]:
+    finalized = _map_module().annotate_report(report, mode=mode)
+    finalized["remediation_hint"] = mode_hint(mode)
+    return finalized
+
+
+def mode_hint(mode: str) -> str:
+    if mode == "detect":
+        return (
+            "detect-only: report findings with blast_radius; do not edit product files "
+            "or probe production databases."
+        )
+    if mode == "propose":
+        return (
+            "propose-fixes: report includes proposed_fix text only; "
+            "do not write files or touch real DBs. db/secrets are never autofix."
+        )
+    return (
+        "apply-fixes: agent may write files ONLY when safe_to_autofix=true. "
+        "db/secrets findings stay propose-only. Never apply destructive migrations "
+        "or probe prod DBs."
+    )
 
 
 def parse_semgrep(payload: dict[str, Any]) -> list[dict[str, Any]]:
@@ -193,31 +230,6 @@ def summarize(findings: list[dict[str, Any]]) -> dict[str, int]:
     return summary
 
 
-def blast_summary(findings: list[dict[str, Any]]) -> dict[str, int]:
-    counts: dict[str, int] = {}
-    for finding in findings:
-        blast = str(finding.get("blast_radius") or "other")
-        counts[blast] = counts.get(blast, 0) + 1
-    return counts
-
-
-def mode_hint(mode: str) -> str:
-    if mode == "detect":
-        return (
-            "detect-only: report findings with blast_radius; do not edit product files "
-            "or probe production databases."
-        )
-    if mode == "propose":
-        return (
-            "propose-fixes: include minimal defensive diffs in the report only; "
-            "do not write files or touch real DBs."
-        )
-    return (
-        "apply-fixes: write smallest defensive source fixes where safe_to_autofix is true, "
-        "then re-scan. Never apply destructive migrations or probe prod DBs."
-    )
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -291,23 +303,14 @@ def main(argv: list[str] | None = None) -> int:
         )
     )
 
-    report = {
+    draft = {
         "target": str(target),
         "mode": mode,
         "findings": findings,
         "summary": summarize(findings),
-        "blast_summary": blast_summary(findings),
         "tools": tools,
-        "safety": {
-            "touches_production_db": False,
-            "executes_injection_payloads": False,
-            "note": (
-                "Static source scan only. No production DB connection. "
-                "Do not verify findings by attacking live frontend/backend/API/DB."
-            ),
-        },
-        "remediation_hint": mode_hint(mode),
     }
+    report = finalize_report(draft, mode=mode)
 
     text = json.dumps(report, indent=2, sort_keys=False) + "\n"
     if args.output:
@@ -315,8 +318,6 @@ def main(argv: list[str] | None = None) -> int:
     else:
         sys.stdout.write(text)
 
-    # Exit 1 when ERROR findings exist so CI/agents can gate; 0 otherwise.
-    # Missing tools alone do not fail the process (soft-fail).
     return 1 if report["summary"]["error"] else 0
 
 

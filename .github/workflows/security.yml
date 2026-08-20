@@ -83,11 +83,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Compile review scripts
-        run: python3 -m py_compile scripts/secure-review.py scripts/map_findings.py scripts/rescan-after-fix.py
+        run: python3 -m py_compile scripts/secure-review.py scripts/map_findings.py scripts/rescan-after-fix.py evals/scale/run_scale.py
       - name: Run secure-review on vulnerable fixtures
         run: |
           set +e
-          python3 scripts/secure-review.py evals/fixtures/vulnerable-snippet --mode detect --skip-gitleaks -o /tmp/secure-review.json
+          python3 scripts/secure-review.py evals/fixtures/vulnerable-snippet --mode propose --skip-gitleaks -o /tmp/secure-review.json
           status=$?
           set -e
           python3 - <<'PY'
@@ -98,8 +98,9 @@ jobs:
           semgrep = tools.get("semgrep", {})
           blast = report.get("blast_summary", {})
           safety = report.get("safety", {})
-          if report.get("mode") != "detect":
-              print("expected mode=detect", file=sys.stderr)
+          policy = report.get("agent_policy", {})
+          if report.get("mode") != "propose":
+              print("expected mode=propose", file=sys.stderr)
               sys.exit(1)
           if not semgrep.get("available"):
               print("semgrep unavailable in smoke container", file=sys.stderr)
@@ -114,13 +115,24 @@ jobs:
           if safety.get("touches_production_db") is not False:
               print("safety.touches_production_db must be false", file=sys.stderr)
               sys.exit(1)
+          if policy.get("may_edit_files") is not False:
+              print("propose mode must set may_edit_files=false", file=sys.stderr)
+              sys.exit(1)
+          for finding in report.get("findings", []):
+              if finding.get("blast_radius") in {"db", "secrets"} and finding.get("safe_to_autofix"):
+                  print("db/secrets must not be safe_to_autofix", finding, file=sys.stderr)
+                  sys.exit(1)
+          if not report.get("proposed_fixes"):
+              print("propose mode must include proposed_fixes", file=sys.stderr)
+              sys.exit(1)
           print(f"smoke ok: {errors} ERROR finding(s); blast={blast}")
           PY
-          # secure-review exits 1 when ERROR findings exist; that is success here
           if [ "$status" -ne 1 ]; then
             echo "expected exit code 1 from secure-review when findings exist, got $status"
             exit 1
           fi
+      - name: Scale harness (small corpus)
+        run: python3 evals/scale/run_scale.py --variants 3 --min-f1 0.95
 
   # ---------------------------------------------------------------
   # 3. Dependency vulnerability scan

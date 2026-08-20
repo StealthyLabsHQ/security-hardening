@@ -1,6 +1,6 @@
 rules:
   - id: ai.javascript.eval
-    message: "eval() enables code injection. Avoid dynamic code execution on untrusted input."
+    message: "eval() on a non-literal enables code injection. Avoid dynamic code execution on untrusted input."
     languages: [javascript, typescript]
     severity: ERROR
     metadata:
@@ -10,10 +10,13 @@ rules:
       references:
         - references/ai/vibecoder-traps.md
         - references/appsec/language-patterns.md
-    pattern: eval(...)
+    patterns:
+      - pattern: eval($X)
+      - pattern-not: eval("...")
+      - pattern-not: eval('...')
 
   - id: ai.javascript.child-process-shell
-    message: "Shelling out with concatenated or untrusted input is a command-injection risk. Prefer execFile/spawn with argv arrays and shell:false."
+    message: "Shelling out with concatenated or interpolated input is a command-injection risk. Prefer execFile/spawn with argv arrays."
     languages: [javascript, typescript]
     severity: ERROR
     metadata:
@@ -25,10 +28,14 @@ rules:
         - references/appsec/language-patterns.md
         - references/appsec/ssrf-deserialization-command-injection.md
     pattern-either:
-      - pattern: exec($CMD, ...)
-      - pattern: execSync($CMD, ...)
-      - pattern: child_process.exec($CMD, ...)
-      - pattern: child_process.execSync($CMD, ...)
+      - pattern: exec($A + $B, ...)
+      - pattern: execSync($A + $B, ...)
+      - pattern: child_process.exec($A + $B, ...)
+      - pattern: child_process.execSync($A + $B, ...)
+      - pattern: exec(`...${$X}...`, ...)
+      - pattern: execSync(`...${$X}...`, ...)
+      - pattern: child_process.exec(`...${$X}...`, ...)
+      - pattern: child_process.execSync(`...${$X}...`, ...)
 
   - id: ai.javascript.innerhtml
     message: "Assigning to innerHTML can introduce XSS. Prefer textContent or safe sanitization APIs."

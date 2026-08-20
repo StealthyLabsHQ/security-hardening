@@ -25,7 +25,7 @@ rules:
     pattern: os.system(...)
 
   - id: ai.python.eval-exec
-    message: "eval()/exec() on attacker-influenced input enables code injection. Avoid dynamic code execution."
+    message: "eval()/exec() on non-literal input enables code injection. Avoid dynamic code execution."
     languages: [python]
     severity: ERROR
     metadata:
@@ -35,8 +35,14 @@ rules:
         - references/ai/vibecoder-traps.md
         - references/appsec/language-patterns.md
     pattern-either:
-      - pattern: eval(...)
-      - pattern: exec(...)
+      - patterns:
+          - pattern: eval($X)
+          - pattern-not: eval("...")
+          - pattern-not: eval('...')
+      - patterns:
+          - pattern: exec($X)
+          - pattern-not: exec("...")
+          - pattern-not: exec('...')
 
   - id: ai.python.weak-password-hash
     message: "Hashing passwords with MD5/SHA alone is not acceptable. Use Argon2id, bcrypt, or scrypt via a maintained library."
