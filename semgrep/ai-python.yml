@@ -1,0 +1,169 @@
+rules:
+  - id: ai.python.shell-true
+    message: "subprocess with shell=True is a common AI-generated command-injection pattern. Prefer argv lists without shell=True."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+        - references/appsec/ssrf-deserialization-command-injection.md
+    pattern: subprocess.$METHOD(..., shell=True, ...)
+
+  - id: ai.python.os-system
+    message: "os.system() executes a shell string. Prefer subprocess with an argument list."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern: os.system(...)
+
+  - id: ai.python.eval-exec
+    message: "eval()/exec() on non-literal input enables code injection. Avoid dynamic code execution."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - patterns:
+          - pattern: eval($X)
+          - pattern-not: eval("...")
+          - pattern-not: eval('...')
+      - patterns:
+          - pattern: exec($X)
+          - pattern-not: exec("...")
+          - pattern-not: exec('...')
+
+  - id: ai.python.weak-password-hash
+    message: "Hashing passwords with MD5/SHA alone is not acceptable. Use Argon2id, bcrypt, or scrypt via a maintained library."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-328"
+      category: crypto
+      references:
+        - references/appsec/applied-cryptography.md
+        - references/ai/vibecoder-traps.md
+    pattern-either:
+      - pattern: hashlib.md5($X).hexdigest()
+      - pattern: hashlib.sha1($X).hexdigest()
+      - pattern: hashlib.sha256($PASSWORD.encode(...)).hexdigest()
+      - pattern: hashlib.sha512($PASSWORD.encode(...)).hexdigest()
+
+  - id: ai.python.verify-false
+    message: "TLS verification disabled (verify=False). Restore certificate verification instead of bypassing it."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-295"
+      category: tls
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - pattern: requests.$METHOD(..., verify=False, ...)
+      - pattern: httpx.$METHOD(..., verify=False, ...)
+
+  - id: ai.python.unsafe-deserialize
+    message: "Unsafe deserialization of untrusted data. Prefer safe loaders or schema-based formats."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-502"
+      category: deserialization
+      blast_radius: rce
+      references:
+        - references/appsec/ssrf-deserialization-command-injection.md
+        - references/appsec/language-patterns.md
+    pattern-either:
+      - pattern: pickle.loads(...)
+      - pattern: pickle.load(...)
+      - pattern: yaml.load($X)
+      - pattern: yaml.load($X, Loader=yaml.Loader)
+      - pattern: marshal.loads(...)
+
+  - id: ai.python.sql-fstring
+    message: "SQL built with an f-string is a common AI-generated injection pattern. Use parameterized queries or ORM binds."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-regex: (?i)f["'].*\b(SELECT|INSERT|UPDATE|DELETE)\b.*\{
+
+  - id: ai.python.sql-format
+    message: "SQL built with str.format is injection-prone. Use parameterized queries."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: |
+              $S.format(...)
+          - pattern: |
+              "...".format(...)
+          - pattern: |
+              '...'.format(...)
+      - pattern-regex: (?i)["'].*\b(SELECT|INSERT|UPDATE|DELETE)\b
+
+  - id: ai.python.sql-percent
+    message: "SQL built with % formatting is injection-prone. Use parameterized execute(query, params)."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern: $QUERY % $ARGS
+      - pattern-regex: (?i)(SELECT|INSERT|UPDATE|DELETE)
+
+  - id: ai.python.sql-execute-concat
+    message: "Passing concatenated SQL into execute()/raw() is a common AI SQL-injection pattern. Bind parameters instead."
+    languages: [python]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      blast_radius: db
+      references:
+        - references/appsec/database-security.md
+        - references/appsec/language-patterns.md
+        - references/ai/vibecoder-traps.md
+    patterns:
+      - pattern-either:
+          - pattern: $DB.execute($SQL + $X, ...)
+          - pattern: $CUR.execute($SQL + $X, ...)
+          - pattern: $OBJ.raw($SQL + $X, ...)
+          - pattern: $DB.execute($SQL + $X + $Y, ...)
+          - pattern: $CUR.execute($SQL + $X + $Y, ...)
+      - metavariable-regex:
+          metavariable: $SQL
+          regex: (?i).*\b(SELECT|INSERT|UPDATE|DELETE)\b.*

@@ -1,3 +1,11 @@
 display_name: Security Hardening
-short_description: Defensive application security and AI-agent security skill for audits, secure design, code review, and hardening.
-default_prompt: Review this for security issues, load only the relevant references, and prioritize defensive fixes, exploitability, trust boundaries, blast radius, and remediation order.
+short_description: Defensive application security and AI-agent security skill for audits, secure design, code review, non-destructive scan-and-fix remediation, and hardening.
+default_prompt: >
+  Review this for security issues. Default to detect-only: scope the change,
+  run python scripts/secure-review.py --mode detect, load only mapped
+  references plus core invariants, prioritize db/rce/secrets blast radius,
+  and report without editing files or touching production databases.
+  Use --mode propose for fix text only. Use --mode apply only when the user
+  explicitly asks, and never autofix db/secrets findings. Always mention
+  SAST gaps (IDOR, business logic, destructive migrations). Never run
+  injection payloads against real systems and never produce exploit PoCs.

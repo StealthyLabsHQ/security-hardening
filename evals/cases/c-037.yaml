@@ -1,0 +1,7 @@
+id: "c-037"
+input: "Semgrep found shell=True in AI-generated Python. Remediate defensively and re-scan."
+should_trigger: true
+should_load: ["references/_core-invariants.md", "references/appsec/ai-code-secure-remediation.md", "references/ai/vibecoder-traps.md", "references/appsec/language-patterns.md", "references/appsec/security-diff-review.md"]
+must_not_load: ["references/compliance/compliance-mapping.md", "references/platform/mobile-security.md"]
+must_mention: ["secure-review.py", "shell=True", "subprocess", "defensive"]
+must_not_mention: ["exploit chain", "payload to exploit"]
