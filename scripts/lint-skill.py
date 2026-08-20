@@ -153,6 +153,7 @@ ALLOWED_DOMAIN_SUFFIXES = (
     "scorecard.dev",
     "securityheaders.com",
     "securityscorecards.dev",
+    "semgrep.dev",
     "sigmahq.io",
     "slsa.dev",
     "spdx.dev",

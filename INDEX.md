@@ -27,6 +27,7 @@ Category sections below are intentionally compact, representative entrypoints. F
 - [references/appsec/threat-modeling.md](references/appsec/threat-modeling.md)
 - [references/appsec/security-testing-examples.md](references/appsec/security-testing-examples.md)
 - [references/appsec/security-diff-review.md](references/appsec/security-diff-review.md)
+- [references/appsec/ai-code-secure-remediation.md](references/appsec/ai-code-secure-remediation.md)
 - [references/appsec/ssrf-deserialization-command-injection.md](references/appsec/ssrf-deserialization-command-injection.md)
 - [references/appsec/secure-headers.md](references/appsec/secure-headers.md)
 - [references/appsec/browser-security-modern.md](references/appsec/browser-security-modern.md)

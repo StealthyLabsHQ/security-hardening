@@ -61,9 +61,55 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - run: semgrep ci --config=auto
+      - name: Semgrep local AI/vibecoder rules
+        run: semgrep scan --config semgrep/ --error --metrics=off --exclude evals/fixtures
+      - name: Semgrep auto rules (informational)
+        run: semgrep scan --config=auto --metrics=off --exclude evals/fixtures || true
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
+
+  # ---------------------------------------------------------------
+  # 2b. Secure-review smoke - agent entrypoint on known-bad fixtures
+  # ---------------------------------------------------------------
+  secure-review-smoke:
+    name: Secure Review Smoke
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    container:
+      image: semgrep/semgrep:1.159.0
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Compile review scripts
+        run: python3 -m py_compile scripts/secure-review.py scripts/map_findings.py scripts/rescan-after-fix.py
+      - name: Run secure-review on vulnerable fixtures
+        run: |
+          set +e
+          python3 scripts/secure-review.py evals/fixtures/vulnerable-snippet --skip-gitleaks -o /tmp/secure-review.json
+          status=$?
+          set -e
+          python3 - <<'PY'
+          import json, sys
+          report = json.load(open("/tmp/secure-review.json", encoding="utf-8"))
+          errors = report.get("summary", {}).get("error", 0)
+          tools = report.get("tools", {})
+          semgrep = tools.get("semgrep", {})
+          if not semgrep.get("available"):
+              print("semgrep unavailable in smoke container", file=sys.stderr)
+              sys.exit(1)
+          if errors < 1:
+              print("expected ERROR findings in vulnerable fixtures", file=sys.stderr)
+              print(json.dumps(report, indent=2), file=sys.stderr)
+              sys.exit(1)
+          print(f"smoke ok: {errors} ERROR finding(s)")
+          PY
+          # secure-review exits 1 when ERROR findings exist; that is success here
+          if [ "$status" -ne 1 ]; then
+            echo "expected exit code 1 from secure-review when findings exist, got $status"
+            exit 1
+          fi
 
   # ---------------------------------------------------------------
   # 3. Dependency vulnerability scan

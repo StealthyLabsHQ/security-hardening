@@ -1,0 +1,77 @@
+rules:
+  - id: ai.javascript.eval
+    message: "eval() enables code injection. Avoid dynamic code execution on untrusted input."
+    languages: [javascript, typescript]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-95"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+    pattern: eval(...)
+
+  - id: ai.javascript.child-process-shell
+    message: "Shelling out with concatenated or untrusted input is a command-injection risk. Prefer execFile/spawn with argv arrays and shell:false."
+    languages: [javascript, typescript]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-78"
+      category: injection
+      references:
+        - references/ai/vibecoder-traps.md
+        - references/appsec/language-patterns.md
+        - references/appsec/ssrf-deserialization-command-injection.md
+    pattern-either:
+      - pattern: exec($CMD, ...)
+      - pattern: execSync($CMD, ...)
+      - pattern: child_process.exec($CMD, ...)
+      - pattern: child_process.execSync($CMD, ...)
+
+  - id: ai.javascript.innerhtml
+    message: "Assigning to innerHTML can introduce XSS. Prefer textContent or safe sanitization APIs."
+    languages: [javascript, typescript]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-79"
+      category: xss
+      references:
+        - references/appsec/browser-security-modern.md
+        - references/appsec/frontend-frameworks-security.md
+    pattern-either:
+      - pattern: $EL.innerHTML = $X
+      - pattern: $EL.outerHTML = $X
+
+  - id: ai.javascript.dangerously-set-inner-html
+    message: "dangerouslySetInnerHTML bypasses React escaping. Ensure the HTML is sanitized server-side or avoid it."
+    languages: [javascript, typescript]
+    severity: WARNING
+    metadata:
+      cwe: "CWE-79"
+      category: xss
+      references:
+        - references/appsec/frontend-frameworks-security.md
+        - references/appsec/browser-security-modern.md
+    pattern: |
+      { dangerouslySetInnerHTML: ... }
+
+  - id: ai.javascript.sql-concat
+    message: "SQL built via string concatenation is a common AI-generated injection pattern. Use parameterized queries."
+    languages: [javascript, typescript]
+    severity: ERROR
+    metadata:
+      cwe: "CWE-89"
+      category: injection
+      references:
+        - references/appsec/language-patterns.md
+        - references/appsec/database-security.md
+        - references/ai/vibecoder-traps.md
+    pattern-either:
+      - pattern: |
+          $Q = "SELECT " + $X
+      - pattern: |
+          $Q = `SELECT ${$X}`
+      - pattern: |
+          $DB.query("SELECT " + $X, ...)
+      - pattern: |
+          $DB.query(`SELECT ${$X}`, ...)

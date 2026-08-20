@@ -22,7 +22,30 @@ This repository is licensed under the Apache License, Version 2.0. See [LICENSE]
 - Treat prompt injection, system prompt leakage, RAG poisoning, MCP abuse, and excessive agent autonomy as first-class security problems.
 - Do not treat the system prompt, model refusal behavior, or vendor defaults as security boundaries.
 - Prefer read-only defaults, explicit elevation, tool trust zones, structured validation, and operator-visible kill switches.
-- Use this repository as a portable skill and reference corpus; no local installer tooling is required.
+- Use this repository as a portable skill and reference corpus; agents should follow the **scan → triage → defensive fix → re-scan** loop in `SKILL.md` when reviewing AI-generated patches.
+
+### Operational secure review (agents)
+
+When reviewing or hardening AI-generated code:
+
+```bash
+# Requires: Python 3, optionally semgrep and gitleaks on PATH (or Semgrep Docker image)
+python3 scripts/secure-review.py path/to/changed-code -o review.json
+python3 scripts/map_findings.py --report review.json
+# Apply defensive fixes, then:
+python3 scripts/secure-review.py path/to/changed-code -o review-after.json
+python3 scripts/rescan-after-fix.py review.json review-after.json
+```
+
+Local Semgrep rules live under `semgrep/`. The runbook is `references/appsec/ai-code-secure-remediation.md`.
+
+Example prompts:
+
+```
+Review and harden this AI-generated patch
+Corriger après Semgrep: shell=True dans ce fichier
+Scan and fix secrets and injection risks in this diff
+```
 
 ---
 
@@ -238,6 +261,8 @@ Once installed, the skill activates on prompts like:
 "Harden my nginx config"
 "Check for secret leaks in this file"
 "Threat-model this feature"
+"Review and harden this AI-generated patch"
+"Corriger après Semgrep"
 ```
 
 ### Maximum-Protection Quick Start

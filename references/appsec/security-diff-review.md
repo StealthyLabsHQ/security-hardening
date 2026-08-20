@@ -11,7 +11,7 @@ sources:
   - "CWE Top 25"
 triggers_strong: ["security diff review", "pr security review", "review this diff", "ai generated patch review", "security review checklist"]
 triggers_weak: ["diff review", "pr review", "code review security"]
-related: ["language-patterns", "authorization-rbac", "security-testing-examples"]
+related: ["language-patterns", "authorization-rbac", "security-testing-examples", "ai-code-secure-remediation"]
 ---
 
 # Security Diff Review
