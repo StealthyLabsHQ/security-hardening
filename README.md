@@ -44,7 +44,7 @@ Example prompts:
 
 ```
 Review and harden this AI-generated patch
-Corriger après Semgrep: shell=True dans ce fichier
+Fix after Semgrep: shell=True in this file
 Scan and fix secrets and injection risks in this diff
 ```
 
@@ -263,7 +263,7 @@ Once installed, the skill activates on prompts like:
 "Check for secret leaks in this file"
 "Threat-model this feature"
 "Review and harden this AI-generated patch"
-"Corriger après Semgrep"
+"Fix after Semgrep"
 ```
 
 ### Maximum-Protection Quick Start

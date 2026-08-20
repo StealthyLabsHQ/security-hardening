@@ -10,7 +10,7 @@ sources:
   - "OWASP ASVS"
   - "Semgrep — https://semgrep.dev/docs/"
   - "Gitleaks — https://github.com/gitleaks/gitleaks"
-triggers_strong: ["secure review and fix", "ai generated code remediation", "semgrep remediate", "review and harden ai patch", "corriger apres semgrep", "revue code ia", "scan and fix", "detect-only security review"]
+triggers_strong: ["secure review and fix", "ai generated code remediation", "semgrep remediate", "review and harden ai patch", "scan and fix", "detect-only security review"]
 triggers_weak: ["fix security findings", "remediate sast", "ai patch review"]
 related: ["security-diff-review", "vibecoder-traps", "language-patterns", "quick-start-ai-coding", "secret-leak-prevention", "database-security"]
 ---
@@ -40,9 +40,9 @@ This skill prefers defensive fixes. Do not produce exploit PoCs, weaponized payl
 |------|------|-----------|
 | `detect-only` (**default**) | User asks to review, audit, scan, or detect | Run `scripts/secure-review.py`, triage, report. **No file edits.** |
 | `propose-fixes` | User asks for suggested patches / how to fix | Same as detect, plus `proposed_fixes` text in JSON. **Do not write files.** |
-| `apply-fixes` | User explicitly says fix / remediate / apply / corriger | Write only findings with `safe_to_autofix=true`. **`db` and `secrets` are never writable.** No destructive migrations. |
+| `apply-fixes` | User explicitly says fix / remediate / apply | Write only findings with `safe_to_autofix=true`. **`db` and `secrets` are never writable.** No destructive migrations. |
 
-Enter `apply-fixes` only on explicit intent (`fix`, `remediate`, `apply fixes`, `corriger`). Ambiguous prompts stay in `detect-only`.
+Enter `apply-fixes` only on explicit intent (`fix`, `remediate`, `apply fixes`). Ambiguous prompts stay in `detect-only`.
 
 Hard rule: `blast_radius` in `{db, secrets}` always has `safe_to_autofix=false`. Prefer propose-only parameterized-query templates for SQL.
 
